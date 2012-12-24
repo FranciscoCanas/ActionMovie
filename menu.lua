@@ -18,12 +18,11 @@ end
 
 function state:draw()
 	love.graphics.print("Menu Placeholder", 10, 10)
-	
 	if player1.isplaying then 
-		love.graphics.print("Player1",10,200)
+		love.graphics.print("Player1",10,400)
 	end
 	if player2.isplaying then
-		love.graphics.print("Player2",400,200)
+		love.graphics.print("Player2",400,400)
 	end
 end 
 
@@ -31,7 +30,8 @@ function state:keyreleased(key)
 	if key == "escape" then
 		-- quits game
 		love.event.push("quit")
-	elseif key == "return" or key==" " then
+	elseif (player1.isplaying or player2.isplaying) 
+		and (key == "return" or key==" ") then
 		-- Start scene 1
 		Gamestate.switch(Gamestate.epmenu)
 	elseif key == player1.keyfire then
@@ -39,5 +39,4 @@ function state:keyreleased(key)
 	elseif key == player2.keyfire then
 		player2.isplaying = not player2.isplaying
 	end	
-	
 end

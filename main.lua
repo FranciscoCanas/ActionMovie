@@ -1,5 +1,8 @@
 -- library requires
 Gamestate = require "hump.gamestate"
+Class = require "hump.class"
+-- Entities requires
+require "player"
 
 -- gamestate requires
 require "intro"
@@ -7,25 +10,10 @@ require "menu"
 require "ep1/epmenu"
 
 -- Globals
-player1 = {}
-player2 = {}
 
-player1.keyup = "w"
-player1.keyright = "d"
-player1.keyup = "w"
-player1.keydown = "s"
-player1.keyfire = "f"
-player1.keyroll = "g" 
+player1 = Player(1)
+player2 = Player(2)
 
-player2.keyup = "o"
-player2.keyright = ";"
-player2.keyup = "k"
-player2.keydown = "l"
-player2.keyfire = "j"
-player2.keyroll = "h" 
-
-player1.isplaying = false
-player2.isplaying = false
 
 -- call this last so gamestate events get registered.
 function love.load()

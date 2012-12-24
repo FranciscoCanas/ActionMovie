@@ -14,8 +14,6 @@ end
 function state:enter()
 -- Initialize players here
 	if player1.isplaying then
-		player1.
-	
 		player1.x = 200
 		player1.y = 640
 	end
@@ -44,14 +42,30 @@ function state:focus()
 end
 
 function state:keypressed()
+	if player1.isplaying then
+		player1:keyPressHandler(key)
+	end
+	
+	if player2.isplaying then
+		player2:keyPressHandler(key)
+	end
 end
 
 function state:keyreleased(key)
 	if key == "escape" then
 		-- quits to main menu
 		Gamestate.switch(Gamestate.epmenu)
+	else
+		if player1.isplaying then
+			player1.keyReleaseHandler(key)
+		end
+		if player2.isplaying then
+			player2.keyReleaseHandler(key)
+		end
 	end	
 end
+
+
 
 function state:quit()
 end
