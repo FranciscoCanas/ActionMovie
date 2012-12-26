@@ -5,6 +5,8 @@ Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
 
 function state:enter()
+	--player1:init()
+	--player2:init()
 end
 
 function state:leave()

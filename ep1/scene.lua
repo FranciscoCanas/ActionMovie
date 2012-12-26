@@ -36,6 +36,8 @@ function state:enter()
 	-- The type of camera used.
 	camfollows = true -- follows players around.
 	camstatic = false -- does not.
+	camMaxZoom = 1.5
+	camMinZoom = 0.5
 		
 end
 
@@ -45,7 +47,6 @@ end
 function state:update(dt)
 	-- Update scene-related systems.
 	world:update(math.min(dt, 1/60))
-	Collider:update(dt)
 	
 	-- Update the players.
 	for i,player in ipairs(players) do
@@ -64,10 +65,20 @@ function state:draw()
 	-- will go here.
 	cam:attach()
 	love.graphics.print("Attached to cam for reference", 30,30)
-	for i,player in ipairs(players) do
-		if player.isplaying then
-			player:draw()
-			end
+	if (player1.isplaying and player2.isplaying) then
+		if player1.position.y >= player2.position.y then
+			player2:draw()
+			player1:draw()
+		else
+			player1:draw()
+			player2:draw()
+		end
+	else
+		for i,player in ipairs(players) do
+			if player.isplaying then
+				player:draw()
+				end
+		end
 	end
 	cam:detach()
 	
@@ -75,9 +86,9 @@ function state:draw()
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
 	love.graphics.print("Scene Placeholder", 10, 10)
-	love.graphics.print(player1.position.x, 200, 10)
-	love.graphics.print(player1.position.y, 220, 10)
-	love.graphics.print(keypressed, 200, 30)
+	-- love.graphics.print(player1.position.x, 200, 10)
+	-- love.graphics.print(player1.position.y, 220, 10)
+	-- love.graphics.print(keypressed, 200, 30)
 end 
 
 function state:focus()
@@ -126,8 +137,8 @@ function state:movecam()
 			y = (player1.position.y + player2.position.y) / 2
 			dist = (player1.position - player2.position):len()
 			zoom = 600 / dist 
-			if zoom > 1.5 then zoom = 1.5 end
-			if zoom < 0.5 then zoom = 0.5 end
+			if zoom > camMaxZoom then zoom = 1.5 end
+			if zoom < camMinZoom then zoom = 0.5 end
 		elseif player1.isplaying and (not player2.isplaying) then
 			x = player1.position.x
 			y = player1.position.y

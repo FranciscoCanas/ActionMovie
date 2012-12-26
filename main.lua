@@ -3,7 +3,6 @@ Gamestate = require "hump.gamestate"
 Class = require "hump.class"
 Vector = require "hump.vector"
 Anim8 = require "anim8.anim8"
-HC = require 'HardonCollider'
 -- Entities requires
 require "player"
 
@@ -16,9 +15,11 @@ require "ep1/epmenu"
 -- TODO: organize these into groups
 -- note: Initialization order matters.
 dimScreen = Vector(1024, 768)
-love.physics.setMeter(32) --the height of a meter our worlds will be 64px
-world = love.physics.newWorld(0,0,true)
-Collider = HC(100, on_collide)
+love.physics.setMeter(32) --the height of a meter our worlds will be 32px
+world = love.physics.newWorld(
+	0, -- x grav
+	0, -- y grav
+	true)
 player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}
