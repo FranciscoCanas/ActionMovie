@@ -8,6 +8,11 @@ Gamestate.menu = Gamestate.new()
 local state = Gamestate.menu
 
 function state:enter()
+	-- Reinitialize the players when we enter menu
+	player1.isplaying = false
+	player2.isplaying = false
+	player1:init()
+	player2:init()
 end
 
 function state:leave()
@@ -17,12 +22,28 @@ function state:update()
 end
 
 function state:draw()
-	love.graphics.print("Menu Placeholder", 10, 10)
+	love.graphics.print("Main Menu", (dimScreen.x / 2) - 10, 10)
+	
+	-- Code to draw player when they join a game
 	if player1.isplaying then 
-		love.graphics.print("Player1",10,400)
+		love.graphics.print("Player1",
+			60,
+			dimScreen.y - (player1.image:getHeight() + 50))
+		player1:draw()
+	else
+		love.graphics.print("Press F to join",
+			60,
+			dimScreen.y - (player1.image:getHeight() + 50))
 	end
 	if player2.isplaying then
-		love.graphics.print("Player2",400,400)
+		love.graphics.print("Player2",
+			dimScreen.x - (40 + player2.image:getWidth()),
+			dimScreen.y - (player2.image:getHeight() + 50))
+		player2:draw()
+	else
+		love.graphics.print("Press J to join",
+			dimScreen.x - (40 + player2.image:getWidth()),
+			dimScreen.y - (player2.image:getHeight() + 50))
 	end
 end 
 

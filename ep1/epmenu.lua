@@ -1,5 +1,5 @@
 -- This is the menu for episode one.
-
+-- Players will be able to select a scene to start from.
 require "ep1/scene"
 Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
@@ -14,7 +14,20 @@ function state:update()
 end
 
 function state:draw()
-	love.graphics.print("Episode One Menu", 10, 10)
+	love.graphics.print("Episode One", (dimScreen.x / 2) - 10, 10)
+	-- Code to draw player when they join a game
+	if player1.isplaying then 
+		love.graphics.print("Player1",
+			60,
+			dimScreen.y - (player1.image:getHeight() + 50))
+		player1:draw()
+	end
+	if player2.isplaying then
+		love.graphics.print("Player2",
+			dimScreen.x - (40 + player2.image:getWidth()),
+			dimScreen.y - (player2.image:getHeight() + 50))
+		player2:draw()
+	end
 end 
 
 function state:keyreleased(key)

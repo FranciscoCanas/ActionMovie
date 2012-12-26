@@ -1,3 +1,7 @@
+-- Introduction sequence.
+-- Will include some fancy scrolling text, maybe
+-- some sweet ass animations, and badass music.
+
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
 
@@ -11,7 +15,7 @@ function state:update()
 end
 
 function state:draw()
-	love.graphics.print("Intro Placeholder", 10, 10)
+	love.graphics.print("Intro Screen", (dimScreen.x / 2) - 10, 10)
 end 
 
 function state:keyreleased(key)
