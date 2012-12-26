@@ -29,40 +29,45 @@ function(self, num)
 			self.grid:getFrames(1,1),
 			0.1)
 			
+			
 	self.isplaying = false
+
+	-- This stuff used for non-love.physics based motion
 	self.velocity = Vector(0,0)
 	self.acceleration = 10000
 	self.max_velocity = 500
 	self.drag = 0.96
+	-- end of stuff used for non-physics based motion
 	
-	-- Collision detection init
+	-- Collision detection init using hardon collider
 	self.collisionShape = Collider:addRectangle(self.position.x,
 		self.position.y,
 		self.image:getWidth(),
 		self.image:getHeight())
 	
-	-- self.body = love.physics.newBody(world, 
-		-- ((self.position.x + self.image:getWidth()) / 2),
-		-- ((self.position.y + self.image:getHeight()) / 2), 
-		-- "dynamic"
-		-- )
+	-- love.physics code starts here
+	self.body = love.physics.newBody(world, 
+		((self.position.x + self.image:getWidth()) / 2),
+		((self.position.y + self.image:getHeight()) / 2), 
+		"dynamic"
+		)
 		
-	-- self.shape = love.physics.newRectangleShape(
-		-- self.position.x,
-		-- self.position.y,
-		-- self.image:getWidth(), 
-		-- self.image:getHeight(),
-		-- 0)
+	self.shape = love.physics.newRectangleShape(
+		self.position.x,
+		self.position.y,
+		self.image:getWidth(), 
+		self.image:getHeight(),
+		0)
 		
-	-- self.fixture = love.physics.newFixture(self.body, self.shape, 1)
-	-- self.body:setLinearDamping( 0.001 )
-	-- self.fixture:setUserData("player")
+	self.fixture = love.physics.newFixture(self.body, self.shape, 1)
+	self.body:setLinearDamping( 0.001 )
+	self.fixture:setUserData("player")
 	-- self.body:setMassData(
 		-- (self.position.x + self.image:getWidth()) / 2,
 		-- (self.position.y + self.image:getHeight()) / 2,
 		-- 64,
 		-- 10)
-	
+	-- love.physics ends here
 end
 }
 
@@ -80,18 +85,18 @@ function Player:update(dt)
 	local delta = Vector(0,0)
 	
     if love.keyboard.isDown(self.keyleft) then
-        delta.x = -1
-		--self.body:applyForce(-400,0)
+        --delta.x = -1
+		self.body:applyForce(-400,0)
     elseif love.keyboard.isDown(self.keyright) then
-        delta.x =  1
-		--self.body:applyForce(0,400)
+        --delta.x =  1
+		self.body:applyForce(400,0)
     end
     if love.keyboard.isDown(self.keyup) then
-        delta.y = -1
-		--self.body:applyForce(0,-400)
+        --delta.y = -1
+		self.body:applyForce(0,-400)
     elseif love.keyboard.isDown(self.keydown) then
-        delta.y =  1
-		--self.body:applyForce(0,400)
+        --delta.y =  1
+		self.body:applyForce(0,400)
     end
 	
 	-- Want length 1 vector with correct x, y elements
@@ -115,11 +120,11 @@ function Player:update(dt)
 		self.velocity = Vector(0,0)
 	end
 
-    self.position = self.position + self.velocity * dt
-	self.collisionShape:moveTo(self.position.x + self.image:getWidth()/2,
-		self.position.y + self.image:getHeight()/2)
+    --self.position = self.position + self.velocity * dt
+	-- self.collisionShape:moveTo(self.position.x + self.image:getWidth()/2,
+		-- self.position.y + self.image:getHeight()/2)
 	--self.body:setPosition(self.position.x, self.position.y)
-	--self.position.x, self.position.y = self.body:getX(), self.body:getY()
+	self.position.x, self.position.y = self.body:getX(), self.body:getY()
 end
 
 function Player:draw()
