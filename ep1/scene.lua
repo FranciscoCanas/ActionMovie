@@ -88,7 +88,8 @@ function state:draw()
 	love.graphics.print("Scene Placeholder", 10, 10)
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
-	-- love.graphics.print(keypressed, 200, 30)
+	love.graphics.print(player1.facing.x, 200, 30)
+	love.graphics.print(player1.facing.y, 210, 30)
 end 
 
 function state:focus()
@@ -105,10 +106,10 @@ function state:keypressed(key)
 	keypressed = key
 end
 
-function state:keyreleased(key)
+function state:keyreleased(key) 
 	if key == "escape" then
 		-- quits to main menu
-		Gamestate.switch(Gamestate.epmenu)
+		Gamestate.switch(Gamestate.menu)
 	else
 		if player1.isplaying then
 			player1.keyReleaseHandler(key)
