@@ -273,6 +273,27 @@ function Animation:draw(image, x, y, r, sx, sy, ox, oy, ...)
   love.graphics.drawq(image, frame, x, y, r, sx, sy, ox, oy, ...)
 end
 
+-- Francisco added this quick little hat to do mirrored
+-- drawing of frames without using persistent flippedH
+-- or flippedV. We instead pass them in as parameters.
+function Animation:drawf(image, x, y, r, sx, sy, ox, oy, flippedH, flippedV, ...)
+  local frame = self.frames[self.position]
+  if flippedH or flippedV then
+    r,sx,sy,ox,oy = r or 0, sx or 1, sy or 1, ox or 0, oy or 0
+    local _,_,w,h = frame:getViewport()
+
+    if flippedH then
+      sx = sx * -1
+      ox = w - ox
+    end
+    if flippedV then
+      sy = sy * -1
+      oy = h - oy
+    end
+  end
+  love.graphics.drawq(image, frame, x, y, r, sx, sy, ox, oy, ...)
+end
+
 -----------------------------------------------------------
 
 local anim8 = {

@@ -6,13 +6,22 @@ function(self, image, position)
 	self:init()
 	
 	-- Set up anim8 for spritebatch animations:
-	self.grid = Anim8.newGrid(64, 64, 
+	self.frameDelay = 0.2
+	self.frameFlipH = false
+	self.frameFlipV = false
+	self.grid = Anim8.newGrid(128, 128, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
-	self.animation = Anim8.newAnimation('loop', 
+	self.standAnim = Anim8.newAnimation('loop', 
 			self.grid:getFrames(1,1),
-			0.1)
+			self.frameDelay)
+			
+	self.runAnim = Anim8.newAnimation('loop',
+		self.grid('2-3, 1'),
+		self.frameDelay)
+		
+	self.animation = self.standAnim
 	
 	-- love.physics code starts here
 	self.acceleration = 4000
@@ -93,14 +102,16 @@ function Enemy:update(dt)
 end
 
 function Enemy:draw()
-    self.animation:draw(self.image, 
+    self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
 				0, -- angle
 				1, -- x scale
 				1, -- y scale
 				0, -- x offset
-				0 -- y offset
+				0, -- y offset
+				self.frameFlipH,
+				self.frameFlipV
 				)
 end
 
