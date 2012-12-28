@@ -47,6 +47,7 @@ function(self, num)
 		-- self.image:getHeight())
 	
 	-- love.physics code starts here
+	self.facing = Vector(1,0) -- normalized direction vector
 	self.acceleration = 4000
 	self.damping = 15
 	self.density = 2
@@ -65,11 +66,10 @@ function(self, num)
 	self.fixture = love.physics.newFixture(
 		self.body, 
 		self.shape, 
-		self.density) -- density
+		self.density)
 		
 	self.body:setLinearDamping( self.damping )
 	
-	self.fixture:setUserData("player")
 	-- self.body:setMassData(
 		-- (self.position.x + self.image:getWidth()) / 2,
 		-- (self.position.y + self.image:getHeight()) / 2,
@@ -94,25 +94,32 @@ end
 function Player:update(dt)
 	-- delta holds direction of movement input
 	local delta = Vector(0,0)
+	local moved = false
 	
     if love.keyboard.isDown(self.keyleft) then
-        --delta.x = -1
+        delta.x = -1
 		self.body:applyForce(-self.acceleration,0)
+		moved = true
     elseif love.keyboard.isDown(self.keyright) then
-        --delta.x =  1
+        delta.x =  1
 		self.body:applyForce(self.acceleration,0)
-    end
-	
+		moved = true
+    end	
     if love.keyboard.isDown(self.keyup) then
-        --delta.y = -1
+        delta.y = -1
 		self.body:applyForce(0,-self.acceleration)
+		moved = true
     elseif love.keyboard.isDown(self.keydown) then
-        --delta.y =  1
+        delta.y =  1
 		self.body:applyForce(0,self.acceleration)
+		moved = true
     end
 	
 	-- Want length 1 vector with correct x, y elements
-    -- delta:normalize_inplace()
+    delta:normalize_inplace()
+	if moved then 
+		self.facing = delta
+	end
 
 	--compute velocity based on normalized delta and acceleration
     -- self.velocity = self.velocity + delta 

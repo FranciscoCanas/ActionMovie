@@ -5,6 +5,7 @@ Vector = require "hump.vector"
 Anim8 = require "anim8.anim8"
 -- Entities requires
 require "player"
+require "enemy"
 
 -- gamestate requires
 require "intro"
@@ -24,8 +25,6 @@ player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}
 
-
-
 function love.update()
 end
 
@@ -36,7 +35,8 @@ function love.load()
 	Gamestate.switch(Gamestate.intro)
 	
 	-- Graphic options:
-	love.graphics.setMode(dimScreen.x, 
+	love.graphics.setMode(
+		dimScreen.x, 
 		dimScreen.y, 
 		false, -- fullscreen
 		true, --vsync
