@@ -161,22 +161,14 @@ function Player:draw()
 end
 
 function Player:keyPressHandler(key)
-	-- if key == self.keyup then
-		-- self.body:applyForce(0,-40000)
-	-- elseif key == self.keydown then	
-		-- self.body:applyForce(0,40000)
-	-- elseif key == self.keyleft then
-		-- self.body:applyForce(-40000,0)
-	-- elseif key == self.keyright then
-		-- self.body:applyForce(40000,0)
-	-- end
+
 end
 
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
-		love.graphics.print("fire", 300, 300)
+		-- fire here
 	elseif key == self.keyroll then
-		love.graphics.print("roll", 300, 300)
+		-- animate roll here
 	end
 end
 
