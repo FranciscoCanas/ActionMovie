@@ -18,6 +18,7 @@ bullets = {}
 
 
 function state:init()	
+	self.started = false
 end
 
 function state:enter()
@@ -42,7 +43,8 @@ function state:enter()
 	camstatic = false -- does not.
 	camMaxZoom = 1.5
 	camMinZoom = 0.5
-		
+	
+	self.started = true
 end
 
 function state:leave()
@@ -119,6 +121,7 @@ function state:keyreleased(key)
 		if player1.isplaying then
 			player1.keyReleaseHandler(key)
 		end
+		
 		if player2.isplaying then
 			player2.keyReleaseHandler(key)
 		end

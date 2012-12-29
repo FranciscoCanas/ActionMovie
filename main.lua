@@ -7,6 +7,7 @@ Anim8 = require "anim8.anim8"
 -- Entities requires
 require "player"
 require "enemy"
+require "bullet"
 
 -- gamestate requires
 require "intro"
