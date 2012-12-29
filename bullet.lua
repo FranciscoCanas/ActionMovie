@@ -2,7 +2,7 @@ Bullet = Class{
 	function(self, shape, startpos, facing)
 		self.position = startpos
 		self.direction = facing
-		self.foce = 10000
+		self.force = 10000
 		self.vel = self.direction * self.force
 		self.damping = 0
 		self.density = 0.1
@@ -21,7 +21,7 @@ Bullet = Class{
 			
 		self.body:setLinearDamping(self.damping)
 		self.body:setBullet(true)
-		self.body:setLinearVelocity(self.vel.x, self.vel.y)
+		self.body:applyLinearImpulse(self.vel.x,self.vel.y)
 		
 	end
 }

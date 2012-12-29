@@ -92,6 +92,7 @@ function Player:init()
 	self.scale = 0.5
 	self.width = 64 -- size we will draw each frame at
 	self.height = 64 -- size we will draw each frame at
+	self.facing = Vector(1,0)
 	if self.pnum == 2 then
 		self.position = Vector(
 			dimScreen.x - (50 + self.width),
@@ -182,12 +183,22 @@ end
 function Player:keyPressHandler(key)
 end
 
+function Player:fire(self)
+		-- some weird stuff happening here.
+		-- self.facing is being passed in as null
+		-- and this event is being called when any key
+		-- is pressed, not just keyfire.
+		Bullet(null, self.position, self.facing)
+end
+
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
-		-- fire here
+		--self:fire(self)
 	elseif key == self.keyroll then
 		-- animate roll here
 	end
 end
+
+
 
 
