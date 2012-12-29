@@ -21,13 +21,13 @@ function state:draw()
 	if player1.isplaying then 
 		love.graphics.print("Player1",
 			60,
-			dimScreen.y - (player1.image:getHeight() + 50))
+			dimScreen.y - (player1.height + 50))
 		player1:draw()
 	end
 	if player2.isplaying then
 		love.graphics.print("Player2",
-			dimScreen.x - (40 + player2.image:getWidth()),
-			dimScreen.y - (player2.image:getHeight() + 50))
+			dimScreen.x - (40 + player2.width),
+			dimScreen.y - (player2.height + 50))
 		player2:draw()
 	end
 end 

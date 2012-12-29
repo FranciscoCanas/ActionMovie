@@ -28,22 +28,22 @@ function state:draw()
 	if player1.isplaying then 
 		love.graphics.print("Player1",
 			60,
-			dimScreen.y - (player1.image:getHeight() + 50))
+			dimScreen.y - (player1.height + 50))
 		player1:draw()
 	else
 		love.graphics.print("Press F to join",
 			60,
-			dimScreen.y - (player1.image:getHeight() + 50))
+			dimScreen.y - (player1.height + 50))
 	end
 	if player2.isplaying then
 		love.graphics.print("Player2",
-			dimScreen.x - (40 + player2.image:getWidth()),
-			dimScreen.y - (player2.image:getHeight() + 50))
+			dimScreen.x - (40 + player2.width),
+			dimScreen.y - (player2.height + 50))
 		player2:draw()
 	else
 		love.graphics.print("Press J to join",
-			dimScreen.x - (40 + player2.image:getWidth()),
-			dimScreen.y - (player2.image:getHeight() + 50))
+			dimScreen.x - (40 + player2.width),
+			dimScreen.y - (player2.height + 50))
 	end
 end 
 
