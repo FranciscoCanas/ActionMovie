@@ -12,6 +12,7 @@ local keypressed = "none"
 -- Stuffs local to scene
 enemies = {}
 bullets = {}
+map = ATL.Loader.load("maps/road.tmx") 
 
 function state:init()	
 end
@@ -64,6 +65,7 @@ function state:draw()
 	-- Game objects and anything in the scene's physical space
 	-- will go here.
 	cam:attach()
+	map:draw()
 	love.graphics.print("Attached to cam for reference", 30,30)
 	if (player1.isplaying and player2.isplaying) then
 		if player1.position.y >= player2.position.y then
