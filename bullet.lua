@@ -1,5 +1,7 @@
 Bullet = Class{
 	function(self, shape, startpos, facing)
+		self.radius = 10
+		self.segments = 5
 		self.position = startpos
 		self.direction = facing
 		self.force = 10000
@@ -31,9 +33,11 @@ function Bullet:update(dt)
 end
 
 function Bullet:Draw()
+	love.graphics.setColor(255,0,0)
 	love.graphics.circle(fill,
 		self.position.x,
 		self.position.y,
 		self.radius,
 		self.segments)
+		
 end

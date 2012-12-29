@@ -184,16 +184,16 @@ function Player:keyPressHandler(key)
 end
 
 function Player:fire()
-		-- some weird stuff happening here.
-		-- self.facing is being passed in as null
-		-- and this event is being called when any key
-		-- is pressed, not just keyfire.
-		Bullet(null, self.position, self.facing)
+		-- figure out origin to fire from first
+		local pos = Vector(0,0)
+		pos.x, pos.y = self.body:getWorldCenter()
+		pos = pos + self.facing * 25
+		Bullet(null, pos, self.facing)
 end
 
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
-		--self:fire()
+		self:fire()
 	elseif key == self.keyroll then
 		-- animate roll here
 	end
