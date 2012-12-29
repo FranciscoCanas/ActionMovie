@@ -3,7 +3,6 @@ Gamestate = require "hump.gamestate"
 Class = require "hump.class"
 Vector = require "hump.vector"
 Anim8 = require "anim8.anim8"
-ATL = require("AdvTiledLoader")
 
 -- Entities requires
 require "player"
@@ -27,9 +26,6 @@ world = love.physics.newWorld(
 player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}
-
---  Set maps/ as the base directory for map loading
---ATL.Loader.path = 'maps/'
 
 function love.update()
 end
