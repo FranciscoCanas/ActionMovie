@@ -183,7 +183,7 @@ end
 function Player:keyPressHandler(key)
 end
 
-function Player:fire(self)
+function Player:fire()
 		-- some weird stuff happening here.
 		-- self.facing is being passed in as null
 		-- and this event is being called when any key
@@ -193,7 +193,7 @@ end
 
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
-		--self:fire(self)
+		--self:fire()
 	elseif key == self.keyroll then
 		-- animate roll here
 	end

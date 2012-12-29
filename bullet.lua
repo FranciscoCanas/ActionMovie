@@ -26,6 +26,14 @@ Bullet = Class{
 	end
 }
 
+function Bullet:update(dt)
+	self.position.x, self.position.y = self.body:getX(), self.body:getY()
+end
+
 function Bullet:Draw()
-	
+	love.graphics.circle(fill,
+		self.position.x,
+		self.position.y,
+		self.radius,
+		self.segments)
 end

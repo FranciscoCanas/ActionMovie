@@ -119,11 +119,11 @@ function state:keyreleased(key)
 		Gamestate.switch(Gamestate.menu)
 	else
 		if player1.isplaying then
-			player1.keyReleaseHandler(key)
+			player1:keyReleaseHandler(key)
 		end
 		
 		if player2.isplaying then
-			player2.keyReleaseHandler(key)
+			player2:keyReleaseHandler(key)
 		end
 	end	
 end
