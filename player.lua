@@ -54,16 +54,17 @@ function(self, num)
 	self.density = 2
 	
 	self.body = love.physics.newBody(world, 
-		((self.position.x + self.width) / 4),
-		((self.position.y + self.height) / 6), 
+		((self.position.x + self.width) / 2 ),
+		((self.position.y + self.height) / 2 ), 
 		--self.position.x,
 		--self.position.y,
 		"dynamic"
 		)
+	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
-		self.width / 3,
-		self.height / 2
+		self.width /3,
+		self.height /3
 		)
 		
 	self.fixture = love.physics.newFixture(
@@ -139,10 +140,13 @@ function Player:update(dt)
 		self.animation = self.standAnim
 	end
 
-	self.position.x, self.position.y = self.body:getX(), self.body:getY()
+	self.position.x, self.position.y = self.body:getX() - self.width / 2, 
+		self.body:getY() - self.height / 2
 end
 
 function Player:draw()
+love.graphics.polygon("fill", 
+		self.body:getWorldPoints(self.shape:getPoints()))
     self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
@@ -154,8 +158,7 @@ function Player:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
-    love.graphics.polygon("fill", 
-		self.body:getWorldPoints(self.shape:getPoints()))
+    
 end
 
 function Player:keyPressHandler(key)

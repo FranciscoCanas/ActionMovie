@@ -33,10 +33,11 @@ function(self, image, position)
 	self.density = 2
 	
 	self.body = love.physics.newBody(world, 
-		((self.position.x + self.image:getWidth()) / 4),
-		((self.position.y + self.image:getHeight()) / 6), 
+		((self.position.x + self.image:getWidth()) / 2),
+		((self.position.y + self.image:getHeight()) / 3), 
 		"dynamic"
 		)
+	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
 		self.image:getWidth() / 3,
