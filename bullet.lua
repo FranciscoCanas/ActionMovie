@@ -1,6 +1,6 @@
 Bullet = Class{
 	function(self, shape, startpos, facing)
-		self.radius = 10
+		self.radius = 3
 		self.segments = 5
 		self.position = startpos
 		self.direction = facing
@@ -14,7 +14,7 @@ Bullet = Class{
 			self.position.y,
 			"dynamic")
 			
-		self.shape = love.physics.newCircleShape(3)
+		self.shape = love.physics.newCircleShape(self.radius)
 		
 		self.fixture = love.physics.newFixture(
 			self.body,

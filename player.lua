@@ -23,7 +23,7 @@ function(self, num)
 	end
 	self:init()
 	
-	-- Set up anim8 for spritebatch animations:
+	-- Set up anim8 for spritebatch animations -----------------------------
 	self.frameDelay = 0.2
 	self.frameFlipH = false
 	self.frameFlipV = false
@@ -38,23 +38,16 @@ function(self, num)
 	self.runAnim = Anim8.newAnimation('loop',
 		self.grid('2-3, 1'),
 		self.frameDelay)
+	
+	-- ready for shooting animation here:
+	-- self.shootingAnim = Anim8.newAnimation('loop',
+		-- self.grid('1-2, 2'),
+		-- self.frameDelay)
 		
 	self.animation = self.standAnim
+	
 
-	-- This stuff used for non-love.physics based motion
-	-- self.velocity = Vector(0,0)
-	-- self.acceleration = 10000
-	-- self.max_velocity = 500
-	-- self.drag = 0.96
-	-- end of stuff used for non-physics based motion
-	
-	-- Collision detection init using hardon collider
-	-- self.collisionShape = Collider:addRectangle(self.position.x,
-		-- self.position.y,
-		-- self.image:getWidth(),
-		-- self.image:getHeight())
-	
-	-- love.physics code starts here
+	-- love.physics code starts here -----------------------------------------
 	self.facing = Vector(1,0) -- normalized direction vector
 	self.acceleration = 4000
 	self.damping = 15
@@ -98,6 +91,7 @@ function Player:init()
 	self.width = 64 -- size we will draw each frame at
 	self.height = 64 -- size we will draw each frame at
 	self.facing = Vector(1,0)
+	
 	if self.pnum == 2 then
 		self.position = Vector(
 			dimScreen.x - (50 + self.width),
@@ -144,30 +138,6 @@ function Player:update(dt)
 		self.animation = self.standAnim
 	end
 
-	--compute velocity based on normalized delta and acceleration
-    -- self.velocity = self.velocity + delta 
-		-- * self.acceleration * dt
-	
-	-- add drag so player stops when keys released
-	-- with inertia
-	-- self.velocity = self.velocity * self.drag
-
-	-- clamp upper velocity bound
-    -- if self.velocity:len() > self.max_velocity then
-        -- self.velocity = self.velocity:normalized() * self.max_velocity
-    -- end
-	
-	-- clamp lower velocity bound
-	-- if self.velocity:len() < 1 then
-		-- self.velocity = Vector(0,0)
-	-- end
-
-	-- This code used for none love.physics movement:
-		--self.position = self.position + self.velocity * dt
-		-- self.collisionShape:moveTo(self.position.x + self.image:getWidth()/2,
-			-- self.position.y + self.image:getHeight()/2)
-		--self.body:setPosition(self.position.x, self.position.y)
-	
 	self.position.x, self.position.y = self.body:getX(), self.body:getY()
 end
 

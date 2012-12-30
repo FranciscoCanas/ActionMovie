@@ -22,8 +22,9 @@ function state:init()
 end
 
 function state:enter()
-	-- Init collisions
-	--Collider:setCallbacks(self:collide)
+	-- initialize world here
+	-- world:setGravity(0,9.8*love.physics.getMeter())
+
 	-- Initialize players here
 	if player1.isplaying then
 		player1.position = Vector(100,100)
@@ -32,21 +33,21 @@ function state:enter()
 		player2.position = Vector(200,100)
 	end
 
-	--make objects in map solid
+	-- make objects in map solid
 	background:createObjects()
 
-	-- set up cam
+	-- set up camera ------------------------------------
 	cam = Camera(player1.position.x, player1.position.y, 
 		1, -- zoom level
 		0 -- rotation angle
 		)
 		
-	-- The type of camera used.
 	camfollows = true -- follows players around.
 	camstatic = false -- does not.
-	camMaxZoom = 1.5
+	camMaxZoom = 2.0
 	camMinZoom = 0.5
-	
+	camZoomRatio = 500
+	-- camera code ends here --
 	self.started = true
 end
 
@@ -149,9 +150,9 @@ function state:movecam()
 			x = (player1.position.x + player2.position.x) / 2
 			y = (player1.position.y + player2.position.y) / 2
 			dist = (player1.position - player2.position):len()
-			zoom = 600 / dist 
-			if zoom > camMaxZoom then zoom = 1.5 end
-			if zoom < camMinZoom then zoom = 0.5 end
+			zoom = camZoomRatio / dist 
+			if zoom > camMaxZoom then zoom = camMaxZoom end
+			if zoom < camMinZoom then zoom = camMinZoom end
 		elseif player1.isplaying and (not player2.isplaying) then
 			x = player1.position.x
 			y = player1.position.y
@@ -170,9 +171,4 @@ function state:movecam()
 	cam:zoomTo(zoom)
 end
 
--- Collision handling local to this particular scene. May instead choose to implement
--- on a game-wide basis so all scenes have the exact same detection and handling.
-function collide(dt, shape_one, shape_two, dx, dy)
-
-end
 
