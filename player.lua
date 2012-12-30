@@ -56,6 +56,8 @@ function(self, num)
 	self.body = love.physics.newBody(world, 
 		((self.position.x + self.width) / 4),
 		((self.position.y + self.height) / 6), 
+		--self.position.x,
+		--self.position.y,
 		"dynamic"
 		)
 
@@ -133,7 +135,6 @@ function Player:update(dt)
 	if moved then 
 		self.facing = delta
 		self.animation = self.runAnim
-		
 	else
 		self.animation = self.standAnim
 	end
@@ -153,7 +154,8 @@ function Player:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
-    love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+    love.graphics.polygon("fill", 
+		self.body:getWorldPoints(self.shape:getPoints()))
 end
 
 function Player:keyPressHandler(key)

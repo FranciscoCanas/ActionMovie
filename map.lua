@@ -34,6 +34,9 @@ function Map:createObjects()
 			obstacles[x..","..y].fixture = love.physics.newFixture(
 				obstacles[x..",".. y].body, 
 				obstacles[x..",".. y].shape)
+				
+			-- Use this to detect obstacles when handling collisions	
+			obstacles[x..","..y].fixture:setUserData("Obstacle")
 		end
 	end
 end
