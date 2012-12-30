@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="City" tilewidth="32" tileheight="32">
-  <image source="cement.png" width="32" height="32"/>
+  <image source="cement.png" width="96" height="32"/>
+  <tile id="1">
+   <properties>
+    <property name="name" value="red cross"/>
+    <property name="obstacle" value="true"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="name" value="green cross"/>
+    <property name="obstacle" value="false"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="Tile Layer 1" width="100" height="100">
+ <layer name="Ground" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMBKH7/qUHy6Hgqqmqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv8AX0MnEQ==
+   eJzt1bENACAMA7AW/v+ZCzoiEeHBS6YsUbqqGiDQGvL9QDcAckx/wn0+O4+9gB0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/OIA718nGQ==
   </data>
  </layer>
 </map>

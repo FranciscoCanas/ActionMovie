@@ -178,6 +178,7 @@ function Player:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
+    love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
 end
 
 function Player:keyPressHandler(key)

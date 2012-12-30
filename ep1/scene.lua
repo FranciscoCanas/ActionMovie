@@ -31,7 +31,10 @@ function state:enter()
 	if player2.isplaying then
 		player2.position = Vector(200,100)
 	end
-	
+
+	--make objects in map solid
+	background:createObjects()
+
 	-- set up cam
 	cam = Camera(player1.position.x, player1.position.y, 
 		1, -- zoom level
