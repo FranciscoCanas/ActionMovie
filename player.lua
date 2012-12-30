@@ -75,6 +75,10 @@ function(self, num)
 		self.body, 
 		self.shape, 
 		self.density)
+	-- awkward but absolutely needed to pull out the
+	-- object that owns the fixture during collision
+	-- detection:
+	self.fixture:setUserData(self)
 		
 	self.body:setLinearDamping( self.damping )
 	
@@ -88,6 +92,7 @@ end
 }
 
 function Player:init()
+	self.health = 10
 	self.isplaying = false
 	self.scale = 0.5
 	self.width = 64 -- size we will draw each frame at
@@ -200,6 +205,12 @@ function Player:keyReleaseHandler(key)
 	end
 end
 
+-- Resolve being shot here.
+-- called by world collision callback in main.lua
+function Player:isShot(bullet, collision)
+	self.health = self.health - 1
+	bullet.body:destroy()
+end
 
 
 

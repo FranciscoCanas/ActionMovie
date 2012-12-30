@@ -43,6 +43,12 @@ function(self, image, position)
 		self.body, 
 		self.shape, 
 		self.density) -- density
+	
+	-- awkward but absolutely needed to pull out the
+	-- object that owns the fixture during collision
+	-- detection:
+	self.fixture:setUserData(self)	
+		
 		
 	self.body:setLinearDamping( self.damping )
 end
@@ -113,6 +119,13 @@ function Enemy:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
+end
+
+
+-- Resolve being shot here.
+-- called by world collision callback in main.lua
+function Enemy:isShot(bullet, collision)
+
 end
 
 

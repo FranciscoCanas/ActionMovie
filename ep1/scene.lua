@@ -100,6 +100,7 @@ function state:draw()
 	-- love.graphics.print(player1.position.y, 220, 10)
 	love.graphics.print(player1.facing.x, 200, 30)
 	love.graphics.print(player1.facing.y, 210, 30)
+	love.graphics.print(player1.health, 50, 50)
 end 
 
 function state:focus()

@@ -20,6 +20,11 @@ Bullet = Class{
 			self.body,
 			self.shape,
 			self.density)
+		
+		-- awkward but absolutely needed to pull out the
+		-- object that owns the fixture during collision
+		-- detection:
+		self.fixture:setUserData(self)
 			
 		self.body:setLinearDamping(self.damping)
 		self.body:setBullet(true)

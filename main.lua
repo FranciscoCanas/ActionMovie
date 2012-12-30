@@ -45,4 +45,32 @@ function love.load()
 		true, --vsync
 		0 -- antialiasing
 		)
+		
+	-- universal world callbacks here:
+	world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+end
+
+
+-- love.physics collision callbacks get defined here since they
+-- will be universal to all scenes/episodes
+-- a is the first fixture involved in the collision
+-- b is the second
+-- coll is the collision object created
+function beginContact(a, b, coll)
+	local a, b = a:getUserData(), b:getUserData()
+
+	if (a:is_a(Bullet) and (b:is_a(Player) or b:is_a(Enemy))) then
+		b:isShot(a, coll)
+	elseif (b:is_a(Bullet) and (a:is_a(Player) or a:is_a(Enemy))) then
+		a:isShot(b, coll)
+	end
+end
+
+function endContact(a, b, coll)
+end
+
+function preSolve(a, b, coll)
+end
+
+function postSolve(a, b, coll)
 end
