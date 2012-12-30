@@ -1,5 +1,6 @@
 Bullet = Class{
 	function(self, shape, startpos, facing)
+		self.impacted = false
 		self.radius = 3
 		self.segments = 5
 		self.position = startpos
@@ -37,12 +38,18 @@ function Bullet:update(dt)
 	self.position.x, self.position.y = self.body:getX(), self.body:getY()
 end
 
-function Bullet:Draw()
-	love.graphics.setColor(255,0,0)
-	love.graphics.circle(fill,
+function Bullet:draw()
+	--love.graphics.setColor(255,0,0)
+	love.graphics.circle('fill',
 		self.position.x,
 		self.position.y,
 		self.radius,
 		self.segments)
-		
+	--love.graphics.clear()	
+end
+
+function Bullet:impact()
+	-- we'll put some particle effects bitnez here
+	self.impacted = true
+	self.body:destroy()
 end

@@ -61,8 +61,16 @@ function state:update(dt)
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying then
-			player:update(dt)
-			player.animation:update(dt)
+			player:update(math.min(dt, 1/60))
+			player.animation:update(math.min(dt, 1/60))
+		end
+	end
+	
+	for i,bullet in ipairs(bullets) do
+		if bullet.impacted then 
+			table.remove(bullets, i)
+		else 
+			bullet:update(math.min(dt,1/60))
 		end
 	end
 	state:movecam() -- Update camera. See movecam func below.
@@ -90,6 +98,10 @@ function state:draw()
 				player:draw()
 				end
 		end
+	end
+	
+	for i,bullet in ipairs(bullets) do
+		bullet:draw()
 	end
 	cam:detach()
 	

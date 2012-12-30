@@ -10,6 +10,28 @@ Map = Class {
 	end
 }
 
+-- Made obstacle class so we could more consistently
+-- handle collisions in the main:beginContact function
+Obstacle = Class {
+	function(self, map, x, y)
+		self.body = love.physics.newBody(world, 
+			((x * map.tileWidth) + map.tileWidth / 2),
+			((y * map.tileHeight) + map.tileHeight / 2))
+
+		self.shape = love.physics.newRectangleShape(
+			map.tileWidth,
+			map.tileHeight
+			)
+			
+		self.fixture = love.physics.newFixture(
+			self.body, 
+			self.shape)
+			
+		-- Use this to detect obstacles when handling collisions	
+		self.fixture:setUserData(self)
+	end
+}
+
 function Map:draw() 
 	map:draw()
 	for id, object in next,obstacles,nil do
@@ -21,22 +43,7 @@ end
 function Map:createObjects() 
 	for x, y, tile in map("Ground"):iterate() do
 		if tile.properties.obstacle then
-			obstacles[x..","..y] = {}
-			obstacles[x..","..y].body = love.physics.newBody(world, 
-				((x * map.tileWidth) + map.tileWidth / 2),
-				((y * map.tileHeight) + map.tileHeight / 2))
-
-			obstacles[x..","..y].shape = love.physics.newRectangleShape(
-				map.tileWidth,
-				map.tileHeight
-				)
-				
-			obstacles[x..","..y].fixture = love.physics.newFixture(
-				obstacles[x..",".. y].body, 
-				obstacles[x..",".. y].shape)
-				
-			-- Use this to detect obstacles when handling collisions	
-			obstacles[x..","..y].fixture:setUserData("Obstacle")
+			obstacles[x..","..y] = Obstacle(map, x, y)
 		end
 	end
 end

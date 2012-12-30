@@ -59,15 +59,17 @@ end
 function beginContact(a, b, coll)
 	local a, b = a:getUserData(), b:getUserData()
 	
-	-- if it's an obstacle, let the physics handle it 
-	-- without special treatment
-	if (a=="Obstacle" or b=="Obstacle") then return end
 	
+	
+	-- if we've got a bullet and a person...
 	if (a:is_a(Bullet) and (b:is_a(Player) or b:is_a(Enemy))) then
 		b:isShot(a, coll)
 	elseif (b:is_a(Bullet) and (a:is_a(Player) or a:is_a(Enemy))) then
 		a:isShot(b, coll)
 	end
+	
+	if (a:is_a(Bullet)) then a:impact() end
+	if (b:is_a(Bullet)) then b:impact() end
 end
 
 function endContact(a, b, coll)

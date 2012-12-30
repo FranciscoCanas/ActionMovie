@@ -140,13 +140,13 @@ function Player:update(dt)
 		self.animation = self.standAnim
 	end
 
-	self.position.x, self.position.y = self.body:getX() - self.width / 2, 
+	self.position.x, self.position.y = 
+		self.body:getX() - self.width / 2, 
 		self.body:getY() - self.height / 2
 end
 
 function Player:draw()
-love.graphics.polygon("fill", 
-		self.body:getWorldPoints(self.shape:getPoints()))
+--love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
     self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
@@ -169,7 +169,7 @@ function Player:fire()
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
 		pos = pos + self.facing * 25
-		Bullet(null, pos, self.facing)
+		table.insert(bullets,Bullet(null, pos, self.facing))
 end
 
 function Player:keyReleaseHandler(key)
@@ -184,7 +184,7 @@ end
 -- called by world collision callback in main.lua
 function Player:isShot(bullet, collision)
 	self.health = self.health - 1
-	bullet.body:destroy()
+	
 end
 
 
