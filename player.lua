@@ -18,7 +18,7 @@ function(self, num)
 		self.keydown = "l"
 		self.keyfire = "j"
 		self.keyroll = "h" 
-		self.image = love.graphics.newImage('art/ManRun.png')
+		self.image = love.graphics.newImage('art/ManSprite.png')
 		
 	end
 	self:init()
@@ -40,9 +40,9 @@ function(self, num)
 		self.frameDelay)
 
 	--ready for shooting animation here:
-	-- self.shootingAnim = Anim8.newAnimation('loop',
-	-- 	self.grid('1-2, 2'),
-	-- 	self.frameDelay)
+	self.shootingAnim = Anim8.newAnimation('loop',
+		self.grid('1-2, 2'),
+		self.frameDelay)
 		
 	self.animation = self.standAnim
 	
