@@ -8,7 +8,7 @@ function(self, num)
 		self.keydown = "s"
 		self.keyfire = "f"
 		self.keyroll = "g" 
-		self.image = love.graphics.newImage('art/WomenRun.png')
+		self.image = love.graphics.newImage('art/WomanSprite.png')
 		
 	elseif num == 2 then
 		self.pnum = 2
@@ -38,11 +38,11 @@ function(self, num)
 	self.runAnim = Anim8.newAnimation('loop',
 		self.grid('2-3, 1'),
 		self.frameDelay)
-	
-	-- ready for shooting animation here:
+
+	--ready for shooting animation here:
 	-- self.shootingAnim = Anim8.newAnimation('loop',
-		-- self.grid('1-2, 2'),
-		-- self.frameDelay)
+	-- 	self.grid('1-2, 2'),
+	-- 	self.frameDelay)
 		
 	self.animation = self.standAnim
 	
