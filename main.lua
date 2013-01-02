@@ -3,6 +3,7 @@ Gamestate = require "hump.gamestate"
 Class = require "hump.class"
 Vector = require "hump.vector"
 Anim8 = require "anim8.anim8"
+Timer = require "hump.timer"
 
 -- Entities requires
 require "player"
@@ -28,7 +29,8 @@ player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}
 
-function love.update()
+function love.update(dt)
+	
 end
 
 -- call this last so gamestate events get registered.

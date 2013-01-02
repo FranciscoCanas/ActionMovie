@@ -4,6 +4,7 @@ function(self, image, position)
 	self.position = position
 	self.isalive = true
 	self.health = 3
+	self.fired = false
 	
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.2
@@ -21,13 +22,14 @@ function(self, image, position)
 		self.grid('2-3, 1'),
 		self.frameDelay)
 		
-	-- self.shootAnim = Anim8.newAnimation('loop',
-		-- self.grid('1-1, 2'),
-		-- self.frameDelay)
+	self.shootAnim = Anim8.newAnimation('loop',
+		self.grid('1-2, 2'),
+		self.frameDelay)
 		
 	self.animation = self.standAnim
 	
 	-- love.physics code starts here
+	self.facing = Vector(-1,0)
 	self.acceleration = 4000
 	self.damping = 15
 	self.density = 2
@@ -84,11 +86,21 @@ function Enemy:update(dt)
 		self.body:applyForce(0,self.acceleration)
     end
 	
-	self.position.x, self.position.y = self.body:getX(), self.body:getY()
+	-- Handle the animation switching here as needed:
+	if not self.fired then
+		if moved then 
+			self.facing = delta
+			self.animation = self.runAnim
+		else
+			self.animation = self.standAnim
+		end
+	end
+	
+	self.position.x, self.position.y = 
+		self.body:getX() - self.width / 2, 
+		self.body:getY() - self.height / 2
 end
 
-function Enemy:update(dt)
-end
 
 function Enemy:draw()
     self.animation:drawf(self.image, 
@@ -104,11 +116,28 @@ function Enemy:draw()
 				)
 end
 
+function Enemy:fire()
+		-- do the animation
+		self.fired = true
+		self.animation = self.shootingAnim
+		self.animation:gotoFrame(1)
+		self.timer:add(0.5, function() self:stopFire() end)
+		-- figure out origin to fire from first
+		local pos = Vector(0,0)
+		pos.x, pos.y = self.body:getWorldCenter()
+		pos = pos + self.facing * 25
+		table.insert(bullets,Bullet(null, pos, self.facing))
+end
+
+function Enemy:stopFire()
+	self.fired = false
+	self.animation = self.standAnim
+end
 
 -- Resolve being shot here.
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
-
+	self.health = self.health - 1
 end
 
 

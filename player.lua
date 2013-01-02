@@ -22,6 +22,8 @@ function(self, num)
 		
 	end
 	self:init()
+	-- Set up for Timers
+	self.timer = Timer.new()
 	
 	-- Set up anim8 for spritebatch animations -----------------------------
 	self.frameDelay = 0.2
@@ -94,6 +96,7 @@ function Player:init()
 	self.width = 64 -- size we will draw each frame at
 	self.height = 64 -- size we will draw each frame at
 	self.facing = Vector(1,0)
+	self.fired = false
 	
 	if self.pnum == 2 then
 		self.position = Vector(
@@ -106,38 +109,46 @@ function Player:init()
 end
 
 function Player:update(dt)
+	-- Inc timers
+	self.timer:update(dt)
 	-- delta holds direction of movement input
 	local delta = Vector(0,0)
 	local moved = false
 	
-    if love.keyboard.isDown(self.keyleft) then
-        delta.x = -1
-		self.body:applyForce(-self.acceleration,0)
-		moved = true
-		self.frameFlipH = true
-    elseif love.keyboard.isDown(self.keyright) then
-        delta.x =  1
-		self.body:applyForce(self.acceleration,0)
-		moved = true
-		self.frameFlipH = false
-    end	
-    if love.keyboard.isDown(self.keyup) then
-        delta.y = -1
-		self.body:applyForce(0,-self.acceleration)
-		moved = true
-    elseif love.keyboard.isDown(self.keydown) then
-        delta.y =  1
-		self.body:applyForce(0,self.acceleration)
-		moved = true
-    end
+	if not self.fired then
+		if love.keyboard.isDown(self.keyleft) then
+			delta.x = -1
+			self.body:applyForce(-self.acceleration,0)
+			moved = true
+			self.frameFlipH = true
+		elseif love.keyboard.isDown(self.keyright) then
+			delta.x =  1
+			self.body:applyForce(self.acceleration,0)
+			moved = true
+			self.frameFlipH = false
+		end	
+		if love.keyboard.isDown(self.keyup) then
+			delta.y = -1
+			self.body:applyForce(0,-self.acceleration)
+			moved = true
+		elseif love.keyboard.isDown(self.keydown) then
+			delta.y =  1
+			self.body:applyForce(0,self.acceleration)
+			moved = true
+		end
+	end
 	
 	-- Want length 1 vector with correct x, y elements
     delta:normalize_inplace()
-	if moved then 
-		self.facing = delta
-		self.animation = self.runAnim
-	else
-		self.animation = self.standAnim
+	
+	-- Handle the animation switching here as needed:
+	if not self.fired then
+		if moved then 
+			self.facing = delta
+			self.animation = self.runAnim
+		else
+			self.animation = self.standAnim
+		end
 	end
 
 	self.position.x, self.position.y = 
@@ -165,11 +176,26 @@ function Player:keyPressHandler(key)
 end
 
 function Player:fire()
+		-- do the animation
+		self.fired = true
+		self.animation = self.shootingAnim
+		self.animation:gotoFrame(1)
+		self.timer:add(0.5, function() 
+								self:stopFire() 
+							end)
 		-- figure out origin to fire from first
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
 		pos = pos + self.facing * 25
-		table.insert(bullets,Bullet(null, pos, self.facing))
+		
+		self.timer:add(0.25, function()	
+			table.insert(bullets,Bullet(null, pos, self.facing)) 
+		end)
+end
+
+function Player:stopFire()
+	self.fired = false
+	self.animation = self.standAnim
 end
 
 function Player:keyReleaseHandler(key)
