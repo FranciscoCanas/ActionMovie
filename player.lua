@@ -201,6 +201,7 @@ end
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
 		self:fire()
+		self.animation = self.shootingAnim
 	elseif key == self.keyroll then
 		-- animate roll here
 	end

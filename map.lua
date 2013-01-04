@@ -3,10 +3,14 @@
 local ATL = require("AdvTiledLoader")
 local map
 obstacles = {}
+ATL.Loader.path = 'maps/'
+
+-- Define the translation
+local tx, ty = 0, 0
 
 Map = Class {
 	function(self, scene)
-		map = ATL.Loader.load("maps/" .. scene) 
+		map = ATL.Loader.load(scene..".tmx") 
 	end
 }
 
@@ -33,10 +37,18 @@ Obstacle = Class {
 }
 
 function Map:draw() 
+	-- Apply the translation
+	love.graphics.translate( math.floor(tx), math.floor(ty) )
+	
+	-- Set the draw range. Setting this will significantly increase drawing performance.
+	map:autoDrawRange( math.floor(tx), math.floor(ty), 1, pad)
+	
+	-- Draw the map
 	map:draw()
-	for id, object in next,obstacles,nil do
-		love.graphics.polygon("fill", object.body:getWorldPoints(object.shape:getPoints()))
-	end	
+
+	-- for id, object in next,obstacles,nil do
+	-- 	love.graphics.polygon("fill", object.body:getWorldPoints(object.shape:getPoints()))
+	-- end	
 end
 
 --iterate through map to create objects that players can't pass through as defined in the map
