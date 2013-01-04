@@ -96,7 +96,8 @@ function Player:init()
 	self.width = 64 -- size we will draw each frame at
 	self.height = 64 -- size we will draw each frame at
 	self.facing = Vector(1,0)
-	self.fired = false
+	self.fired = false -- keeps track of shooting state
+	self.isalive = true -- keeps track of aliveness. duh.
 	
 	if self.pnum == 2 then
 		self.position = Vector(

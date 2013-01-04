@@ -49,6 +49,11 @@ function state:enter()
 	camZoomRatio = 500
 	-- camera code ends here --
 	self.started = true
+	
+	-- set up some baddies here --
+	-- table.insert(enemies, 
+		-- Enemy(love.graphics.newImage('art/gunman.png'),
+		-- Vector(400,800)))
 end
 
 function state:leave()
@@ -64,6 +69,13 @@ function state:update(dt)
 		if player.isplaying then
 			player:update(math.min(dt, 1/60))
 			player.animation:update(math.min(dt, 1/60))
+		end
+	end
+	
+	for i,enemy in ipairs(enemies) do
+		if enemy.isalive then
+			enemy:update(math.min(dt,1/60))
+			enemy.animation:update(math.min(dt,1/60))
 		end
 	end
 	
@@ -99,6 +111,10 @@ function state:draw()
 				player:draw()
 				end
 		end
+	end
+	
+	for i,enemy in ipairs(enemies) do
+		enemy:draw()
 	end
 	
 	for i,bullet in ipairs(bullets) do

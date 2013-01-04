@@ -1,29 +1,32 @@
 Enemy = Class{
 function(self, image, position)
-	self.image = love.graphics.newImage(image)
+	--self.image = love.graphics.newImage(image)
+	self:init()
 	self.position = position
-	self.isalive = true
-	self.health = 3
-	self.fired = false
 	
+	self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.2
 	self.frameFlipH = false
 	self.frameFlipV = false
-	self.grid = Anim8.newGrid(128, 128, 
+	self.grid = Anim8.newGrid(80, 94, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
 	self.standAnim = Anim8.newAnimation('loop', 
-			self.grid:getFrames(1,1),
+			self.grid:getFrames('1-8, 1'),
 			self.frameDelay)
 			
 	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('2-3, 1'),
+		self.grid('1-3, 2'),
 		self.frameDelay)
 		
 	self.shootAnim = Anim8.newAnimation('loop',
-		self.grid('1-2, 2'),
+		self.grid('1-2, 3'),
+		self.frameDelay)
+		
+	self.diesAnim = Anim8.newAnimation('loop',
+		self.grid('4-8, 3'),
 		self.frameDelay)
 		
 	self.animation = self.standAnim
@@ -44,8 +47,8 @@ function(self, image, position)
 	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
-		self.image:getWidth() / 3,
-		self.image:getHeight() / 3
+		self.width / 3,
+		self.height
 		)
 		
 	self.fixture = love.physics.newFixture(
@@ -64,30 +67,39 @@ end
 }
 
 function Enemy:init()
+	self.isalive = true
+	self.health = 3
+	self.fired = false
+	self.target = nil
+	self.destination = nil
+	self.maxTargetRange = 500
+	self.shootRange = 250
+	self.width = 64
+	self.height = 64
 end
 
 function Enemy:update(dt)
 	-- delta holds direction of movement input
 	local delta = Vector(0,0)
 	
-    if love.keyboard.isDown(self.keyleft) then
-        --delta.x = -1
-		self.body:applyForce(-self.acceleration,0)
-    elseif love.keyboard.isDown(self.keyright) then
-        --delta.x =  1
-		self.body:applyForce(self.acceleration,0)
-    end
-	
-    if love.keyboard.isDown(self.keyup) then
-        --delta.y = -1
-		self.body:applyForce(0,-self.acceleration)
-    elseif love.keyboard.isDown(self.keydown) then
-        --delta.y =  1
-		self.body:applyForce(0,self.acceleration)
-    end
-	
+   
 	-- Handle the animation switching here as needed:
 	if not self.fired then
+		-- decide where/if to move here
+		if not self.target then
+			self:SetNearestTarget()
+		end
+		
+		if self.target then 
+			self:DirToTarget(delta)
+		end
+		
+		if (delta.x ~= 0) and (delta.y ~= 0) then
+			moved = true
+			delta = delta * self.acceleration
+			self.body:applyForce(delta.x, delta.y)
+		end
+		
 		if moved then 
 			self.facing = delta
 			self.animation = self.runAnim
@@ -103,6 +115,7 @@ end
 
 
 function Enemy:draw()
+love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
     self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
@@ -138,6 +151,39 @@ end
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
 	self.health = self.health - 1
+end
+
+-- Some simple AI decision making functions
+
+-- Checks distance to each playing player and selects
+-- the closest one to target, provided said player
+-- is within range.
+function Enemy:SetNearestTarget()
+self.target = nil
+local leastdist = self.maxTargetRange
+-- Update the players.
+	for i,player in ipairs(players) do
+		if player.isplaying and player.isalive then
+			thisdist = (player.position - self.position):len()
+			if thisdist < leastdist then
+				leastdist = thisdist
+				self.target = player
+			end
+		end
+	end
+end
+
+-- Will move the bad guy towards a shooting channel
+-- within range so they can fire at player.
+function Enemy:DirToTarget(delta)
+	-- vector towards target
+	delta = (self.position 
+		- self.target.position):normalize_inplace()
+		
+	if math.abs(self.position.x 
+		- self.position.y) < self.shootRange then
+			delta.x = 0
+		end
 end
 
 
