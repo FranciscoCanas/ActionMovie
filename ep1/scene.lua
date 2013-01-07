@@ -1,11 +1,11 @@
 -- This is the template for a scene.
 
-require "../map"
+require "../level"
 
 -- Required libraries that are locally used
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
-local background = Map("ep1")
+local background = Level("ep1")
 
 -- State declarations
 Gamestate.scene = Gamestate.new()
@@ -87,6 +87,7 @@ function state:update(dt)
 		end
 	end
 	state:movecam() -- Update camera. See movecam func below.
+
 end
 
 function state:draw()
@@ -94,8 +95,11 @@ function state:draw()
 	-- from camera perspective. 
 	-- Game objects and anything in the scene's physical space
 	-- will go here.
+	
 	cam:attach()
+	--tx, ty = cam:pos()
 	background:draw()
+
 	love.graphics.print("Attached to cam for reference", 30,30)
 	if (player1.isplaying and player2.isplaying) then
 		if player1.position.y >= player2.position.y then
@@ -198,6 +202,12 @@ function state:movecam()
 	cam:lookAt(x, y)
 	-- Zoom the cam to the appropriate level.
 	cam:zoomTo(zoom)
+
+	camWorldWidth = love.graphics.getWidth() / cam.scale
+	camWorldHeight = love.graphics.getHeight() / cam.scale
+	camWorldX = cam.x - (camWorldWidth / 2)
+	camWorldY = cam.y - (camWorldHeight / 2)
+	background:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
 end
 
 
