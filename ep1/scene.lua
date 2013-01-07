@@ -24,7 +24,6 @@ end
 function state:enter()
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())
-
 	-- Initialize players here
 	if player1.isplaying then
 		player1.position = Vector(100,100)
@@ -47,6 +46,11 @@ function state:enter()
 	camMaxZoom = 2.0
 	camMinZoom = 0.5
 	camZoomRatio = 500
+	--boundaries for the camera
+	camLeft = 0
+	camRight = 2000
+	camTop = 0
+	camBottom = 1000
 	-- camera code ends here --
 	self.started = true
 	
@@ -196,13 +200,23 @@ function state:movecam()
 	if camstatic then
 		-- Nothing to do here just yet.
 	end
+
+	camWorldWidth = love.graphics.getWidth() / zoom
+	camWorldHeight = love.graphics.getHeight() / zoom
+	
+	x = math.max(x, camLeft + (camWorldWidth / 2))
+	x = math.min(x, camRight - (camWorldWidth / 2))
+
+	y = math.max(y, camTop + (camWorldHeight / 2))
+	y = math.min(y, camBottom - (camWorldWidth / 2))
+
 	-- Move the cam to the coordinates calculated above.
 	cam:lookAt(x, y)
 	-- Zoom the cam to the appropriate level.
 	cam:zoomTo(zoom)
 
-	camWorldWidth = love.graphics.getWidth() / cam.scale
-	camWorldHeight = love.graphics.getHeight() / cam.scale
+
+
 	camWorldX = cam.x - (camWorldWidth / 2)
 	camWorldY = cam.y - (camWorldHeight / 2)
 	background:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
