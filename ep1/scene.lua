@@ -94,7 +94,7 @@ function state:draw()
 	-- from camera perspective. 
 	-- Game objects and anything in the scene's physical space
 	-- will go here.
-	cam:attach()
+	cam:attach()	
 	background:draw()
 	love.graphics.print("Attached to cam for reference", 30,30)
 	if (player1.isplaying and player2.isplaying) then
