@@ -72,45 +72,47 @@ function Enemy:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
-	self.maxTargetRange = 500
-	self.shootRange = 250
+	self.maxTargetRange = 500 / background.map.tileWidth
+	self.minTargetRange = 250 / background.map.tileHeight
 	self.width = 64
 	self.height = 64
+	
+	-- state machine info
+	idle = 1
+	moveToShoot = 2
+	shoot = 4
+	moveToCover = 8
+	self.state = moveToShoot
+	
+	-- direction to move to during an update
+	self.delta = Vector(0,0)
+	
 end
 
 function Enemy:update(dt)
 	-- delta holds direction of movement input
-	local delta = Vector(0,0)
+	self.delta = Vector(0,0)
 	
+   -- this is our finite state machine handling
+   -- structure here
+   if self.state == moveToShoot then
+		moveToShoot()
+   elseif self.state == shoot then
+		shoot()
+   elseif self.state == idle then
+		idle()
+   elseif self.state == moveToCover then
+		moveToCover()
+   end
    
-	-- Handle the animation switching here as needed:
-	if not self.fired then
-		-- decide where/if to move here
-		if not self.target then
-			self:SetNearestTarget()
-		end
-		
-		if self.target then 
-			self:DirToTarget(delta)
-		end
-		
-		if (delta.x ~= 0) and (delta.y ~= 0) then
-			moved = true
-			delta = delta * self.acceleration
-			self.body:applyForce(delta.x, delta.y)
-		end
-		
-		if moved then 
-			self.facing = delta
-			self.animation = self.runAnim
-		else
-			self.animation = self.standAnim
-		end
-	end
+   self.body:applyForce(delta.x * self.acceleration, 
+		delta.y * self.acceleration)
 	
 	self.position.x, self.position.y = 
 		self.body:getX() - self.width / 2, 
 		self.body:getY() - self.height / 2
+		
+	setTilePosition()
 end
 
 
@@ -129,12 +131,26 @@ love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
 				)
 end
 
-function Enemy:fire()
+function Enemy:moveToShoot()
+	-- Find nearest target if we don't have a target
+	if self.target == nil then
+		SetNearestTarget()
+		MoveToShootingSpot()
+	end
+end
+
+function Enemy:idle()
+end
+
+function Enemy:moveToCover()
+end
+
+function Enemy:shoot()
 		-- do the animation
 		self.fired = true
 		self.animation = self.shootingAnim
 		self.animation:gotoFrame(1)
-		self.timer:add(0.5, function() self:stopFire() end)
+		self.timer:add(0.5, function() self:stopShoot() end)
 		-- figure out origin to fire from first
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
@@ -142,7 +158,7 @@ function Enemy:fire()
 		table.insert(bullets,Bullet(null, pos, self.facing))
 end
 
-function Enemy:stopFire()
+function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
 end
@@ -159,9 +175,9 @@ end
 -- the closest one to target, provided said player
 -- is within range.
 function Enemy:SetNearestTarget()
-self.target = nil
-local leastdist = self.maxTargetRange
--- Update the players.
+	self.target = nil
+	local leastdist = self.maxTargetRange
+	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying and player.isalive then
 			thisdist = (player.position - self.position):len()
@@ -175,15 +191,65 @@ end
 
 -- Will move the bad guy towards a shooting channel
 -- within range so they can fire at player.
-function Enemy:DirToTarget(delta)
-	-- vector towards target
-	delta = (self.position 
-		- self.target.position):normalize_inplace()
+function Enemy:MoveToShootingSpot()
+	local tx, ty = background:toTile(
+			self.target.position.x,
+			self.target.position.y)
+	
+	local dx = math.abs(self.tile_x - tx)
+	
+	local dy = self.tile_y - ty
+	
+	-- figure out where we need to go to shoot the target
+	-- case 1: player is sufficiently far from enemy 
+	-- on the x axis:
+	if (dx < self.minTargetRange) then
+		-- enemy too close to player. must back off.
 		
-	if math.abs(self.position.x 
-		- self.position.y) < self.shootRange then
-			delta.x = 0
-		end
+	elseif (dx > self.maxTargetRange) then
+		-- enemy too far from player. must go approach.
+	end
+	
+		-- player is just right. so move to his y coord
+	self.delta.y = dy	
+		
+
+	
 end
 
+-- Sends to the enemy the order to move
+function Enemy:orderMove(path)
+  self.path = path -- the path to follow
+  self.isMoving = true -- whether or not the enemy should start moving
+  self.cur = 1 -- indexes the current reached step on the path to follow
+  self.there = true -- whether or not the enemy has reached a step
+end
+
+-- Moves the enemy by checking its current route and whether
+-- it has reached the end of it.
+function Enemy:move(dt)
+  if self.isMoving then
+    if not self.there then
+      -- Walk to the assigned location
+      self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
+    else
+      -- Make the next step move
+      if self.path[self.cur+1] then
+        self.cur = self.cur + 1
+        self.there = false
+      else
+        -- Reached the goal!
+        self.isMoving = false
+        self.path = nil
+      end
+    end
+  end
+end
+
+-- sets the logical map tile position for this enemy
+function Enemy:setTilePosition()
+	self.tile_x, self.tile_y = 
+		background:toTile(self.position.x, 
+						self.position.y)
+end
 
