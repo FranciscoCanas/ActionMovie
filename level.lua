@@ -1,27 +1,33 @@
 -- class to make objects in maps solid
 
 local ATL = require("AdvTiledLoader")
---local map
+local collisionMapMaker = require 'collision_map'
 obstacles = {}
 ATL.Loader.path = 'maps/'
+
 
 -- -- Define the translation
 -- local tx, ty = 0, 0
 
 Level = Class {
 	function(self, scene)
-		map = ATL.Loader.load(scene..".tmx") 
-		print(map.viewH.. ", ".. map.viewW)
+		self.map = ATL.Loader.load(scene..".tmx") 
+		self.collisionMap = collisionMapMaker.create(self.map, "Ground", "Collision")
 	end
 }
 
--- Move the camera
--- function love.update(dt)
--- 	if love.keyboard.isDown("up") then ty = ty + 250*dt end
--- 	if love.keyboard.isDown("down") then ty = ty - 250*dt end
--- 	if love.keyboard.isDown("left") then tx = tx + 250*dt end
--- 	if love.keyboard.isDown("right") then tx = tx - 250*dt end
--- end
+-- Function which converts x,y on the screen to tile coordinates
+-- All tiles are 32-pixels wide (width, height). Function returns nil
+-- if we clicked out of the map bounds
+--takes screen coordinates and converts to tile coordinates
+function Level:toTile(x,y)
+	x_,y_ = cam:worldCoords(x, y)
+	local _x = math.floor(x_/(self.map.tileWidth))
+	local _y = math.floor(y_/(self.map.tileHeight))
+	if self.collisionMap[_y] and self.collisionMap[_y][_x] then 
+	  return _x,_y
+	end
+end
 
 -- Made obstacle class so we could more consistently
 -- handle collisions in the main:beginContact function
@@ -47,29 +53,30 @@ Obstacle = Class {
 
 function Level:draw() 
 
-	-- -- Apply the translation
-	-- love.graphics.translate( math.floor(tx), math.floor(ty) )
-	
-	-- -- Set the draw range. Setting this will significantly increase drawing performance.
-	-- map:autoDrawRange( math.floor(tx), math.floor(ty), 1, pad)
-	
 	-- Draw the map
-	map:draw()
+	self.map:draw()
 
+	-- drawing out the position of collision boxes
 	-- for id, object in next,obstacles,nil do
 	-- 	love.graphics.polygon("fill", object.body:getWorldPoints(object.shape:getPoints()))
 	-- end	
 end
 
---iterate through map to create objects that players can't pass through as defined in the map
+--iterate through the collision layer of the map to create objects that players can't pass through as defined in the map
 function Level:createObjects() 
-	for x, y, tile in map("Ground"):iterate() do
-		if tile.properties.obstacle then
-			obstacles[x..","..y] = Obstacle(map, x, y)
-		end
+	for x, y, tile in self.map("Collision"):iterate() do
+		obstacles[x..","..y] = Obstacle(self.map, x, y)
 	end
 end
 
-function Level:setDrawRange(x, y, w, h)
-	map:setDrawRange(x, y, w, h)
+function Level:createPathFinding()
+	local _map = {}
+	for x,y in self.map(groundLayer):iterate() do
+		_map[y] = _map[y] or {}
+    	_map[y][x] = walkable or 0
+  	end
+  	for x,y in self.map(collisionLayer):iterate() do
+    	_map[y][x] = unwalkable or 1
+  	end
+	return _map
 end

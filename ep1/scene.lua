@@ -5,12 +5,16 @@ require "../level"
 -- Required libraries that are locally used
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
-local background = Level("ep1")
+local Jumper = require 'Jumper.jumper'
+local jumperDebug = require 'Jumper.debug_utils'
 
 -- State declarations
 Gamestate.scene = Gamestate.new()
 local state = Gamestate.scene
 local keypressed = "none"
+
+-- some fonts
+font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
 enemies = {}
@@ -31,9 +35,6 @@ function state:enter()
 	if player2.isplaying then
 		player2.position = Vector(200,100)
 	end
-
-	-- make objects in map solid
-	background:createObjects()
 
 	-- set up camera ------------------------------------
 	cam = Camera(player1.position.x, player1.position.y, 
@@ -58,6 +59,21 @@ function state:enter()
 	-- table.insert(enemies, 
 		-- Enemy(love.graphics.newImage('art/gunman.png'),
 		-- Vector(400,800)))
+
+	-- make objects in map solid
+	background = Level("ep1")
+	background:createObjects()
+
+	-- Initializing Jumper
+	searchMode = 'DIAGONAL' -- whether or not diagonal moves are allowed
+	heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
+	current_heuristic = 2 -- indexes the chosen heuristics within 'heuristics' table
+	filling = false -- whether or not returned paths will be smoothed
+	postProcess = false -- whether or not the grid should be postProcessed
+	pather = Jumper(background.collisionMap) -- Inits Jumper
+	pather:setMode(searchMode)
+	pather:setHeuristic(heuristics[current_heuristic])
+	pather:setAutoFill(filling)
 end
 
 function state:leave()
@@ -137,6 +153,9 @@ function state:draw()
 	love.graphics.print(player1.facing.x, 200, 30)
 	love.graphics.print(player1.facing.y, 210, 30)
 	love.graphics.print(player1.health, 50, 50)
+	love.graphics.print(tileX or 0, 50, 70)
+	love.graphics.print(tileY or 0, 70, 70)
+	jumperDebug.drawPath(font12, path, true)
 end 
 
 function state:focus()
@@ -212,6 +231,12 @@ function state:movecam()
 
 	-- Move the cam to the coordinates calculated above.
 	cam:lookAt(x, y)
+
+	-- Restrict zoom level to camera boundaries --NEEDS WORK--
+	-- if (y - ((dimScreen.y/2)*zoom)) < camTop then
+	-- 	zoom = (2/dimScreen.y)*(camTop+y)
+	-- end
+
 	-- Zoom the cam to the appropriate level.
 	cam:zoomTo(zoom)
 
@@ -219,7 +244,14 @@ function state:movecam()
 
 	camWorldX = cam.x - (camWorldWidth / 2)
 	camWorldY = cam.y - (camWorldHeight / 2)
-	background:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
+	background.map:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
 end
 
-
+function state:mousepressed(x,y,button)
+	if button == 'l' then
+		--x,y = cam:worldCoords(x_, y_)
+		tileX, tileY = background:toTile(x, y)
+		playerX, playerY = background:toTile(player1.position.x, player1.position.y)
+		path, length =pather:getPath(playerX, playerY, tileX, tileY)
+	end
+end

@@ -51,7 +51,7 @@ function(self, num)
 
 	-- love.physics code starts here -----------------------------------------
 	self.facing = Vector(1,0) -- normalized direction vector
-	self.acceleration = 4000
+	self.acceleration = 12000
 	self.damping = 15
 	self.density = 2
 	
@@ -65,8 +65,8 @@ function(self, num)
 	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
-		self.width /3,
-		self.height /3
+		self.width/3,
+		self.height
 		)
 		
 	self.fixture = love.physics.newFixture(
