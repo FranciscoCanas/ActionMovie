@@ -31,15 +31,18 @@ function(self, image, position)
 		
 	self.animation = self.standAnim
 	
+	-- Set up for Timers
+	self.timer = Timer.new()
+	
 	-- love.physics code starts here
 	self.facing = Vector(-1,0)
-	self.acceleration = 4000
+	self.acceleration = 500
 	self.damping = 15
 	self.density = 2
 	
 	self.body = love.physics.newBody(world, 
-		((self.position.x + self.width) / 2 ),
-		((self.position.y + self.height) / 2 ), 
+		(self.position.x + self.width) / 2,
+		(self.position.y + self.height) / 2, 
 		--self.position.x,
 		--self.position.y,
 		"dynamic"
@@ -47,7 +50,7 @@ function(self, image, position)
 	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
-		self.width / 3,
+		self.width /3,
 		self.height
 		)
 		
@@ -72,8 +75,9 @@ function Enemy:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
-	self.maxTargetRange = 500 / background.map.tileWidth
-	self.minTargetRange = 250 / background.map.tileHeight
+	self.inRange = 25 -- 
+	self.maxTargetRange = 500 --/ background.map.tileWidth
+	self.minTargetRange = 250 --/ background.map.tileHeight
 	self.width = 64
 	self.height = 64
 	
@@ -96,23 +100,32 @@ function Enemy:update(dt)
    -- this is our finite state machine handling
    -- structure here
    if self.state == moveToShoot then
-		moveToShoot()
+		self:moveToShoot()
+		self.animation = self.runAnim
    elseif self.state == shoot then
-		shoot()
+		self:shoot()
    elseif self.state == idle then
-		idle()
+		self:idle()
    elseif self.state == moveToCover then
-		moveToCover()
+		self:moveToCover()
    end
    
-   self.body:applyForce(delta.x * self.acceleration, 
-		delta.y * self.acceleration)
+   if (self.delta.x < 0) then
+		self.facing = Vector(-1,0)
+		self.frameFlipH = true
+	elseif (self.delta.x > 0) then
+		self.facing = Vector(1,0)
+		self.frameFlipH = false
+	end
+   
+   self.body:applyForce(self.delta.x * self.acceleration, 
+		self.delta.y * self.acceleration)
 	
 	self.position.x, self.position.y = 
 		self.body:getX() - self.width / 2, 
 		self.body:getY() - self.height / 2
 		
-	setTilePosition()
+	self:setTilePosition()
 end
 
 
@@ -133,34 +146,42 @@ end
 
 function Enemy:moveToShoot()
 	-- Find nearest target if we don't have a target
-	if self.target == nil then
-		SetNearestTarget()
-		MoveToShootingSpot()
+	self:SetNearestTarget()
+
+	
+	if self.target ~= nil then
+		self:MoveToShootingSpot()
 	end
 end
 
 function Enemy:idle()
+--
 end
 
 function Enemy:moveToCover()
+--
 end
 
 function Enemy:shoot()
+	if self.fired then
+		return 
+	end
 		-- do the animation
 		self.fired = true
-		self.animation = self.shootingAnim
+		self.animation = self.shootAnim
 		self.animation:gotoFrame(1)
 		self.timer:add(0.5, function() self:stopShoot() end)
 		-- figure out origin to fire from first
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
 		pos = pos + self.facing * 25
-		table.insert(bullets,Bullet(null, pos, self.facing))
+		table.insert(bullets,Bullet(null, pos, self.facing))		
 end
 
 function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
+	self.state = moveToShoot
 end
 
 -- Resolve being shot here.
@@ -196,22 +217,28 @@ function Enemy:MoveToShootingSpot()
 			self.target.position.x,
 			self.target.position.y)
 	
-	local dx = math.abs(self.tile_x - tx)
+	local dx = self.body:getX() - self.target.body:getX()
 	
-	local dy = self.tile_y - ty
+	local dy = self.body:getY() - self.target.body:getY()
 	
 	-- figure out where we need to go to shoot the target
 	-- case 1: player is sufficiently far from enemy 
 	-- on the x axis:
 	if (dx < self.minTargetRange) then
 		-- enemy too close to player. must back off.
-		
+		self.delta.x = dx		
 	elseif (dx > self.maxTargetRange) then
 		-- enemy too far from player. must go approach.
+		self.delta.x = -dx
 	end
 	
-		-- player is just right. so move to his y coord
-	self.delta.y = dy	
+	-- are we close enough to shoot?
+	if (dy < self.inRange) then
+		self.state = shoot
+	end
+	-- player is just right. so move to his y coord
+	self.delta.y = -dy
+	--self.delta:normalize_inplace()
 		
 
 	

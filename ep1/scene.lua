@@ -55,10 +55,7 @@ function state:enter()
 	-- camera code ends here --
 	self.started = true
 	
-	-- set up some baddies here --
-	-- table.insert(enemies, 
-		-- Enemy(love.graphics.newImage('art/gunman.png'),
-		-- Vector(400,800)))
+	
 
 	-- make objects in map solid
 	background = Level("ep1")
@@ -74,6 +71,12 @@ function state:enter()
 	pather:setMode(searchMode)
 	pather:setHeuristic(heuristics[current_heuristic])
 	pather:setAutoFill(filling)
+	
+	
+	-- set up some baddies here --
+	table.insert(enemies, 
+		Enemy(love.graphics.newImage('art/gunman.png'),
+		Vector(400,800)))
 end
 
 function state:leave()
