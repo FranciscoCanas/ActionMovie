@@ -158,7 +158,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
---love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
     self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
@@ -171,6 +171,11 @@ function Player:draw()
 				self.frameFlipV
 				)
     
+end
+
+
+function Player:getCenter()
+	return self.body:getX(), self.body:getY()
 end
 
 function Player:keyPressHandler(key)

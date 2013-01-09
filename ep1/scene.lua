@@ -156,8 +156,12 @@ function state:draw()
 	love.graphics.print(player1.facing.x, 200, 30)
 	love.graphics.print(player1.facing.y, 210, 30)
 	love.graphics.print(player1.health, 50, 50)
-	love.graphics.print(tileX or 0, 50, 70)
-	love.graphics.print(tileY or 0, 70, 70)
+	love.graphics.print("clicked", 10, 70)
+	love.graphics.print(tileX or 0, 60, 70)
+	love.graphics.print(tileY or 0, 80, 70)
+	love.graphics.print("player1", 10, 90)
+	love.graphics.print(playerX or 0, 60, 90)
+	love.graphics.print(playerY or 0, 80, 90)
 	jumperDebug.drawPath(font12, path, true)
 end 
 
@@ -254,7 +258,9 @@ function state:mousepressed(x,y,button)
 	if button == 'l' then
 		--x,y = cam:worldCoords(x_, y_)
 		tileX, tileY = background:toTile(x, y)
-		playerX, playerY = background:toTile(player1.position.x, player1.position.y)
+		x_, y_ = player1:getCenter()
+		playerX, playerY = background:toTile(x_, y_)
+		-- getPath doesn't work when zooming is involved atm
 		path, length =pather:getPath(playerX, playerY, tileX, tileY)
 	end
 end

@@ -18,7 +18,7 @@
  </layer>
  <layer name="Collision" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt17ENwCAMAMEM5f1nS502jR90J7kHPw3zUDLbB+BDjxY9WvRomcDc6s/9CvvYfg+1oUGPFj1a9GjRo0WPFj1a9GjRo2W7x/Y/uDibeznRyWcHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgFu88akuUQ==
+   eJzt17EJwDAMAMEMpf1nSxkygd7mDtQLvRvPQ8lsL8CPHi16tOjRMoHhU7jH9nuoDQ16tOjRokeLHi16tOjRokeLHi3bPbb/wcXZvMuJTt4dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG7xAi7kLek=
   </data>
  </layer>
  <layer name="Bricks" width="100" height="100">
@@ -28,7 +28,10 @@
  </layer>
  <layer name="WallsStuffs" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1ssKglAUBVChGoQ1qGxQWtDr/3+xIzgIiTS7GNRasPEB3i0cvJhlwDt2kX1kFVk35+WAdTYD+4vIduCzv+gUObdyGbG/ihxG7OM18+g2j0wi08isuX5UJOwyj37yyCKybN2v9/oqYY959JM3x2fzuCbsqde6JVwPxtT+Fz1+5S2Af2fvgc/4hgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALrdAZBXBAg=
+   eJzt1ssKglAUBVChGoQ1qGxQWtDr/3+xIzgIiTS52IO1YONV8G7hoJhlwDt2kX1kFVk363LAPpuB/UVkO/Def3SKnFu5jNhfRQ4j9vGaeXSbRyaRaWTWnD8qEnaZRz95ZBFZtq7X3/oqYY959JM3x2fzuCbsqfe6JdwPxuRfFPgGx08/APw47xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEC3O+2wA+o=
   </data>
  </layer>
+ <objectgroup name="Enemy" width="100" height="100">
+  <object x="302" y="324"/>
+ </objectgroup>
 </map>
