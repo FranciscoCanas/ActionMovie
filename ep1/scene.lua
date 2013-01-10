@@ -17,8 +17,6 @@ local keypressed = "none"
 font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
-enemies = {}
-bullets = {}
 
 
 function state:init()	
@@ -72,11 +70,22 @@ function state:enter()
 	pather:setHeuristic(heuristics[current_heuristic])
 	pather:setAutoFill(filling)
 	
+	-- set up bullets table --
+	bullets = {}
 	
 	-- set up some baddies here --
+	enemies = {}
 	table.insert(enemies, 
 		Enemy(love.graphics.newImage('art/gunman.png'),
-		Vector(400,800)))
+		Vector(400,700)))
+		
+	table.insert(enemies, 
+		Enemy(love.graphics.newImage('art/gunman.png'),
+		Vector(600,600)))
+		
+	table.insert(enemies, 
+		Enemy(love.graphics.newImage('art/gunman.png'),
+		Vector(700,500)))
 end
 
 function state:leave()

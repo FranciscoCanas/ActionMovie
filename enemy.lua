@@ -36,7 +36,7 @@ function(self, image, position)
 	
 	-- love.physics code starts here
 	self.facing = Vector(-1,0)
-	self.acceleration = 500
+	self.acceleration = 8000
 	self.damping = 15
 	self.density = 2
 	
@@ -64,7 +64,6 @@ function(self, image, position)
 	-- detection:
 	self.fixture:setUserData(self)	
 		
-		
 	self.body:setLinearDamping( self.damping )
 end
 }
@@ -75,9 +74,10 @@ function Enemy:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
-	self.inRange = 25 -- 
-	self.maxTargetRange = 500 --/ background.map.tileWidth
+	self.inRange = 10  -- y axis shooting boundary
+	self.maxTargetRange = 400 --/ background.map.tileWidth
 	self.minTargetRange = 250 --/ background.map.tileHeight
+	self.observePlayerRange = 600
 	self.width = 64
 	self.height = 64
 	
@@ -86,7 +86,7 @@ function Enemy:init()
 	moveToShoot = 2
 	shoot = 4
 	moveToCover = 8
-	self.state = moveToShoot
+	self.state = idle
 	
 	-- direction to move to during an update
 	self.delta = Vector(0,0)
@@ -94,6 +94,8 @@ function Enemy:init()
 end
 
 function Enemy:update(dt)
+	-- update the timer
+	self.timer:update(dt)
 	-- delta holds direction of movement input
 	self.delta = Vector(0,0)
 	
@@ -111,10 +113,14 @@ function Enemy:update(dt)
    end
    
    if (self.delta.x < 0) then
-		self.facing = Vector(-1,0)
-		self.frameFlipH = true
+		self.facing = Vector(-1,0)		
 	elseif (self.delta.x > 0) then
 		self.facing = Vector(1,0)
+	end
+	
+	if self.facing.x == -1 then
+		self.frameFlipH = true
+	else
 		self.frameFlipH = false
 	end
    
@@ -146,16 +152,41 @@ end
 
 function Enemy:moveToShoot()
 	-- Find nearest target if we don't have a target
-	self:SetNearestTarget()
-
+	if self.target == nil then
+		self:SetNearestTarget()
+	end
 	
 	if self.target ~= nil then
 		self:MoveToShootingSpot()
+	else 
+		self.state = idle
 	end
 end
 
 function Enemy:idle()
---
+	if self.animation ~= self.standAnim then
+		self.animation = self.standAnim
+	end
+	
+	if self.target == nil then
+		self:SetNearestTarget()
+	end
+	
+	if (self:DistanceToTarget() 
+			< self.observePlayerRange) then
+		self.state = moveToShoot
+	end
+	
+end
+
+function Enemy:DistanceToTarget()
+	local dx = self.maxTargetRange + 1
+	if self.target ~= null then
+		local tx = self.target.body:getX()
+		dx = math.abs(tx - self.body:getX())
+	end
+	
+	return dx
 end
 
 function Enemy:moveToCover()
@@ -165,23 +196,34 @@ end
 function Enemy:shoot()
 	if self.fired then
 		return 
-	end
+	else
 		-- do the animation
 		self.fired = true
 		self.animation = self.shootAnim
 		self.animation:gotoFrame(1)
-		self.timer:add(0.5, function() self:stopShoot() end)
-		-- figure out origin to fire from first
+		self.timer:add(1.0, function() 
+					self:stopShoot() 
+				end)
+		-- face the target
+		local tx, ty = self.target.body:getWorldCenter()
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
+		local dx = pos.x - tx
+		self.delta = Vector(0,0)
+		self.facing = Vector(-dx, 0):normalize_inplace()
+				
+		-- figure out origin to fire from first
+		
+		
 		pos = pos + self.facing * 25
 		table.insert(bullets,Bullet(null, pos, self.facing))		
+	end
 end
 
 function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
-	self.state = moveToShoot
+	self.state = idle
 end
 
 -- Resolve being shot here.
@@ -197,11 +239,17 @@ end
 -- is within range.
 function Enemy:SetNearestTarget()
 	self.target = nil
-	local leastdist = self.maxTargetRange
+	local leastdist = self.observePlayerRange
+	local mx, my = self.body:getWorldCenter()
+	
+	
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying and player.isalive then
-			thisdist = (player.position - self.position):len()
+			local px, py = player.body:getWorldCenter()
+			
+			thisdist = (Vector(px, py) - Vector(mx, my)):len()
+			
 			if thisdist < leastdist then
 				leastdist = thisdist
 				self.target = player
@@ -214,34 +262,32 @@ end
 -- within range so they can fire at player.
 function Enemy:MoveToShootingSpot()
 	local tx, ty = background:toTile(
-			self.target.position.x,
-			self.target.position.y)
+			self.target.body:getX(),
+			self.target.body:getY())
 	
-	local dx = self.body:getX() - self.target.body:getX()
+	local dx = self.target.body:getX() - self.body:getX() 
 	
-	local dy = self.body:getY() - self.target.body:getY()
+	local dy = self.target.body:getY() - self.body:getY()
 	
 	-- figure out where we need to go to shoot the target
 	-- case 1: player is sufficiently far from enemy 
 	-- on the x axis:
-	if (dx < self.minTargetRange) then
+	if (math.abs(dx) < self.minTargetRange) then
 		-- enemy too close to player. must back off.
-		self.delta.x = dx		
-	elseif (dx > self.maxTargetRange) then
+		 self.delta.x = -dx		
+	elseif (math.abs(dx) > self.maxTargetRange) then
 		-- enemy too far from player. must go approach.
-		self.delta.x = -dx
+		 self.delta.x = dx
 	end
 	
 	-- are we close enough to shoot?
-	if (dy < self.inRange) then
+	if (math.abs(dy) < self.inRange) then
 		self.state = shoot
 	end
-	-- player is just right. so move to his y coord
-	self.delta.y = -dy
-	--self.delta:normalize_inplace()
-		
-
 	
+	-- player is just right. so move to his y coord
+	self.delta.y = dy
+	self.delta:normalize_inplace()
 end
 
 -- Sends to the enemy the order to move
