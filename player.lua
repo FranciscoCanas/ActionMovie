@@ -1,3 +1,5 @@
+--require 'TESound.TEsound'
+
 Player = Class{
 function(self, num)
 	if num == 1 then
@@ -86,6 +88,10 @@ function(self, num)
 		-- 64, -- mass (kg)
 		-- 10) -- inertia
 	-- love.physics ends here
+	
+	-- sound stuffs go here
+	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
+	--, "sfx/gunshot3.ogg" }
 end
 }
 
@@ -110,6 +116,8 @@ function Player:init()
 end
 
 function Player:update(dt)
+	-- sound stuff
+	TEsound.cleanup()
 	-- Inc timers
 	self.timer:update(dt)
 	-- delta holds direction of movement input
@@ -158,7 +166,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
-love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+--love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
     self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
@@ -196,6 +204,7 @@ function Player:fire()
 		
 		self.timer:add(0.25, function()	
 			table.insert(bullets,Bullet(null, pos, self.facing)) 
+			TEsound.play(gunsoundlist)
 		end)
 end
 

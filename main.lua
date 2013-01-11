@@ -31,7 +31,7 @@ player2 = Player(2)
 players = {player1, player2}
 
 function love.update(dt)
-	
+		
 end
 
 -- call this last so gamestate events get registered.

@@ -7,6 +7,7 @@ local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
 local Jumper = require 'Jumper.jumper'
 local jumperDebug = require 'Jumper.debug_utils'
+require 'TESound.TEsound'
 
 -- State declarations
 Gamestate.scene = Gamestate.new()
@@ -24,6 +25,10 @@ function state:init()
 end
 
 function state:enter()
+	-- set up sound objects here
+	bgMusicList = {"music/deathScene.ogg"}
+	TEsound.playLooping(bgMusicList, "bgMusic")
+	
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())
 	-- Initialize players here
@@ -89,9 +94,12 @@ function state:enter()
 end
 
 function state:leave()
+	TEsound.stop("bgMusic", true)
 end
 
 function state:update(dt)
+	-- Sound updates
+	TEsound.cleanup()
 	-- Update scene-related systems.
 	world:update(math.min(dt, 1/60))
 	--Timer.update(math.min(dt, 1/60))

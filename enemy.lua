@@ -91,6 +91,10 @@ function Enemy:init()
 	-- direction to move to during an update
 	self.delta = Vector(0,0)
 	
+	-- sound stuff
+	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
+	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg"}
+	
 end
 
 function Enemy:update(dt)
@@ -136,7 +140,7 @@ end
 
 
 function Enemy:draw()
-love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+--love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
     self.animation:drawf(self.image, 
 				self.position.x,
 				self.position.y,
@@ -216,7 +220,8 @@ function Enemy:shoot()
 		
 		
 		pos = pos + self.facing * 25
-		table.insert(bullets,Bullet(null, pos, self.facing))		
+		table.insert(bullets,Bullet(null, pos, self.facing))	
+		TEsound.play(gunsoundlist)		
 	end
 end
 
@@ -229,6 +234,7 @@ end
 -- Resolve being shot here.
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
+	TEsound.play(screamsoundlist)		
 	self.health = self.health - 1
 end
 
