@@ -212,16 +212,18 @@ function Enemy:shoot()
 		-- face the target
 		local tx, ty = self.target.body:getWorldCenter()
 		local pos = Vector(0,0)
+		-- figure out origin to fire from first
 		pos.x, pos.y = self.body:getWorldCenter()
 		local dx = pos.x - tx
 		self.delta = Vector(0,0)
 		self.facing = Vector(-dx, 0):normalize_inplace()
-				
-		-- figure out origin to fire from first
-		
+		-- add some hilariously bad accuracy modifying
+		-- randomness
+		local ry = (math.random(0, 4) - 2) / 10
+		local bulletDir = Vector(self.facing.x,ry)
 		
 		pos = pos + self.facing * 25
-		table.insert(bullets,Bullet(null, pos, self.facing))	
+		table.insert(bullets,Bullet(null, pos, bulletDir))	
 		TEsound.play(gunsoundlist)		
 	end
 end
