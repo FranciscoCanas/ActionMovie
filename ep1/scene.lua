@@ -19,7 +19,7 @@ local keypressed = "none"
 font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
-local MAXDEAD = 3
+local MAXDEAD = 4
 
 
 function state:init()	
@@ -83,12 +83,12 @@ function state:enter()
 	-- set up some baddies here --
 	enemies = {}
 	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
-	deadEnemies = {}
+	deadCount = 0
 
 	insertEnemy(enemiesPosition)
 
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(10, spawnEnemy, 1)
+	enemyTimer:addPeriodic(10, spawnEnemy)
 end
 
 -- add an enemy at position x, y
@@ -119,16 +119,13 @@ function state:update(dt)
 	end
 	
 	for i,enemy in ipairs(enemies) do
-		if enemy.isalive then
+		if ((not enemy.isalive) and (not enemy.counted)) then
+			deadCount = deadCount + 1
+			enemy.counted = true
+		else
 			enemy:update(math.min(dt,1/60))
-			enemy.animation:update(math.min(dt,1/60))
-		else 
-			if (# deadEnemies == MAXDEAD) then 
-				table.remove(deadEnemies, 1) 
-			end
-			table.insert(deadEnemies, enemy)
-			table.remove(enemies, i)
 		end
+		enemy.animation:update(math.min(dt,1/60))
 	end
 	
 	for i,bullet in ipairs(bullets) do
@@ -139,6 +136,9 @@ function state:update(dt)
 		end
 	end
 
+	if deadCount >= MAXDEAD then 
+		removeDead()
+	end
 	state:movecam() -- Update camera. See movecam func below.
 
 end
@@ -174,10 +174,6 @@ function state:draw()
 	for i,enemy in ipairs(enemies) do
 		enemy:draw()
 	end
-
-	for i,dEnemy in ipairs(deadEnemies) do
-		dEnemy:draw()
-	end
 	
 	for i,bullet in ipairs(bullets) do
 		bullet:draw()
@@ -202,10 +198,22 @@ function state:draw()
 	jumperDebug.drawPath(font12, path, true)
 end 
 
+function removeDead() 
+	for i, enemy in ipairs(enemies) do
+		if ((not enemy.isalive) and enemy.counted) then
+			table.remove(enemies, i)
+			deadCount = deadCount - 1
+			if deadCount <= MAXDEAD/2 then break end
+		end
+	end
+end
+
 function spawnEnemy()
-	print("check for spawns")
-	while #enemies < 3 do
+	local totEnemy = #enemies
+	local curDead = deadCount
+	while totEnemy - curDead < 3 do
 		insertEnemy({Vector(800, 800)})
+		totEnemy = totEnemy+1
 	end
 end
 

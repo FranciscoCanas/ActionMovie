@@ -83,6 +83,8 @@ function Enemy:init()
 	self.observePlayerRange = 600
 	self.width = 64
 	self.height = 64
+
+	self.counted = false
 	
 	-- state machine info
 	dying = 0
