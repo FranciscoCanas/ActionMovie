@@ -108,7 +108,7 @@ function state:update(dt)
 	-- Update scene-related systems.
 	world:update(math.min(dt, 1/60))
 	--Timer.update(math.min(dt, 1/60))
-	enemyTimer:update(dt)
+	enemyTimer:update(math.min(dt, 1/60))
 	
 	-- Update the players.
 	for i,player in ipairs(players) do

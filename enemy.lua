@@ -28,7 +28,7 @@ function(self, image, position)
 		self.frameDelay)
 		
 	self.diesAnim = Anim8.newAnimation('once',
-		self.grid('4-8, 4'),
+		self.grid('4-7, 4'),
 		self.frameDelay)
 		
 	self.animation = self.standAnim
@@ -85,6 +85,7 @@ function Enemy:init()
 	self.height = 64
 	
 	-- state machine info
+	dying = 0
 	idle = 1
 	moveToShoot = 2
 	shoot = 4
@@ -118,6 +119,8 @@ function Enemy:update(dt)
 		self:idle()
    elseif self.state == moveToCover then
 		self:moveToCover()
+   elseif self.state == dying then
+   
    end
    
    if (self.delta.x < 0) then
@@ -243,6 +246,9 @@ end
 -- Resolve being shot here.
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
+	if self.state == dying then
+		return
+	end
 	TEsound.play(screamsoundlist)		
 	self.health = self.health - 1
 	if self.health < 0 then 
@@ -252,9 +258,15 @@ end
 
 -- where enemies goes to die
 function Enemy:dies()
-	self.isalive = false 
+	self.state = dying
+	self.timer:clear() -- clears all queued actions
+	self.timer:add(1.0, function() 
+					self.isalive = false 
+					self.fixture:destroy()
+				end)
+	
 	self.animation = self.diesAnim
-	self.fixture:destroy()
+	
 end
 
 -- Some simple AI decision making functions
