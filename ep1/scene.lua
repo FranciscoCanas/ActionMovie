@@ -7,6 +7,7 @@ local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
 local Jumper = require 'Jumper.jumper'
 local jumperDebug = require 'Jumper.debug_utils'
+local Timer = require "hump.timer"
 require 'TESound.TEsound'
 
 -- State declarations
@@ -18,6 +19,7 @@ local keypressed = "none"
 font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
+local MAXDEAD = 3
 
 
 function state:init()	
@@ -80,17 +82,20 @@ function state:enter()
 	
 	-- set up some baddies here --
 	enemies = {}
-	table.insert(enemies, 
-		Enemy(love.graphics.newImage('art/gunman.png'),
-		Vector(400,700)))
-		
-	-- table.insert(enemies, 
-		-- Enemy(love.graphics.newImage('art/gunman.png'),
-		-- Vector(600,600)))
-		
-	-- table.insert(enemies, 
-		-- Enemy(love.graphics.newImage('art/gunman.png'),
-		-- Vector(700,500)))
+	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
+	deadEnemies = {}
+
+	insertEnemy(enemiesPosition)
+
+	enemyTimer = Timer.new()
+	enemyTimer:addPeriodic(10, spawnEnemy, 1)
+end
+
+-- add an enemy at position x, y
+function insertEnemy(positions) 
+	for i, screenPos in ipairs(positions) do 
+		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos))
+	end
 end
 
 function state:leave()
@@ -103,6 +108,7 @@ function state:update(dt)
 	-- Update scene-related systems.
 	world:update(math.min(dt, 1/60))
 	--Timer.update(math.min(dt, 1/60))
+	enemyTimer:update(dt)
 	
 	-- Update the players.
 	for i,player in ipairs(players) do
@@ -116,6 +122,12 @@ function state:update(dt)
 		if enemy.isalive then
 			enemy:update(math.min(dt,1/60))
 			enemy.animation:update(math.min(dt,1/60))
+		else 
+			if (# deadEnemies == MAXDEAD) then 
+				table.remove(deadEnemies, 1) 
+			end
+			table.insert(deadEnemies, enemy)
+			table.remove(enemies, i)
 		end
 	end
 	
@@ -126,6 +138,7 @@ function state:update(dt)
 			bullet:update(math.min(dt,1/60))
 		end
 	end
+
 	state:movecam() -- Update camera. See movecam func below.
 
 end
@@ -139,6 +152,9 @@ function state:draw()
 	background:draw()
 
 	love.graphics.print("Attached to cam for reference", 30,30)
+
+	-- need to determin drawing order which depends on y values of things
+
 	if (player1.isplaying and player2.isplaying) then
 		if player1.position.y >= player2.position.y then
 			player2:draw()
@@ -157,6 +173,10 @@ function state:draw()
 	
 	for i,enemy in ipairs(enemies) do
 		enemy:draw()
+	end
+
+	for i,dEnemy in ipairs(deadEnemies) do
+		dEnemy:draw()
 	end
 	
 	for i,bullet in ipairs(bullets) do
@@ -181,6 +201,13 @@ function state:draw()
 	love.graphics.print(playerY or 0, 80, 90)
 	jumperDebug.drawPath(font12, path, true)
 end 
+
+function spawnEnemy()
+	print("check for spawns")
+	while #enemies < 3 do
+		insertEnemy({Vector(800, 800)})
+	end
+end
 
 function state:focus()
 end
@@ -263,8 +290,6 @@ function state:movecam()
 
 	-- Zoom the cam to the appropriate level.
 	cam:zoomTo(zoom)
-
-
 
 	camWorldX = cam.x - (camWorldWidth / 2)
 	camWorldY = cam.y - (camWorldHeight / 2)

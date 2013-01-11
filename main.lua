@@ -16,7 +16,6 @@ require "intro"
 require "menu"
 require "ep1/epmenu"
 
-
 -- Globals
 -- TODO: organize these into groups
 -- note: Initialization order matters.
@@ -26,6 +25,12 @@ world = love.physics.newWorld(
 	0, -- x grav
 	0, -- y grav
 	true)
+
+-- OBSTACLE = 1 
+-- PLAYER = 2
+-- ENEMY = 3
+-- BULLET = 4
+
 player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}

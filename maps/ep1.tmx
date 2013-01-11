@@ -31,7 +31,7 @@
    eJzt1ssKglAUBVChGoQ1qGxQWtDr/3+xIzgIiTS52IO1YONV8G7hoJhlwDt2kX1kFVk363LAPpuB/UVkO/Def3SKnFu5jNhfRQ4j9vGaeXSbRyaRaWTWnD8qEnaZRz95ZBFZtq7X3/oqYY959JM3x2fzuCbsqfe6JdwPxuRfFPgGx08/APw47xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEC3O+2wA+o=
   </data>
  </layer>
- <objectgroup name="Enemy" width="100" height="100">
+ <objectgroup name="Enemy" width="100" height="100" visible="0">
   <object x="302" y="324"/>
  </objectgroup>
 </map>

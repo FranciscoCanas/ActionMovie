@@ -1,10 +1,12 @@
 Enemy = Class{
 function(self, image, position)
-	--self.image = love.graphics.newImage(image)
-	self:init()
-	self.position = position
 	
-	self.image = love.graphics.newImage('art/gunman.png')
+	self:init()
+	wx, wy = cam:worldCoords(position.x, position.y)
+	self.position = Vector(wx, wy)
+	
+	self.image = image --love.graphics.newImage(image)
+	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.2
 	self.frameFlipH = false
@@ -25,8 +27,8 @@ function(self, image, position)
 		self.grid('1-2, 3'),
 		self.frameDelay)
 		
-	self.diesAnim = Anim8.newAnimation('loop',
-		self.grid('4-8, 3'),
+	self.diesAnim = Anim8.newAnimation('once',
+		self.grid('4-8, 4'),
 		self.frameDelay)
 		
 	self.animation = self.standAnim
@@ -62,7 +64,8 @@ function(self, image, position)
 	-- awkward but absolutely needed to pull out the
 	-- object that owns the fixture during collision
 	-- detection:
-	self.fixture:setUserData(self)	
+	self.fixture:setUserData(self)
+	--self.fixture:setCategory(ENEMY)	
 		
 	self.body:setLinearDamping( self.damping )
 end
@@ -141,18 +144,20 @@ end
 
 
 function Enemy:draw()
---love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
-    self.animation:drawf(self.image, 
-				self.position.x,
-				self.position.y,
-				0, -- angle
-				1, -- x scale
-				1, -- y scale
-				0, -- x offset
-				0, -- y offset
-				self.frameFlipH,
-				self.frameFlipV
-				)
+	if self.isalive then
+		love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+	end
+	self.animation:drawf(self.image, 
+			self.position.x,
+			self.position.y,
+			0, -- angle
+			1, -- x scale
+			1, -- y scale
+			0, -- x offset
+			0, -- y offset
+			self.frameFlipH,
+			self.frameFlipV
+			)
 end
 
 function Enemy:moveToShoot()
@@ -240,6 +245,16 @@ end
 function Enemy:isShot(bullet, collision)
 	TEsound.play(screamsoundlist)		
 	self.health = self.health - 1
+	if self.health < 0 then 
+		self:dies()
+	end
+end
+
+-- where enemies goes to die
+function Enemy:dies()
+	self.isalive = false 
+	self.animation = self.diesAnim
+	self.fixture:destroy()
 end
 
 -- Some simple AI decision making functions

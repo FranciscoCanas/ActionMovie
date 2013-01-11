@@ -48,6 +48,7 @@ Obstacle = Class {
 			
 		-- Use this to detect obstacles when handling collisions	
 		self.fixture:setUserData(self)
+		--self.fixture:setCategory(OBSTACLE)
 	end
 }
 
