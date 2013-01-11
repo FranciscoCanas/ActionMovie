@@ -99,7 +99,7 @@ function insertEnemy(positions)
 end
 
 function state:leave()
-	TEsound.stop("bgMusic", true)
+	TEsound.stop("bgMusic", false) -- stop bg music immediately
 end
 
 function state:update(dt)
