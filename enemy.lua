@@ -93,7 +93,8 @@ function Enemy:init()
 	
 	-- sound stuff
 	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
-	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg"}
+	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", 
+		"sfx/scream3.ogg"}
 	
 end
 
@@ -229,6 +230,7 @@ function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
 	self.state = idle
+	
 end
 
 -- Resolve being shot here.

@@ -84,13 +84,13 @@ function state:enter()
 		Enemy(love.graphics.newImage('art/gunman.png'),
 		Vector(400,700)))
 		
-	table.insert(enemies, 
-		Enemy(love.graphics.newImage('art/gunman.png'),
-		Vector(600,600)))
+	-- table.insert(enemies, 
+		-- Enemy(love.graphics.newImage('art/gunman.png'),
+		-- Vector(600,600)))
 		
-	table.insert(enemies, 
-		Enemy(love.graphics.newImage('art/gunman.png'),
-		Vector(700,500)))
+	-- table.insert(enemies, 
+		-- Enemy(love.graphics.newImage('art/gunman.png'),
+		-- Vector(700,500)))
 end
 
 function state:leave()
