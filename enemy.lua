@@ -321,12 +321,27 @@ function Enemy:MoveToShootingSpot()
 	
 	-- are we close enough to shoot?
 	if (math.abs(dy) < self.inRange) then
-		self.state = shoot
+		-- is there anything (specifically another enemy) between this enemy and the target?
+		toShoot = true
+		world:rayCast(self.body:getX(), self.body:getY(), --enemy location
+					self.target.body:getX(), self.target.body:getY(), --target location
+					rayCallback) 
+		if toShoot then
+			self.state = shoot
+		end
 	end
 	
 	-- player is just right. so move to his y coord
 	self.delta.y = dy
 	self.delta:normalize_inplace()
+end
+
+-- the function to call when the ray casted by rayCast hits a fixture
+function rayCallback(fixture, x, y, xn, yn, fraction)
+	object = fixture:getUserData()
+	if object:is_a(Enemy) then toShoot = false end
+
+	return 1 -- Continues with ray cast through all shapes.
 end
 
 -- Sends to the enemy the order to move
