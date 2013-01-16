@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="Alley" tilewidth="32" tileheight="32">
-  <image source="alley.png" width="256" height="160"/>
-  <tile id="30">
-   <properties>
-    <property name="obstacle" value="true"/>
-   </properties>
-  </tile>
- </tileset>
- <tileset firstgid="41" name="Collsion" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Collsion" tilewidth="32" tileheight="32">
   <image source="collision.png" width="320" height="320"/>
  </tileset>
- <layer name="Ground" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJzt1yEBAEAIBLBrgvz+DcmA4QUTC7FKUgAAAAseAAAAJ/3+KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAVAOJztdN
-  </data>
- </layer>
+ <tileset firstgid="101" name="Wall" tilewidth="32" tileheight="32">
+  <image source="wall.png" width="288" height="255"/>
+ </tileset>
+ <tileset firstgid="164" name="Ground" tilewidth="32" tileheight="32">
+  <image source="ground.png" width="288" height="255"/>
+ </tileset>
  <layer name="Collision" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt17EJwDAMAMEMpf1nSxkygd7mDtQLvRvPQ8lsL8CPHi16tOjRMoHhU7jH9nuoDQ16tOjRokeLHi16tOjRokeLHi3bPbb/wcXZvMuJTt4dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG7xAi7kLek=
+   eJzt17EJwDAMAMEMoP3nTRkygd7mDtQLvRvPQ8lsL8CPHi16tOjRMoHhU7jH9nuoDQ16tOjRokeLHi16tOjRokeLHi3bPbb/wcXZvMuJTt4dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG7xAiCTCpk=
+  </data>
+ </layer>
+ <layer name="Ground" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1zEBADAIA7Cqxdl8ooGHHeSIiFSSAgAAWPAAAAA46fdHAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACmGgjwbs0=
   </data>
  </layer>
  <layer name="Bricks" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1kmOxCAMAMDOHPr/Tx7NIRKKbGMIl5GqTmkW4xCW/nz2XIfaV3G+i2OcNOb1cyjO6f5RXtGcPdt157V676xuLL+CsiyH+3fVp3L3u+NEeUTjRjk8x46+wbUQd2UNjGPvxlzZNzvrM4rfmdeZ7JtVcWbr5K7v5PB2r47jzPJ6rvdZu26/rLx7VlTlq7pzMVrJ888VPL8537L9l73DN3nOZGdJt2023ps7Kotflb0x2+dV+W113jvzs3q+rPxHqNZmdndFa/tp556r4o31nTajav5WY3W+V6dN50w4tXe6uuPt7rso/om7LYqV3U+zMgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+E9+ASnkAXg=
-  </data>
- </layer>
- <layer name="WallsStuffs" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJzt1ssKglAUBVChGoQ1qGxQWtDr/3+xIzgIiTS52IO1YONV8G7hoJhlwDt2kX1kFVk363LAPpuB/UVkO/Def3SKnFu5jNhfRQ4j9vGaeXSbRyaRaWTWnD8qEnaZRz95ZBFZtq7X3/oqYY959JM3x2fzuCbsqfe6JdwPxuRfFPgGx08/APw47xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEC3O+2wA+o=
+   eJzt1duKgzAQAFC/1kf1/5+WhQaGYG4mbZflHChCGmdym7htzxydbTPxKK9Lbb2uzrZWnBHf3L/zpm0v9H3HOGOuu7G03n2yx7NGc+bt+Xk6wq+Vs9WvpZWj5246Kv/VlOqo1+j5SEbXq7Qfq89UjFeb29O8sT7Sc3YPau7GWZpXrPvWmErz30P8GOMMz9k9a43tfPWJ/fKcv332rXyvpj7RX/mmX9kzto98R1eduxQn7X3a4+vVVssTazrG2bZ16926o0by5LU7E2vV+584l6VaWVHPve+vmGfrLNTuAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+C9+AD12K5s=
   </data>
  </layer>
  <objectgroup name="Enemy" width="100" height="100" visible="0">
   <object x="302" y="324"/>
  </objectgroup>
+ <layer name="WallsStuffs" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0DEKgDAQRcGc2dZSLWxzYi0WbAxs0IDgDLwm/G1SymWPsnr39KnRqD15y9kabQP2APzLFPG+ufHWKrt7eqP7/wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgK86AB6xNxY=
+  </data>
+ </layer>
+ <layer name="Ladder" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1b0OgjAQAGCe1iiDv6O7q6uPKw5NSBVoG5FKvi+5oc0VLr0Wmoba3GbO/5ZjQs5h9irepdQVbKLxp3rvme/PzS+1xN7WoNZ+jMk5k7XYJ87X3I9439dyZ8bO02NgftvFrhftRP5S1tCjlPt+6uLci0vCmtDDdiqxYE3Js38l/k+/xHscj4e+X0NK+hHWpOTmril59r+4Ll0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkeALYYRwH
+  </data>
+ </layer>
+ <layer name="Fire Escape" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztyrENgDAQBMGvH2ESC2jX14IDSx/MSJttFd1c6U4jPQd+9sz0pi/9B34AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoJcF4GEJDQ==
+  </data>
+ </layer>
 </map>
