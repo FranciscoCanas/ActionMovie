@@ -28,7 +28,7 @@ end
 
 function state:enter()
 	-- set up sound objects here
-	bgMusicList = {"music/deathScene.ogg"}
+	bgMusicList = {"music/meanStreets.ogg"}
 	TEsound.playLooping(bgMusicList, "bgMusic")
 	
 	-- initialize world here

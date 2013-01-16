@@ -91,18 +91,18 @@ function(self, num)
 	-- love.physics ends here
 	
 	-- sound stuffs go here
-	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
+	self.gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
 	--, "sfx/gunshot3.ogg" }
 	
 	
 	-- particle sys stuff go here now!
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
-	gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 30 )
-	gunEmitter:setEmissionRate(30)
-	gunEmitter:setLifetime(0.01)
-	gunEmitter:setParticleLife(0.5)
-	gunEmitter:setSpread(30)
-	--gunEmitter:setSize(0.3, 0.7, 0.5)
+	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 30 )
+	self.gunEmitter:setEmissionRate(30)
+	self.gunEmitter:setLifetime(0.01)
+	self.gunEmitter:setParticleLife(0.5)
+	self.gunEmitter:setSpread(30)
+	self.gunEmitter:setSizes(0.3, 0.7, 0.5)
 end
 }
 
@@ -132,7 +132,7 @@ function Player:update(dt)
 	-- Inc timers
 	self.timer:update(dt)
 	-- particle stuffs
-	gunEmitter:update(dt)
+	self.gunEmitter:update(dt)
 	
 	-- delta holds direction of movement input
 	local delta = Vector(0,0)
@@ -214,15 +214,17 @@ function Player:fire()
 		-- figure out origin to fire from first
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
-		pos = pos + self.facing * 25
+		local aiming = self.facing
+		aiming.y = 0
+		pos = pos + aiming * 35
 		
 		-- set up the flashy sparkly guy
-		gunEmitter:reset()
-		gunEmitter:setPosition(pos.x, pos.y)
+		self.gunEmitter:reset()
+		self.gunEmitter:setPosition(pos.x, pos.y)
 		
 		self.timer:add(0.25, function()	
-			gunEmitter:start()
-			table.insert(bullets,Bullet(null, pos, self.facing)) 
+			self.gunEmitter:start()
+			table.insert(bullets,Bullet(null, pos, aiming)) 
 			TEsound.play(gunsoundlist)
 		end)
 end
@@ -230,6 +232,7 @@ end
 function Player:stopFire()
 	self.fired = false
 	self.animation = self.standAnim
+	self.gunEmitter:stop()
 end
 
 function Player:keyReleaseHandler(key)
