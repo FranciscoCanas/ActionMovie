@@ -77,7 +77,7 @@ function Enemy:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
-	self.inRange = 10  -- y axis shooting boundary
+	self.inRange = 32  -- y axis shooting boundary
 	self.maxTargetRange = 400 --/ background.map.tileWidth
 	self.minTargetRange = 250 --/ background.map.tileHeight
 	self.observePlayerRange = 600
@@ -323,23 +323,37 @@ function Enemy:MoveToShootingSpot()
 	if (math.abs(dy) < self.inRange) then
 		-- is there anything (specifically another enemy) between this enemy and the target?
 		toShoot = true
+		curEnemy = self
 		world:rayCast(self.body:getX(), self.body:getY(), --enemy location
 					self.target.body:getX(), self.target.body:getY(), --target location
-					rayCallback) 
+					rayCallback) -- order of rayCallback not necessary in order of what object is hit first
 		if toShoot then
+			-- has a clear shot
 			self.state = shoot
+		else
+			-- doesn't have a clear shot.
+			self.delta.y = self.body:getY() + self.height
 		end
-	end
 	
-	-- player is just right. so move to his y coord
-	self.delta.y = dy
-	self.delta:normalize_inplace()
+	else
+		-- player not in range, but right distance apart
+		-- player is just right. so move to his y coord
+		self.delta.y = dy
+	end
+	self.delta:normalize_inplace()	
 end
 
 -- the function to call when the ray casted by rayCast hits a fixture
 function rayCallback(fixture, x, y, xn, yn, fraction)
 	object = fixture:getUserData()
-	if object:is_a(Enemy) then toShoot = false end
+	if object:is_a(Enemy) then 
+		if (player1.isplaying and player2.isplaying) then
+			curEnemy:SetNearestTarget()
+		end
+		--curEnemy.delta.y = object.body:getY() + curEnemy.height - curEnemy.body:getY()
+		toShoot = false 
+		return 0 -- stops ray from going through other fixtures
+	end
 
 	return 1 -- Continues with ray cast through all shapes.
 end
