@@ -3,12 +3,23 @@
 -- some sweet ass animations, and badass music.
 require 'TESound.TEsound'
 local Timer = require "hump.timer"
+local Camera = require "hump.camera"
 
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
 local currentString = ""
 
 function state:enter()
+-- set up props here (like sprites and such)
+	player1.position = Vector(5000, 5000)
+	player2.position = Vector(10000, 10000)
+
+-- set up camera ------------------------------------
+	cam = Camera(0, 0, 
+		1, -- zoom level
+		0 -- rotation angle
+		)
+
 -- set up sound objects here
 	stringTimer = Timer.new()
 	bgMusicList = {"music/actionMovie.ogg"}
@@ -63,6 +74,12 @@ function state:update(dt)
 end
 
 function state:draw()
+
+	cam:attach()	
+	-- draw stuff that's camera locked here
+	cam:detach()	
+
+	-- draw the credits and other non-camera locked stuff here
 	love.graphics.printf( currentString, (dimScreen.x/2) - 125, (dimScreen.y/2)-20, 250, "center" )
 end 
 
