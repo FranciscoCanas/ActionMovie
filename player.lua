@@ -97,12 +97,14 @@ function(self, num)
 	
 	-- particle sys stuff go here now!
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
-	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 30 )
-	self.gunEmitter:setEmissionRate(30)
+	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.gunEmitter:setEmissionRate(500)
 	self.gunEmitter:setLifetime(0.01)
-	self.gunEmitter:setParticleLife(0.5)
-	self.gunEmitter:setSpread(30)
-	self.gunEmitter:setSizes(0.3, 0.7, 0.5)
+	self.gunEmitter:setParticleLife(0.25)
+	self.gunEmitter:setSpread(3.14/2)
+	self.gunEmitter:setSizes(0.05, 0.5)
+	self.gunEmitter:setGravity(0,0)
+	self.gunEmitter:setSpeed(80,160)
 end
 }
 
@@ -192,7 +194,7 @@ function Player:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
-    
+ love.graphics.draw(self.gunEmitter)
 end
 
 
@@ -208,19 +210,26 @@ function Player:fire()
 		self.fired = true
 		self.animation = self.shootingAnim
 		self.animation:gotoFrame(1)
-		self.timer:add(0.5, function() 
-								self:stopFire() 
-							end)
+		self.timer:add(0.5, function()
+					self:stopFire() 
+				end)
 		-- figure out origin to fire from first
 		local pos = Vector(0,0)
 		pos.x, pos.y = self.body:getWorldCenter()
 		local aiming = self.facing
 		aiming.y = 0
 		pos = pos + aiming * 35
-		
+		local rads
 		-- set up the flashy sparkly guy
 		self.gunEmitter:reset()
-		self.gunEmitter:setPosition(pos.x, pos.y)
+		self.gunEmitter:setPosition(pos.x, pos.y - 20)
+		if aiming.x < 0 then
+			rads = 3.14
+		else
+			rads = 0
+		end
+		self.gunEmitter:setDirection( rads )
+	
 		
 		self.timer:add(0.25, function()	
 			self.gunEmitter:start()
