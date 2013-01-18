@@ -35,10 +35,10 @@ function state:enter()
 	-- world:setGravity(0,9.8*love.physics.getMeter())
 	-- Initialize players here
 	if player1.isplaying then
-		player1.position = Vector(800,100)
+		player1:setPosition(Vector(100,600))
 	end
 	if player2.isplaying then
-		player2.position = Vector(100,300)
+		player2:setPosition(Vector(100,700)) 
 	end
 
 	-- set up camera ------------------------------------
@@ -114,7 +114,7 @@ function state:update(dt)
 	for i,player in ipairs(players) do
 		if player.isplaying then
 			player:update(math.min(dt, 1/60))
-			player.animation:update(math.min(dt, 1/60))
+
 		end
 	end
 	

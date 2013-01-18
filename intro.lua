@@ -4,6 +4,8 @@
 require 'TESound.TEsound'
 local Timer = require "hump.timer"
 local Camera = require "hump.camera"
+local font = love.graphics.setNewFont(24)
+love.graphics.setFont( font)
 
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
@@ -11,32 +13,39 @@ local currentString = ""
 
 function state:enter()
 -- title graphics 
+	titleScene = love.graphics.newImage("art/titleScene.png")		
 	titleImage = love.graphics.newImage("art/title.png")
 	drawTitle = false
 
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
 	self.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
-	self.explosion:setEmissionRate(150)
+	self.explosion:setEmissionRate(100)
 	self.explosion:setLifetime(1.0)
 	self.explosion:setParticleLife(10)
 	self.explosion:setSpread(360)
-	self.explosion:setSizes(1, 3.5, 5.0)
+	self.explosion:setSizes(4, 6.5, 8.0)
 	self.explosion:setRotation(60)
-	self.explosion:setSpeed(150,250)
+	self.explosion:setSpeed(350,550)
 	self.explosion:setSpin(0,1,0.5)
 	self.explosion:setPosition(dimScreen.x/2, dimScreen.y/2)
 	self.explosion:stop()
 
 -- set up props here (like sprites and such)
-	player1.position = Vector(5000, 5000)
-	player2.position = Vector(10000, 10000)
+--	player1:setPosition(Vector(400, 500))
+--	player2.setPosition(Vector(600, 600))
+	mcGuffForce = Vector(0,0)
+	crispyForce = Vector(0,0)
 
 -- set up camera ------------------------------------
-	cam = Camera(0, 0, 
+	cam = Camera(dimScreen.x/2, 400, 
 		1, -- zoom level
 		0 -- rotation angle
 		)
+
+	camdx = 0.5 -- camera x panning rate
+	camdy = 0
+	camdz = 1
 
 -- set up sound objects here
 	stringTimer = Timer.new()
@@ -61,25 +70,27 @@ function state:enter()
 			end)
 
 	-- around 26.5 or so
-	stringTimer:add(25.5, function()
+	stringTimer:add(25, function()
+				camdx = 0
 				state:titleExplosion()
 				currentString = ""
 			end)
 
-	stringTimer:add(33, function()
+	stringTimer:add(30, function()
 				drawTitle = false
 				currentString = "Starring Chun Chi Sham as Crispy"
 				state:zoomCrispy()
 			end)
 
-	stringTimer:add(41, function()
+	stringTimer:add(36, function()
 				currentString = "Cisco as McGuff"
 				state:zoomMcGuff()
 			end)
 
 
-	stringTimer:add(47, function()
-				currentString = "Bugsie as Oldie Olderson Jr"
+	stringTimer:add(42, function()
+				currentString = ""
+				drawTitle = true
 				state:zoomOldie()
 			end)
 
@@ -96,20 +107,33 @@ end
 
 function state:update(dt)
 	dt = math.min(dt, 1/60)
+	world:update(dt)
+
 	stringTimer:update(dt)
 
 	player1:update(dt)
+	player1.animation = player1.runAnim
+	player1.body:applyForce(crispyForce.x, crispyForce.y)
+	player1.animation:update(dt)
 	player2:update(dt)
-
+	player2.animation = player2.runAnim
+	player2.body:applyForce(mcGuffForce.x, mcGuffForce.y)
+	player2.animation:update(dt)
+	
+	cam:move(camdx,camdy)
+	cam:zoom(camdz)
 	state.explosion:update(dt)
 end
 
 function state:draw()
 
+
 	cam:attach()	
+	love.graphics.draw(titleScene, 0,0)
 	-- draw stuff that's camera locked here
 	player1:draw()
 	player2:draw()
+	
 	cam:detach()	
 
 	-- draw the credits and other non-camera locked stuff here
@@ -137,15 +161,27 @@ function state:titleExplosion()
 end
 
 function state:zoomCrispy()
+	crispyForce = Vector(2000,0)
+	camdx = 0.5
+	camdz = 1.001
 	cam:lookAt(player1.position.x+35, player1.position.y)
-	cam:zoomTo(10)
+	cam:zoomTo(5)
+	player1.animation = player1.runAnim
 end
 
 function state:zoomMcGuff()
+	mcGuffForce = Vector(2000,0)
+	camdx = 0.5
+	camdz = 1.001
 	cam:lookAt(player2.position.x+35, player2.position.y)
-	cam:zoomTo(10)
+	cam:zoomTo(5)
+	player2.animation = player2.runAnim
 end
 
 function state:zoomOldie()
-
+	camdx = 0
+	camdy = 0
+	camz = 0
+	cam:lookAt(dimScreen.x/2, dimScreen.y/2)
+	cam:zoomTo(1)
 end

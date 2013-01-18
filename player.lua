@@ -50,7 +50,6 @@ function(self, num)
 		
 	self.animation = self.standAnim
 	
-
 	-- love.physics code starts here -----------------------------------------
 	self.facing = Vector(1,0) -- normalized direction vector
 	self.acceleration = 12000
@@ -64,6 +63,7 @@ function(self, num)
 		--self.position.y,
 		"dynamic"
 		)
+	
 	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
@@ -101,10 +101,10 @@ function(self, num)
 	self.gunEmitter:setEmissionRate(500)
 	self.gunEmitter:setLifetime(0.01)
 	self.gunEmitter:setParticleLife(0.25)
-	self.gunEmitter:setSpread(3.14/2)
-	self.gunEmitter:setSizes(0.05, 0.5)
+	self.gunEmitter:setSpread(3.14/4)
+	self.gunEmitter:setSizes(0.05, 0.25)
 	self.gunEmitter:setGravity(0,0)
-	self.gunEmitter:setSpeed(80,160)
+	self.gunEmitter:setSpeed(200,300)
 end
 }
 
@@ -119,16 +119,21 @@ function Player:init()
 	self.isalive = true -- keeps track of aliveness. duh.
 	
 	if self.pnum == 2 then
-		self.position = Vector(
-			dimScreen.x - (50 + self.width),
-			dimScreen.y - 80)
+		self.position = Vector(4800, 880)
 	elseif self.pnum == 1 then
-		self.position = Vector(50,dimScreen.y - 80)
+		self.position = Vector(4020,880)
 	end
 	
 end
 
+function Player:setPosition(v)
+	self.body:setX(v.x)
+	self.body:setY(v.y)
+end
+
 function Player:update(dt)
+	-- animation stuff
+	self.animation:update(dt)
 	-- sound stuff
 	TEsound.cleanup()
 	-- Inc timers
@@ -169,7 +174,10 @@ function Player:update(dt)
 	-- Handle the animation switching here as needed:
 	if not self.fired then
 		if moved then 
-			self.facing = delta
+			if delta.x ~= 0 then
+				self.facing.x = delta.x
+				self.facing.y = 0
+			end
 			self.animation = self.runAnim
 		else
 			self.animation = self.standAnim
@@ -213,30 +221,39 @@ function Player:fire()
 		self.timer:add(0.5, function()
 					self:stopFire() 
 				end)
-		-- figure out origin to fire from first
+		-- figure out origin to fire from 
+		-- and direction to fire in
 		local pos = Vector(0,0)
-		pos.x, pos.y = self.body:getWorldCenter()
 		local aiming = self.facing
 		aiming.y = 0
-		pos = pos + aiming * 35
+		aiming:normalize_inplace()
+
+		pos.x, pos.y = self.body:getWorldCenter()
+		pos = pos + aiming * 20
+
 		local rads
 		-- set up the flashy sparkly guy
 		self.gunEmitter:reset()
 		self.gunEmitter:setPosition(pos.x, pos.y - 20)
+		self.gunEmitter:start()
 		if aiming.x < 0 then
 			rads = 3.14
 		else
 			rads = 0
 		end
-		self.gunEmitter:setDirection( rads )
-	
+
 		
+		self.timer:add(0.10, function()
+				self.gunEmitter:setDirection( rads )
+			end)
+
 		self.timer:add(0.25, function()	
-			self.gunEmitter:start()
+
 			table.insert(bullets,Bullet(null, pos, aiming)) 
 			TEsound.play(gunsoundlist)
 		end)
 end
+
 
 function Player:stopFire()
 	self.fired = false

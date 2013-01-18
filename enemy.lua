@@ -68,6 +68,17 @@ function(self, image, position)
 	--self.fixture:setCategory(ENEMY)	
 		
 	self.body:setLinearDamping( self.damping )
+
+-- particle sys stuff go here now!
+	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
+	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.gunEmitter:setEmissionRate(500)
+	self.gunEmitter:setLifetime(0.01)
+	self.gunEmitter:setParticleLife(0.25)
+	self.gunEmitter:setSpread(3.14/3)
+	self.gunEmitter:setSizes(0.05, 0.5)
+	self.gunEmitter:setGravity(0,0)
+	self.gunEmitter:setSpeed(140,260)
 end
 }
 
@@ -105,6 +116,8 @@ function Enemy:init()
 end
 
 function Enemy:update(dt)
+	-- update particles
+	self.gunEmitter:update(dt)
 	-- update the timer
 	self.timer:update(dt)
 	-- delta holds direction of movement input
@@ -163,6 +176,8 @@ function Enemy:draw()
 			self.frameFlipH,
 			self.frameFlipV
 			)
+
+	
 end
 
 function Enemy:moveToShoot()
@@ -231,10 +246,20 @@ function Enemy:shoot()
 		-- randomness
 		local ry = (math.random(0, 4) - 2) / 10
 		local bulletDir = Vector(self.facing.x,ry)
+		local aim = 0
+		if (bulletDir.x < 0) then
+			aim = 3.14
+		end
+
+		self.timer:add(0.10, function()
+				self.gunEmitter:setDirection( aim )
+			end)
 		
 		pos = pos + self.facing * 25
-		table.insert(bullets,Bullet(null, pos, bulletDir))	
-		TEsound.play(gunsoundlist)		
+		self.timer:add(0.25, function()
+			table.insert(bullets,Bullet(null, pos, bulletDir))	
+			TEsound.play(gunsoundlist)	
+		end)	
 	end
 end
 
