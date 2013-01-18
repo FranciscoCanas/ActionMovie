@@ -12,22 +12,28 @@ end
 function state:leave()
 end
 
-function state:update()
+function state:update(dt)
+	
 end
 
 function state:draw()
+	love.graphics.draw(titleScene, 0,0)
+
+	love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-240)
+
+
 	love.graphics.print("Episode One", (dimScreen.x / 2) - 10, 10)
 	-- Code to draw player when they join a game
 	if player1.isplaying then 
-		love.graphics.print("Player1",
-			60,
-			dimScreen.y - (player1.height + 50))
+		--love.graphics.print("Player1",
+		--	60,
+		--	dimScreen.y - (player1.height + 50))
 		player1:draw()
 	end
 	if player2.isplaying then
-		love.graphics.print("Player2",
-			dimScreen.x - (40 + player2.width),
-			dimScreen.y - (player2.height + 50))
+		--love.graphics.print("Player2",
+		--	dimScreen.x - (40 + player2.width),
+		--	dimScreen.y - (player2.height + 50))
 		player2:draw()
 	end
 end 

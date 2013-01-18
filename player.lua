@@ -121,7 +121,7 @@ function Player:init()
 	if self.pnum == 2 then
 		self.position = Vector(4800, 880)
 	elseif self.pnum == 1 then
-		self.position = Vector(4020,880)
+		self.position = Vector(4600,880)
 	end
 	
 end
