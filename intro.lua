@@ -17,13 +17,13 @@ function state:enter()
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
 	self.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
-	self.explosion:setEmissionRate(500)
-	self.explosion:setLifetime(0.01)
-	self.explosion:setParticleLife(5)
+	self.explosion:setEmissionRate(150)
+	self.explosion:setLifetime(1.0)
+	self.explosion:setParticleLife(10)
 	self.explosion:setSpread(360)
-	self.explosion:setSizes(1, 2.5, 5.0)
+	self.explosion:setSizes(1, 3.5, 5.0)
 	self.explosion:setRotation(60)
-	self.explosion:setSpeed(75,125)
+	self.explosion:setSpeed(150,250)
 	self.explosion:setSpin(0,1,0.5)
 	self.explosion:setPosition(dimScreen.x/2, dimScreen.y/2)
 	self.explosion:stop()
@@ -41,33 +41,33 @@ function state:enter()
 -- set up sound objects here
 	stringTimer = Timer.new()
 	bgMusicList = {"music/actionMovie.ogg"}
-	TEsound.playLooping(bgMusicList, "bgMusic")
 	p = 0
 					
 	stringTimer:add(0, function() 
 				currentString = "Crouching Guy Pictures Presents" 
 			end)
 
-	stringTimer:add(6, function() 
+	stringTimer:add(7, function() 
 				currentString = "A Crouching Guy Productions Picture Production" 
 			end)
 
 
-	stringTimer:add(12, function() 
+	stringTimer:add(14, function() 
 				currentString = "in Association with ..." 
 			end)
 
-	stringTimer:add(18, function() 
+	stringTimer:add(20, function() 
 				currentString = "Based on a Youtube Sensation viewed by a guy from Crouching Guy Production Pictures" 
 			end)
 
-	-- around 26 or so
-	stringTimer:add(28, function()
+	-- around 26.5 or so
+	stringTimer:add(25.5, function()
 				state:titleExplosion()
 				currentString = ""
 			end)
 
-	stringTimer:add(35, function()
+	stringTimer:add(33, function()
+				drawTitle = false
 				currentString = "Starring Chun Chi Sham as Crispy"
 				state:zoomCrispy()
 			end)
@@ -86,8 +86,8 @@ function state:enter()
 	
 
 
-
-
+	-- start music
+	TEsound.playLooping(bgMusicList, "bgMusic")
 end
 
 function state:leave()
@@ -108,6 +108,8 @@ function state:draw()
 
 	cam:attach()	
 	-- draw stuff that's camera locked here
+	player1:draw()
+	player2:draw()
 	cam:detach()	
 
 	-- draw the credits and other non-camera locked stuff here
@@ -135,12 +137,12 @@ function state:titleExplosion()
 end
 
 function state:zoomCrispy()
-	cam:lookAt(player1.position:unpack())
+	cam:lookAt(player1.position.x+35, player1.position.y)
 	cam:zoomTo(10)
 end
 
 function state:zoomMcGuff()
-	cam:lookAt(player2.position:unpack())
+	cam:lookAt(player2.position.x+35, player2.position.y)
 	cam:zoomTo(10)
 end
 
