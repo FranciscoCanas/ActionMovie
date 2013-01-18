@@ -118,10 +118,10 @@ function Player:init()
 	self.fired = false -- keeps track of shooting state
 	self.isalive = true -- keeps track of aliveness. duh.
 	
-	if self.pnum == 2 then
-		self.position = Vector(4800, 880)
-	elseif self.pnum == 1 then
-		self.position = Vector(4600,880)
+	if self.pnum == 1 then
+		self.position = Vector(4900, 900)
+	elseif self.pnum == 2 then
+		self.position = Vector(4200,940)
 	end
 	
 end

@@ -20,7 +20,7 @@ function state:enter()
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
 	self.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
-	self.explosion:setEmissionRate(100)
+	self.explosion:setEmissionRate(60)
 	self.explosion:setLifetime(1.0)
 	self.explosion:setParticleLife(10)
 	self.explosion:setSpread(360)
@@ -114,6 +114,13 @@ function state:enter()
 				currentString = ""
 				drawTitle = true
 				state:zoomOldie()
+				state:endAtTitle()
+			end)
+
+
+	stringTimer:add(43, function()
+			crispyAnim = player1.standAnim
+			mcGuffAnim = player2.standAnim	
 			end)
 
 	
@@ -203,7 +210,14 @@ end
 function state:zoomOldie()
 	camdx = 0
 	camdy = 0
-	camz = 0
+	camdz = 1.001
 	cam:lookAt(dimScreen.x/2, dimScreen.y/2)
 	cam:zoomTo(1)
+end
+
+function state:endAtTitle()
+	player1:setPosition(Vector(300,900))
+	crispyAnim = player1.shootingAnim
+	player2:setPosition(Vector(350,1000))
+	mcGuffAnim = player2.shootingAnim
 end
