@@ -147,23 +147,34 @@ function state:enter()
 				currentString = "Murderballer #2 as Lloyd the Burgler"
 			end)
 
+
 	stringTimer:add(56, function()
+				currentString = "Wendell Pierce as Detective Bunk"
+			end)
+	
+
+	stringTimer:add(60, function()
 				currentString = "And a special guest appearance by..."
 			end)
 
 
-	stringTimer:add(60, function()
+	stringTimer:add(64, function()
 				currentString = "Barack Obama as himself"
 			end)
 
 
-	stringTimer:add(65, function()
+	stringTimer:add(69, function()
+			currentString = ""
 			state:endAtTitle()
 			end)
 	
-	stringTimer:add(67, function()
+	stringTimer:add(71, function()
 			crispyAnim = player1.standAnim
 			mcGuffAnim = player2.standAnim	
+			end)
+
+	stringTimer:add(76, function()
+				currentString = ""
 			end)
 
 
