@@ -58,18 +58,27 @@ function state:enter()
 				currentString = "Crouching Guy Pictures Presents" 
 			end)
 
-	stringTimer:add(7, function() 
+	stringTimer:add(5, function() 
 				currentString = "A Crouching Guy Productions Picture Production" 
 			end)
 
 
-	stringTimer:add(14, function() 
-				currentString = "in Association with ..." 
+	stringTimer:add(10, function() 
+				currentString = "in Association with Crazy Cup Entertainment Studios" 
+			end)
+
+	stringTimer:add(15, function() 
+				currentString = "Based on a Youtube Sensation viewed by the guy from Crouching Guy Production Pictures" 
 			end)
 
 	stringTimer:add(20, function() 
-				currentString = "Based on a Youtube Sensation viewed by a guy from Crouching Guy Production Pictures" 
+				currentString = "...which was in turn adapted from some Turkish movie..." 
 			end)
+
+	stringTimer:add(23, function() 
+				currentString = "...it's..." 
+			end)
+
 
 	-- around 26.5 or so
 	stringTimer:add(24.5, function()
@@ -87,6 +96,10 @@ function state:enter()
 	stringTimer:add(33, function()
 				crispyAnim = player1.shootingAnim
 				crispyForce = Vector(0,0)
+				camdz = 1
+				camdx = 0
+				cam:lookAt(player1.position.x+50, player1.position.y)
+				cam:zoomTo(10)
 			end)
 
 	stringTimer:add(34, function()
@@ -99,35 +112,66 @@ function state:enter()
 				state:zoomMcGuff()
 			end)
 
-	stringTimer:add(38, function()
+	stringTimer:add(39, function()
 				mcGuffAnim = player2.shootingAnim
 					mcGuffForce = Vector(0,0)
+				camdz = 1
+				camdx = 0
+				cam:lookAt(player2.position.x+50, player2.position.y)
+				cam:zoomTo(10)
+
 			end)
 
-	stringTimer:add(39, function()
+	stringTimer:add(40, function()
 				mcGuffAnim = player2.standAnim
 					
 			end)
 
 
 	stringTimer:add(42, function()
-				currentString = ""
-				drawTitle = true
+				currentString = "guest starring"
 				state:zoomOldie()
-				state:endAtTitle()
+			      --state:endAtTitle()
 			end)
 
 
-	stringTimer:add(43, function()
+	stringTimer:add(44, function()
+				currentString = "Drex Gillicudy as Pato"
+			end)
+
+	stringTimer:add(48, function()
+				currentString = "Mr. T as Skinny Pete"
+			end)
+
+	stringTimer:add(52, function()
+				currentString = "Murderballer #2 as Lloyd the Burgler"
+			end)
+
+	stringTimer:add(56, function()
+				currentString = "And a special guest appearance by..."
+			end)
+
+
+	stringTimer:add(60, function()
+				currentString = "Barack Obama as himself"
+			end)
+
+
+	stringTimer:add(65, function()
+			state:endAtTitle()
+			end)
+	
+	stringTimer:add(67, function()
 			crispyAnim = player1.standAnim
 			mcGuffAnim = player2.standAnim	
 			end)
+
 
 	
 
 
 	-- start music
-	TEsound.playLooping(bgMusicList, "bgMusic")
+	TEsound.play(bgMusicList, "bgMusic")
 end
 
 function state:leave()
@@ -216,6 +260,9 @@ function state:zoomOldie()
 end
 
 function state:endAtTitle()
+	cam:zoomTo(1)
+	camdz = 1
+	drawTitle = true
 	player1:setPosition(Vector(300,900))
 	crispyAnim = player1.shootingAnim
 	player2:setPosition(Vector(350,1000))
