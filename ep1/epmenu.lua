@@ -1,8 +1,10 @@
 -- This is the menu for episode one.
 -- Players will be able to select a scene to start from.
 require "ep1/scene"
+require "ep1/scene3"
 Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
+local epi = 0 
 
 function state:enter()
 	--player1:init()
@@ -17,6 +19,14 @@ end
 
 function state:draw()
 	love.graphics.print("Episode One", (dimScreen.x / 2) - 10, 10)
+
+	if (epi == 0) then
+		love.graphics.print("Scene One", (dimScreen.x / 2) - 10, (dimScreen.y / 2) )
+	elseif (epi == 1) then
+		love.graphics.print("Scene Two", (dimScreen.x / 2) - 10, (dimScreen.y / 2))
+	elseif (epi == 2) then
+		love.graphics.print("Scene Three", (dimScreen.x / 2) - 10, (dimScreen.y / 2))
+	end
 	-- Code to draw player when they join a game
 	if player1.isplaying then 
 		love.graphics.print("Player1",
@@ -38,7 +48,17 @@ function state:keyreleased(key)
 		Gamestate.switch(Gamestate.menu)
 	elseif key == "return" then
 		-- Start scene 1
-		Gamestate.switch(Gamestate.scene)
+		if (epi == 0) then
+			Gamestate.switch(Gamestate.scene)
+		elseif (epi == 1) then
+			--Gamestate.switch(Gamestate.scene2)
+		elseif (epi == 2) then
+			Gamestate.switch(Gamestate.scene3)
+		end
+	elseif key == "up" then
+		epi = (epi - 1) % 3
+	elseif key == "down" then
+		epi = (epi + 1) % 3 
 	end	
 	
 end
