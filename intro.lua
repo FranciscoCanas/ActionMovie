@@ -4,7 +4,7 @@
 require 'TESound.TEsound'
 local Timer = require "hump.timer"
 local Camera = require "hump.camera"
-local font = love.graphics.setNewFont(24)
+local font = love.graphics.setNewFont(32)
 love.graphics.setFont( font)
 
 Gamestate.intro = Gamestate.new()
@@ -16,6 +16,26 @@ function state:enter()
 	titleScene = love.graphics.newImage("art/titleScene.png")		
 	titleImage = love.graphics.newImage("art/title.png")
 	drawTitle = false
+
+-- extra char graphics/anims here
+	drawMurderBaller = false
+	murderBallerPos = Vector(400,500)
+	murderBallerImage = love.graphics.newImage('art/murderballer.png')
+	murderBallerGrid = Anim8.newGrid(52, 52, 
+			murderBallerImage:getWidth(),
+			murderBallerImage:getHeight())
+
+	murderBallerRunAnim = Anim8.newAnimation('loop',
+		murderBallerGrid('1-4, 1'),
+		0.2) 
+
+	murderBallerStandAnim = Anim8.newAnimation('loop',
+		murderBallerGrid('1-4, 2'),
+		0.2) 
+
+	murderBaller = murderBallerRunAnim
+
+	
 
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
@@ -130,45 +150,59 @@ function state:enter()
 
 	stringTimer:add(42, function()
 				currentString = "guest starring"
-				state:zoomOldie()
+				state:zoomToTitle()
 			      --state:endAtTitle()
 			end)
 
 
-	stringTimer:add(44, function()
+
+	-- 45
+	stringTimer:add(45, function()
+				currentString = "Murderballer #2 as Lloyd the Burgler"
+				cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
+				cam:zoomTo(4)
+				camdx = 0.5
+				camdy = 0
+				camdz = 1
+				drawMurderBaller = true		
+			end)
+
+	stringTimer:add(46, function()
+			murderBaller = murderBallerStandAnim
+		end)
+
+
+	stringTimer:add(49, function()
+				state:zoomToTitle()
+				currentString = "Wendell Pierce as Detective Bunk"
+				drawMurderBaller = false
+			end)
+
+	stringTimer:add(54, function()
 				currentString = "Drex Gillicudy as Pato"
 			end)
 
-	stringTimer:add(48, function()
+	stringTimer:add(59, function()
 				currentString = "Mr. T as Skinny Pete"
-			end)
-
-	stringTimer:add(52, function()
-				currentString = "Murderballer #2 as Lloyd the Burgler"
-			end)
-
-
-	stringTimer:add(56, function()
-				currentString = "Wendell Pierce as Detective Bunk"
 			end)
 	
 
-	stringTimer:add(60, function()
+	stringTimer:add(64, function()
 				currentString = "And a special guest appearance by..."
 			end)
 
 
-	stringTimer:add(64, function()
+	stringTimer:add(66, function()
 				currentString = "Barack Obama as himself"
 			end)
 
 
-	stringTimer:add(69, function()
+	stringTimer:add(71, function()
 			currentString = ""
 			state:endAtTitle()
 			end)
 	
-	stringTimer:add(71, function()
+	stringTimer:add(73, function()
 			crispyAnim = player1.standAnim
 			mcGuffAnim = player2.standAnim	
 			end)
@@ -204,6 +238,10 @@ function state:update(dt)
 	player2.body:applyForce(mcGuffForce.x, mcGuffForce.y)
 	player2.animation:update(dt)
 	
+	if drawMurderBaller then
+		murderBaller:update(dt)
+	end
+
 	cam:move(camdx,camdy)
 	cam:zoom(camdz)
 	state.explosion:update(dt)
@@ -217,16 +255,33 @@ function state:draw()
 	-- draw stuff that's camera locked here
 	player1:draw()
 	player2:draw()
-	
 	cam:detach()	
+
+		if drawMurderBaller then
+		murderBaller:drawf(murderBallerImage, 
+			murderBallerPos.x,
+			murderBallerPos.y,
+			0, -- angle
+			4, -- x scale
+			4, -- y scale
+			0, -- x offset
+			0, -- y offset
+			self.frameFlipH,
+			self.frameFlipV
+			)
+		end
+	
+
 
 	-- draw the credits and other non-camera locked stuff here
 	love.graphics.draw(self.explosion)
-	love.graphics.printf( currentString, (dimScreen.x/2) - 125, (dimScreen.y/2)-20, 250, "center" )
+	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y/2)-100, 400, "center" )
 
 	if drawTitle then
-		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-240)
+		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-220)
 	end
+
+
 end 
 
 function state:keyreleased(key)
@@ -262,7 +317,7 @@ function state:zoomMcGuff()
 	mcGuffAnim = player2.runAnim
 end
 
-function state:zoomOldie()
+function state:zoomToTitle()
 	camdx = 0
 	camdy = 0
 	camdz = 1.001

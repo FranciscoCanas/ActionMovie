@@ -53,7 +53,7 @@ function love.load()
 	love.graphics.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		true, -- fullscreen
+		false, -- fullscreen
 		false, --vsync
 		0 -- antialiasing
 		)

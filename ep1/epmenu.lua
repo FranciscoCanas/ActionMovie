@@ -1,7 +1,7 @@
 -- This is the menu for episode one.
 -- Players will be able to select a scene to start from.
 require "ep1/scene"
-require "ep1/scene3"
+--require "ep1/scene3"
 Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
 local epi = 0 
