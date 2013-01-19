@@ -20,7 +20,7 @@ function state:enter()
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
 	self.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
-	self.explosion:setEmissionRate(100)
+	self.explosion:setEmissionRate(60)
 	self.explosion:setLifetime(1.0)
 	self.explosion:setParticleLife(10)
 	self.explosion:setSpread(360)
@@ -36,6 +36,8 @@ function state:enter()
 --	player2.setPosition(Vector(600, 600))
 	mcGuffForce = Vector(0,0)
 	crispyForce = Vector(0,0)
+	mcGuffAnim = player2.standAnim
+	crispyAnim = player1.standAnim
 
 -- set up camera ------------------------------------
 	cam = Camera(dimScreen.x/2, 400, 
@@ -70,7 +72,7 @@ function state:enter()
 			end)
 
 	-- around 26.5 or so
-	stringTimer:add(25, function()
+	stringTimer:add(24.5, function()
 				camdx = 0
 				state:titleExplosion()
 				currentString = ""
@@ -82,9 +84,29 @@ function state:enter()
 				state:zoomCrispy()
 			end)
 
+	stringTimer:add(33, function()
+				crispyAnim = player1.shootingAnim
+				crispyForce = Vector(0,0)
+			end)
+
+	stringTimer:add(34, function()
+				crispyAnim = player1.standAnim
+				crispyForce = Vector(0,0)
+			end)
+
 	stringTimer:add(36, function()
 				currentString = "Cisco as McGuff"
 				state:zoomMcGuff()
+			end)
+
+	stringTimer:add(38, function()
+				mcGuffAnim = player2.shootingAnim
+					mcGuffForce = Vector(0,0)
+			end)
+
+	stringTimer:add(39, function()
+				mcGuffAnim = player2.standAnim
+					
 			end)
 
 
@@ -92,6 +114,13 @@ function state:enter()
 				currentString = ""
 				drawTitle = true
 				state:zoomOldie()
+				state:endAtTitle()
+			end)
+
+
+	stringTimer:add(43, function()
+			crispyAnim = player1.standAnim
+			mcGuffAnim = player2.standAnim	
 			end)
 
 	
@@ -112,11 +141,11 @@ function state:update(dt)
 	stringTimer:update(dt)
 
 	player1:update(dt)
-	player1.animation = player1.runAnim
+	player1.animation = crispyAnim
 	player1.body:applyForce(crispyForce.x, crispyForce.y)
 	player1.animation:update(dt)
 	player2:update(dt)
-	player2.animation = player2.runAnim
+	player2.animation = mcGuffAnim
 	player2.body:applyForce(mcGuffForce.x, mcGuffForce.y)
 	player2.animation:update(dt)
 	
@@ -166,7 +195,7 @@ function state:zoomCrispy()
 	camdz = 1.001
 	cam:lookAt(player1.position.x+35, player1.position.y)
 	cam:zoomTo(5)
-	player1.animation = player1.runAnim
+	crispyAnim = player1.runAnim
 end
 
 function state:zoomMcGuff()
@@ -175,13 +204,20 @@ function state:zoomMcGuff()
 	camdz = 1.001
 	cam:lookAt(player2.position.x+35, player2.position.y)
 	cam:zoomTo(5)
-	player2.animation = player2.runAnim
+	mcGuffAnim = player2.runAnim
 end
 
 function state:zoomOldie()
 	camdx = 0
 	camdy = 0
-	camz = 0
+	camdz = 1.001
 	cam:lookAt(dimScreen.x/2, dimScreen.y/2)
 	cam:zoomTo(1)
+end
+
+function state:endAtTitle()
+	player1:setPosition(Vector(300,900))
+	crispyAnim = player1.shootingAnim
+	player2:setPosition(Vector(350,1000))
+	mcGuffAnim = player2.shootingAnim
 end
