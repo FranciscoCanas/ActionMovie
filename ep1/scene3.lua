@@ -10,6 +10,7 @@ local jumperDebug = require 'Jumper.debug_utils'
 local Timer = require "hump.timer"
 require 'TESound.TEsound'
 
+
 -- State declarations
 Gamestate.scene3 = Gamestate.new()
 local state = Gamestate.scene3
@@ -29,7 +30,7 @@ end
 function state:enter()
 	-- set up sound objects here
 	bgMusicList = {"music/meanStreets.ogg"}
-	--TEsound.playLooping(bgMusicList, "bgMusic")
+--	TEsound.playLooping(bgMusicList, "bgMusic")
 	
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())

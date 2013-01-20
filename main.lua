@@ -4,7 +4,8 @@ Class = require "hump.class"
 Vector = require "hump.vector"
 Anim8 = require "anim8.anim8"
 Timer = require "hump.timer"
-Sound = require "TESound.TEsound"
+--require "TESound.TEsound"
+require 'TESound.TEsound'
 
 -- Entities requires
 require "player"

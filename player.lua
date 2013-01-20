@@ -250,7 +250,7 @@ function Player:fire()
 		self.timer:add(0.25, function()	
 
 			table.insert(bullets,Bullet(null, pos, aiming)) 
-			TEsound.play(gunsoundlist)
+			TEsound.play(self.gunsoundlist)
 		end)
 end
 
