@@ -269,8 +269,8 @@ function state:draw()
 			4, -- y scale
 			0, -- x offset
 			0, -- y offset
-			self.frameFlipH,
-			self.frameFlipV
+			false, -- H flip
+			false -- V flip
 			)
 		end
 	
