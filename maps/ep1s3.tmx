@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="32" height="30" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="33" height="30" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32">
   <image source="collision.png" width="320" height="320"/>
  </tileset>
  <tileset firstgid="101" name="Ground" tilewidth="32" tileheight="32">
   <image source="ground.png" width="288" height="255"/>
  </tileset>
- <layer name="Ground" width="32" height="30">
+ <layer name="Ground" width="33" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1DEKACAMQ9HeVlDQQUGPbxfBQdyqgn94kC2QIU5EHLa8Cot8SlZlkX/B/hiiShf7q2oP7ABYu/G1M74WAGClA6O7gyA=
+   eJztw0ENAAAMA6FzW/8OpmI/SFg1VVVV9eUBowiOYg==
   </data>
  </layer>
- <layer name="Collision" width="32" height="30">
+ <layer name="Barricade" width="33" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1kENAAAIA7EJwL9eZIyEXrJ3v5skU14rPp/P5/P5fD6/4X/83tKFFqvDBRE=
+   eJztzkENACEQALEVgH+995hggYOkVdCZt6y/A+OwOcQhDnGIQxziEIc45IYDcM4HuO8BCQ==
   </data>
  </layer>
- <layer name="Barricade" width="32" height="30">
+ <layer name="Collision" width="33" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzUERAAAIA6AFsH9eS+zjCQVI7hi/3+/3+/1+v//RD3QtbCcBCQ==
+   eJzt1jEKADAIBMF7gP9/b4prUookKLIDIZ1smmBIisaj6+5Eg9FgLxuqs7Y1VNFgPxuys7c3ZNFg2/6oCQ1VNBgN1rnXT3g/MNUBZBAEUQ==
+  </data>
+ </layer>
+ <layer name="Stuffs" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1LENACAMA0EvC/uPQGFRI4oELP1N8IVlKct4HSAaNhrs1DBpaEOD3TZU7COxoQINlvBRPzR0oMFoANBtAW7dCxM=
   </data>
  </layer>
 </map>

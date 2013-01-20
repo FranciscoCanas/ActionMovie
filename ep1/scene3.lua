@@ -5,8 +5,8 @@ require "../level"
 -- Required libraries that are locally used
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
--- local Jumper = require 'Jumper.jumper'
--- local jumperDebug = require 'Jumper.debug_utils'
+Jumper = require 'Jumper.jumper'
+local jumperDebug = require 'Jumper.debug_utils'
 local Timer = require "hump.timer"
 require 'TESound.TEsound'
 
@@ -29,7 +29,7 @@ end
 function state:enter()
 	-- set up sound objects here
 	bgMusicList = {"music/meanStreets.ogg"}
---	TEsound.playLooping(bgMusicList, "bgMusic")
+	--TEsound.playLooping(bgMusicList, "bgMusic")
 	
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())
@@ -65,38 +65,40 @@ function state:enter()
 	
 
 	-- make objects in map solid
-	background = Level("ep1s3", true)
+	background = Level("ep1s3", false)
 	background:createObjects()
 
 	-- Initializing Jumper
-	-- searchMode = 'DIAGONAL' -- whether or not diagonal moves are allowed
-	-- heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
-	-- current_heuristic = 2 -- indexes the chosen heuristics within 'heuristics' table
-	-- filling = false -- whether or not returned paths will be smoothed
-	-- postProcess = false -- whether or not the grid should be postProcessed
-	-- pather = Jumper(background.collisionMap) -- Inits Jumper
-	-- pather:setMode(searchMode)
-	-- pather:setHeuristic(heuristics[current_heuristic])
-	-- pather:setAutoFill(filling)
+	searchMode = 'ORTHOGONAL' -- whether or not diagonal moves are allowed
+	heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
+	current_heuristic = 2 -- indexes the chosen heuristics within 'heuristics' table
+	filling = false -- whether or not returned paths will be smoothed
+	postProcess = false -- whether or not the grid should be postProcessed
+	pather = Jumper(background.collisionMap) -- Inits Jumper
+	pather:setMode(searchMode)
+	pather:setHeuristic(heuristics[current_heuristic])
+	pather:setAutoFill(filling)
 	
 	-- set up bullets table --
 	bullets = {}
 	
 	-- set up some baddies here --
 	enemies = {}
-	enemiesPosition = {Vector(1000, 800)} --, Vector(600,700), Vector(700, 700)}
 	deadCount = 0
 
-	insertEnemy(enemiesPosition)
-
+	-- tiled coordinates
+	--(cover.x, cover.y, shoot.x, shoot.y)
+	movementPositions = {{20, 17, 20, 19}, {24, 12, 24, 14}} --, {20, 16, 20, 15}}
+--	insertEnemy(enemiesPosition)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(10, spawnEnemy)
+	enemyTimer:add(5, s3spawnEnemy)
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions) 
+function insertMEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos))
+		print("position")
+		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, MOVETOSETSPOT))
 	end
 end
 
@@ -139,7 +141,7 @@ function state:update(dt)
 	end
 
 	if deadCount >= MAXDEAD then 
-		removeDead()
+		s3removeDead()
 	end
 	state:movecam() -- Update camera. See movecam func below.
 
@@ -153,7 +155,7 @@ function state:draw()
 	cam:attach()	
 	background:draw()
 
-	love.graphics.print("Attached to cam for reference", 30,30)
+	--love.graphics.print("Attached to cam for reference", 30,30)
 
 	-- need to determin drawing order which depends on y values of things
 
@@ -185,13 +187,15 @@ function state:draw()
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
-	love.graphics.print("Scene Placeholder", 10, 10)
+	-- love.graphics.print("Scene Placeholder", 10, 10)
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
 	love.graphics.print(background.map.viewX..", "..background.map.viewY, 200, 10)
+	jumperDebug.drawPath(font12, path, true)
+	jumperDebug.drawPath(font12, _path, true)
 end 
 
-function removeDead() 
+function s3removeDead() 
 	for i, enemy in ipairs(enemies) do
 		if ((not enemy.isalive) and enemy.counted) then
 			table.remove(enemies, i)
@@ -201,13 +205,13 @@ function removeDead()
 	end
 end
 
-function spawnEnemy()
-	local totEnemy = #enemies
-	local curDead = deadCount
-	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(800, 800)})
-		totEnemy = totEnemy+1
-	end
+function s3spawnEnemy()
+	-- local totEnemy = #enemies
+	-- local curDead = deadCount
+	-- while totEnemy - curDead < 3 do
+		insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+		-- totEnemy = totEnemy+1
+	-- end
 end
 
 function state:focus()
@@ -297,13 +301,13 @@ function state:movecam()
 	background.map:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
 end
 
--- function state:mousepressed(x,y,button)
--- 	if button == 'l' then
--- 		--x,y = cam:worldCoords(x_, y_)
--- 		tileX, tileY = background:toTile(x, y)
--- 		x_, y_ = player1:getCenter()
--- 		playerX, playerY = background:toTile(x_, y_)
--- 		-- getPath doesn't work when zooming is involved atm
--- 		path, length =pather:getPath(playerX, playerY, tileX, tileY)
--- 	end
--- end
+function state:mousepressed(x,y,button)
+	if button == 'l' then
+		--x,y = cam:worldCoords(x_, y_)
+		tileX, tileY = background:toTile(x, y)
+		x_, y_ = player1:getCenter()
+		playerX, playerY = background:toTile(x_, y_)
+		-- getPath doesn't work when zooming is involved atm
+		path, length =pather:getPath(playerX, playerY, tileX, tileY)
+	end
+end

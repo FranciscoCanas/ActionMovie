@@ -63,7 +63,7 @@ function state:enter()
 	
 
 	-- make objects in map solid
-	background = Level("ep1")
+	background = Level("ep1", false)
 	background:createObjects()
 
 	-- Initializing Jumper
@@ -84,17 +84,15 @@ function state:enter()
 	enemies = {}
 	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
 	deadCount = 0
-
-	insertEnemy(enemiesPosition)
-
+	insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
 	enemyTimer:addPeriodic(10, spawnEnemy)
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions) 
+function insertEnemy(positions, type) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos))
+		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, type))
 	end
 end
 
@@ -119,10 +117,11 @@ function state:update(dt)
 	end
 	
 	for i,enemy in ipairs(enemies) do
+		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
 		if ((not enemy.isalive) and (not enemy.counted)) then
 			deadCount = deadCount + 1
 			enemy.counted = true
-		else
+		elseif (enemy.isalive) then
 			enemy:update(math.min(dt,1/60))
 		end
 		enemy.animation:update(math.min(dt,1/60))
@@ -212,7 +211,7 @@ function spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(800, 800)})
+		insertEnemy({Vector(800, 800)}, FOLLOWPLAYER)
 		totEnemy = totEnemy+1
 	end
 end

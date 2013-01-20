@@ -1,10 +1,15 @@
+--different types of enemies
+FOLLOWPLAYER = 1
+MOVETOSETSPOT = 2
+movementPositions = {}
+
 Enemy = Class{
-function(self, image, position)
+function(self, image, position, type)
 	
 	self:init()
 	wx, wy = cam:worldCoords(position.x, position.y)
 	self.position = Vector(wx, wy)
-	
+	self.behaviour = type
 	self.image = image --love.graphics.newImage(image)
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
@@ -88,10 +93,12 @@ function Enemy:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
+
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = 400 --/ background.map.tileWidth
-	self.minTargetRange = 250 --/ background.map.tileHeight
-	self.observePlayerRange = 600
+	self.maxTargetRange = 400 --/ max distance from player to shoot
+	self.minTargetRange = 250 --/ min distance from player to shoot
+	self.observePlayerRange = 600 -- distance to interact with player
+	
 	self.width = 64
 	self.height = 64
 
@@ -176,8 +183,6 @@ function Enemy:draw()
 			self.frameFlipH,
 			self.frameFlipV
 			)
-
-	
 end
 
 function Enemy:moveToShoot()
@@ -193,18 +198,34 @@ function Enemy:moveToShoot()
 	end
 end
 
+-- when enemy decides where to go
 function Enemy:idle()
 	if self.animation ~= self.standAnim then
 		self.animation = self.standAnim
 	end
 	
 	if self.target == nil then
-		self:SetNearestTarget()
+		if (self.behaviour == FOLLOWPLAYER) then
+			self:SetNearestTarget()
+		elseif (self.behaviour == MOVETOSETSPOT) then
+			-- target is set to one of preapproved cover positions
+			self.target = movementPositions[math.random(1, 2)]
+		end 
 	end
 	
-	if (self:DistanceToTarget() 
+	if (self.behaviour == FOLLOWPLAYER) and (self:DistanceToTarget() 
 			< self.observePlayerRange) then
 		self.state = moveToShoot
+	elseif (self.behaviour == MOVETOSETSPOT) then
+		--calculate the path and order the move
+		--change state to move to cover
+		x_, y_ = self:getCenter()
+		tx, ty = background:toTile(x_, y_)
+		if not ((tx == self.target[1]) and (ty == self.target[2])) then
+			_path, length = pather:getPath(tx, ty, self.target[1], self.target[2])
+			self:orderMove(_path)
+			self.state = moveToCover
+		end
 	end
 	
 end
@@ -220,7 +241,23 @@ function Enemy:DistanceToTarget()
 end
 
 function Enemy:moveToCover()
---
+	-- call move until reach end
+	-- if end add timer to pause for a random amount of time 
+	-- and then change target, calculate path  to call moveToShootingSpot
+	-- 
+	if self.isMoving then
+		self:move(dt)
+	else
+		self.animation = self.standAnim
+		self.state = idle
+		self.timer:add(math.random(1, 5), function()
+			_path, length = pather:getPath(tx, ty, self.target[3], self.target[4])
+			self:orderMove(_path)
+			self.state = moveToShoot
+			end)
+		-- path, length = pather:getPath(self.tile_x, self.tile_x, self.target[3], self.target[4])
+		-- self:orderMove(path)
+	end
 end
 
 function Enemy:shoot()
@@ -235,7 +272,12 @@ function Enemy:shoot()
 					self:stopShoot() 
 				end)
 		-- face the target
-		local tx, ty = self.target.body:getWorldCenter()
+		if self.behaviour == FOLLOWPLAYER then
+			targetBody = self.target.body--:getWorldCenter()
+		else
+			targetBody = player1.body or player2.body
+		end
+		local tx, ty = targetBody:getWorldCenter()
 		local pos = Vector(0,0)
 		-- figure out origin to fire from first
 		pos.x, pos.y = self.body:getWorldCenter()
@@ -267,7 +309,9 @@ function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
 	self.state = idle
-	
+	if (self.behaviour == MOVETOSETSPOT) then
+		self.target = nil
+	end
 end
 
 -- Resolve being shot here.
@@ -303,20 +347,23 @@ end
 -- is within range.
 function Enemy:SetNearestTarget()
 	self.target = nil
-	local leastdist = self.observePlayerRange
-	local mx, my = self.body:getWorldCenter()
-	
-	
-	-- Update the players.
-	for i,player in ipairs(players) do
-		if player.isplaying and player.isalive then
-			local px, py = player.body:getWorldCenter()
-			
-			thisdist = (Vector(px, py) - Vector(mx, my)):len()
-			
-			if thisdist < leastdist then
-				leastdist = thisdist
-				self.target = player
+
+	if self.behaviour == FOLLOWPLAYER then 
+		local leastdist = self.observePlayerRange
+		local mx, my = self.body:getWorldCenter()
+		
+		
+		-- Update the players.
+		for i,player in ipairs(players) do
+			if player.isplaying and player.isalive then
+				local px, py = player.body:getWorldCenter()
+				
+				thisdist = (Vector(px, py) - Vector(mx, my)):len()
+				
+				if thisdist < leastdist then
+					leastdist = thisdist
+					self.target = player
+				end
 			end
 		end
 	end
@@ -325,47 +372,53 @@ end
 -- Will move the bad guy towards a shooting channel
 -- within range so they can fire at player.
 function Enemy:MoveToShootingSpot()
-	local tx, ty = background:toTile(
+	if (self.behaviour == FOLLOWPLAYER) then
+		local tx, ty = background:toTile(
 			self.target.body:getX(),
 			self.target.body:getY())
-	
-	local dx = self.target.body:getX() - self.body:getX() 
-	
-	local dy = self.target.body:getY() - self.body:getY()
-	
-	-- figure out where we need to go to shoot the target
-	-- case 1: player is sufficiently far from enemy 
-	-- on the x axis:
-	if (math.abs(dx) < self.minTargetRange) then
-		-- enemy too close to player. must back off.
-		 self.delta.x = -dx		
-	elseif (math.abs(dx) > self.maxTargetRange) then
-		-- enemy too far from player. must go approach.
-		 self.delta.x = dx
-	end
-	
-	-- are we close enough to shoot?
-	if (math.abs(dy) < self.inRange) then
-		-- is there anything (specifically another enemy) between this enemy and the target?
-		toShoot = true
-		curEnemy = self
-		world:rayCast(self.body:getX(), self.body:getY(), --enemy location
-					self.target.body:getX(), self.target.body:getY(), --target location
-					rayCallback) -- order of rayCallback not necessary in order of what object is hit first
-		if toShoot then
-			-- has a clear shot
-			self.state = shoot
-		else
-			-- doesn't have a clear shot.
-			self.delta.y = self.body:getY() + self.height
+		local dx = self.target.body:getX() - self.body:getX() 	
+		local dy = self.target.body:getY() - self.body:getY()
+		
+		-- figure out where we need to go to shoot the target
+		-- case 1: player is sufficiently far from enemy 
+		-- on the x axis:
+		if (math.abs(dx) < self.minTargetRange) then
+			-- enemy too close to player. must back off.
+			 self.delta.x = -dx		
+		elseif (math.abs(dx) > self.maxTargetRange) then
+			-- enemy too far from player. must go approach.
+			 self.delta.x = dx
 		end
-	
-	else
-		-- player not in range, but right distance apart
-		-- player is just right. so move to his y coord
-		self.delta.y = dy
+		
+		-- are we close enough to shoot?
+		if (math.abs(dy) < self.inRange) then
+			-- is there anything (specifically another enemy) between this enemy and the target?
+			toShoot = true
+			curEnemy = self
+			world:rayCast(self.body:getX(), self.body:getY(), --enemy location
+						self.target.body:getX(), self.target.body:getY(), --target location
+						rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
+			if toShoot then
+				-- has a clear shot
+				self.state = shoot
+			else
+				-- doesn't have a clear shot.
+				self.delta.y = self.body:getY() + self.height
+			end
+		
+		else
+			-- player not in range, but right distance apart
+			-- player is just right. so move to his y coord
+			self.delta.y = dy
+			self.delta:normalize_inplace()	
+		end
+	elseif (self.behaviour == MOVETOSETSPOT) then
+		if self.isMoving then
+			self:move(dt)
+		else
+			self.state = shoot
+		end
 	end
-	self.delta:normalize_inplace()	
 end
 
 -- the function to call when the ray casted by rayCast hits a fixture
@@ -395,9 +448,19 @@ end
 -- it has reached the end of it.
 function Enemy:move(dt)
   if self.isMoving then
+  	self.animation = self.runAnim
     if not self.there then
-      -- Walk to the assigned location
-      self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
+      	-- Walk to the assigned location
+     	--self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
+     	local dx = self.path[self.cur].x*32 - self.body:getX() 	
+		local dy = self.path[self.cur].y*32 - self.body:getY()
+		if (math.pow(dx, 2) + math.pow(dy, 2) <= math.pow(20, 2)) then
+			self.there = true
+		else
+			self.delta.x = dx
+			self.delta.y = dy
+			self.delta:normalize_inplace()	
+		end
     else
       -- Make the next step move
       if self.path[self.cur+1] then
@@ -419,3 +482,6 @@ function Enemy:setTilePosition()
 						self.position.y)
 end
 
+function Enemy:getCenter()
+	return self.body:getX(), self.body:getY()
+end
