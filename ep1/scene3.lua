@@ -5,14 +5,14 @@ require "../level"
 -- Required libraries that are locally used
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
-local Jumper = require 'Jumper.jumper'
+Jumper = require 'Jumper.jumper'
 local jumperDebug = require 'Jumper.debug_utils'
 local Timer = require "hump.timer"
 require 'TESound.TEsound'
 
 -- State declarations
-Gamestate.scene = Gamestate.new()
-local state = Gamestate.scene
+Gamestate.scene3 = Gamestate.new()
+local state = Gamestate.scene3
 local keypressed = "none"
 
 -- some fonts
@@ -29,26 +29,28 @@ end
 function state:enter()
 	-- set up sound objects here
 	bgMusicList = {"music/meanStreets.ogg"}
-	TEsound.playLooping(bgMusicList, "bgMusic")
+	--TEsound.playLooping(bgMusicList, "bgMusic")
 	
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())
 	-- Initialize players here
 	if player1.isplaying then
-		player1:setPosition(Vector(100,600))
+		player1.body:setPosition(100, 600)
+		--player1:setPosition(Vector(100,600))
 	end
 	if player2.isplaying then
-		player2:setPosition(Vector(100,700)) 
+		player2.body:setPosition(100,700)
+		--player2:setPosition(Vector(100,700)) 
 	end
 
 	-- set up camera ------------------------------------
 	cam = Camera(player1.position.x, player1.position.y, 
-		1, -- zoom level
+		2, -- zoom level
 		0 -- rotation angle
 		)
 		
-	camfollows = true -- follows players around.
-	camstatic = false -- does not.
+	camfollows = false -- follows players around.
+	camstatic = true -- does not.
 	camMaxZoom = 2.0
 	camMinZoom = 0.5
 	camZoomRatio = 500
@@ -63,11 +65,11 @@ function state:enter()
 	
 
 	-- make objects in map solid
-	background = Level("ep1", false)
+	background = Level("ep1s3", false)
 	background:createObjects()
 
 	-- Initializing Jumper
-	searchMode = 'DIAGONAL' -- whether or not diagonal moves are allowed
+	searchMode = 'ORTHOGONAL' -- whether or not diagonal moves are allowed
 	heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
 	current_heuristic = 2 -- indexes the chosen heuristics within 'heuristics' table
 	filling = false -- whether or not returned paths will be smoothed
@@ -82,17 +84,21 @@ function state:enter()
 	
 	-- set up some baddies here --
 	enemies = {}
-	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
 	deadCount = 0
-	insertEnemy(enemiesPosition, FOLLOWPLAYER)
+
+	-- tiled coordinates
+	--(cover.x, cover.y, shoot.x, shoot.y)
+	movementPositions = {{20, 17, 20, 19}, {24, 12, 24, 14}} --, {20, 16, 20, 15}}
+--	insertEnemy(enemiesPosition)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(10, spawnEnemy)
+	enemyTimer:add(5, s3spawnEnemy)
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions, type) 
+function insertMEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, type))
+		print("position")
+		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, MOVETOSETSPOT))
 	end
 end
 
@@ -117,11 +123,10 @@ function state:update(dt)
 	end
 	
 	for i,enemy in ipairs(enemies) do
-		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
 		if ((not enemy.isalive) and (not enemy.counted)) then
 			deadCount = deadCount + 1
 			enemy.counted = true
-		elseif (enemy.isalive) then
+		else
 			enemy:update(math.min(dt,1/60))
 		end
 		enemy.animation:update(math.min(dt,1/60))
@@ -136,7 +141,7 @@ function state:update(dt)
 	end
 
 	if deadCount >= MAXDEAD then 
-		removeDead()
+		s3removeDead()
 	end
 	state:movecam() -- Update camera. See movecam func below.
 
@@ -150,7 +155,7 @@ function state:draw()
 	cam:attach()	
 	background:draw()
 
-	love.graphics.print("Attached to cam for reference", 30,30)
+	--love.graphics.print("Attached to cam for reference", 30,30)
 
 	-- need to determin drawing order which depends on y values of things
 
@@ -182,22 +187,15 @@ function state:draw()
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
-	love.graphics.print("Scene Placeholder", 10, 10)
+	-- love.graphics.print("Scene Placeholder", 10, 10)
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
-	love.graphics.print(player1.facing.x, 200, 30)
-	love.graphics.print(player1.facing.y, 210, 30)
-	love.graphics.print(player1.health, 50, 50)
-	love.graphics.print("clicked", 10, 70)
-	love.graphics.print(tileX or 0, 60, 70)
-	love.graphics.print(tileY or 0, 80, 70)
-	love.graphics.print("player1", 10, 90)
-	love.graphics.print(playerX or 0, 60, 90)
-	love.graphics.print(playerY or 0, 80, 90)
+	love.graphics.print(background.map.viewX..", "..background.map.viewY, 200, 10)
 	jumperDebug.drawPath(font12, path, true)
+	jumperDebug.drawPath(font12, _path, true)
 end 
 
-function removeDead() 
+function s3removeDead() 
 	for i, enemy in ipairs(enemies) do
 		if ((not enemy.isalive) and enemy.counted) then
 			table.remove(enemies, i)
@@ -207,13 +205,13 @@ function removeDead()
 	end
 end
 
-function spawnEnemy()
-	local totEnemy = #enemies
-	local curDead = deadCount
-	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(800, 800)}, FOLLOWPLAYER)
-		totEnemy = totEnemy+1
-	end
+function s3spawnEnemy()
+	-- local totEnemy = #enemies
+	-- local curDead = deadCount
+	-- while totEnemy - curDead < 3 do
+		insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+		-- totEnemy = totEnemy+1
+	-- end
 end
 
 function state:focus()

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="33" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32">
+  <image source="collision.png" width="320" height="320"/>
+ </tileset>
+ <tileset firstgid="101" name="Ground" tilewidth="32" tileheight="32">
+  <image source="ground.png" width="288" height="255"/>
+ </tileset>
+ <layer name="Ground" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6FzW/8OpmI/SFg1VVVV9eUBowiOYg==
+  </data>
+ </layer>
+ <layer name="Barricade" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztzkENACEQALEVgH+995hggYOkVdCZt6y/A+OwOcQhDnGIQxziEIc45IYDcM4HuO8BCQ==
+  </data>
+ </layer>
+ <layer name="Collision" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1jEKADAIBMF7gP9/b4prUookKLIDIZ1smmBIisaj6+5Eg9FgLxuqs7Y1VNFgPxuys7c3ZNFg2/6oCQ1VNBgN1rnXT3g/MNUBZBAEUQ==
+  </data>
+ </layer>
+ <layer name="Stuffs" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1LENACAMA0EvC/uPQGFRI4oELP1N8IVlKct4HSAaNhrs1DBpaEOD3TZU7COxoQINlvBRPzR0oMFoANBtAW7dCxM=
+  </data>
+ </layer>
+</map>

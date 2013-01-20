@@ -26,7 +26,7 @@ Bullet = Class{
 		-- object that owns the fixture during collision
 		-- detection:
 		self.fixture:setUserData(self)
-		--self.fixture:setCategory(BULLET)
+		self.fixture:setCategory(BULLET)
 			
 		self.body:setLinearDamping(self.damping)
 		self.body:setBullet(true)
