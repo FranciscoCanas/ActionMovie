@@ -29,10 +29,10 @@ player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}
 
--- OBSTACLE = 1 
--- PLAYER = 2
--- ENEMY = 3
--- BULLET = 4
+OBSTACLE = 1 
+PLAYER = 2
+ENEMY = 3
+BULLET = 4
 -- gamestate requires
 require "intro"
 require "menu"
@@ -53,7 +53,7 @@ function love.load()
 	love.graphics.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		true, -- fullscreen
+		false, -- fullscreen
 		false, --vsync
 		0 -- antialiasing
 		)
