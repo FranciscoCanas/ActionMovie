@@ -11,6 +11,7 @@ require 'TESound.TEsound'
 require "player"
 require "enemy"
 require "bullet"
+require "bystander"
 
 
 

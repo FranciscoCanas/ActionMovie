@@ -148,17 +148,10 @@ function state:enter()
 			end)
 
 
+
+	-- 42
 	stringTimer:add(42, function()
-				currentString = "guest starring"
-				state:zoomToTitle()
-			      --state:endAtTitle()
-			end)
-
-
-
-	-- 45
-	stringTimer:add(45, function()
-				currentString = "Murderballer #2 as Lloyd the Burgler"
+				currentString = "Murderballer #2 as Lloyd the Rat"
 				cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
 				cam:zoomTo(4)
 				camdx = 0.5
@@ -167,8 +160,16 @@ function state:enter()
 				drawMurderBaller = true		
 			end)
 
+	stringTimer:add(45, function()
+				currentString = "with guest appearances by"
+				state:zoomToTitle()
+			      --state:endAtTitle()
+			end)
+
+
 	stringTimer:add(46, function()
 			murderBaller = murderBallerStandAnim
+			camdx = 0
 		end)
 
 
@@ -212,7 +213,9 @@ function state:enter()
 			end)
 
 
-	
+	stringTimer:add(100, function()
+			Gamestate.switch(Gamestate.menu)
+		end)
 
 
 	-- start music

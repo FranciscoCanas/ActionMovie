@@ -1,6 +1,7 @@
 -- This is the menu for episode one.
 -- Players will be able to select a scene to start from.
 require "ep1/scene"
+require "ep1/scene2"
 require "ep1/scene3"
 Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
@@ -57,7 +58,7 @@ function state:keyreleased(key)
 		if (epi == 0) then
 			Gamestate.switch(Gamestate.scene)
 		elseif (epi == 1) then
-			--Gamestate.switch(Gamestate.scene2)
+			Gamestate.switch(Gamestate.scene2)
 		elseif (epi == 2) then
 			Gamestate.switch(Gamestate.scene3)
 		end
