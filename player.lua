@@ -102,7 +102,8 @@ function(self, num)
 	gunEmitter:setLifetime(0.01)
 	gunEmitter:setParticleLife(0.5)
 	gunEmitter:setSpread(30)
-	--gunEmitter:setSize(0.3, 0.7, 0.5)
+	gunEmitter:setSizes(0.3, 0.7)
+	gunEmitter:setSpeed(100)
 end
 }
 
@@ -193,6 +194,8 @@ function Player:draw()
 				self.frameFlipV
 				)
     
+	local px, py = gunEmitter:getPosition()
+	love.graphics.draw(gunEmitter, px, py)
 end
 
 
