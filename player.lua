@@ -28,7 +28,7 @@ function(self, num)
 	self.timer = Timer.new()
 	
 	-- Set up anim8 for spritebatch animations -----------------------------
-	self.frameDelay = 0.2
+	self.frameDelay = 0.3
 	self.frameFlipH = false
 	self.frameFlipV = false
 	self.grid = Anim8.newGrid(128, 128, 
@@ -97,15 +97,7 @@ function(self, num)
 	
 	-- particle sys stuff go here now!
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
-<<<<<<< HEAD
-	gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 30 )
-	gunEmitter:setEmissionRate(30)
-	gunEmitter:setLifetime(0.01)
-	gunEmitter:setParticleLife(0.5)
-	gunEmitter:setSpread(30)
-	gunEmitter:setSizes(0.3, 0.7)
-	gunEmitter:setSpeed(100)
-=======
+
 	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
 	self.gunEmitter:setEmissionRate(500)
 	self.gunEmitter:setLifetime(0.01)
@@ -114,7 +106,7 @@ function(self, num)
 	self.gunEmitter:setSizes(0.05, 0.25)
 	self.gunEmitter:setGravity(0,0)
 	self.gunEmitter:setSpeed(200,300)
->>>>>>> 35391e28f32063808bd524ab391a67ff2f2bbf45
+
 end
 }
 
@@ -214,13 +206,9 @@ function Player:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
-<<<<<<< HEAD
-    
-	local px, py = gunEmitter:getPosition()
-	love.graphics.draw(gunEmitter, px, py)
-=======
+
  love.graphics.draw(self.gunEmitter)
->>>>>>> 35391e28f32063808bd524ab391a67ff2f2bbf45
+
 end
 
 

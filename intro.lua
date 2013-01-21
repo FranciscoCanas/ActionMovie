@@ -65,7 +65,7 @@ function state:enter()
 		0 -- rotation angle
 		)
 
-	camdx = 0.5 -- camera x panning rate
+	camdx = 7 -- camera x panning rate per 30 frames
 	camdy = 0
 	camdz = 1
 
@@ -95,13 +95,13 @@ function state:enter()
 				currentString = "...which was in turn adapted from some Turkish movie..." 
 			end)
 
-	stringTimer:add(23, function() 
+	stringTimer:add(25, function() 
 				currentString = "...it's..." 
 			end)
 
 
-	-- around 26.5 or so
-	stringTimer:add(24.5, function()
+	-- around 28 or so
+	stringTimer:add(28, function()
 				camdx = 0
 				state:titleExplosion()
 				currentString = ""
@@ -154,29 +154,34 @@ function state:enter()
 				currentString = "Murderballer #2 as Lloyd the Rat"
 				cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
 				cam:zoomTo(4)
-				camdx = 0.5
+				camdx = 7
 				camdy = 0
 				camdz = 1
 				drawMurderBaller = true		
 			end)
 
+	
+
+
+	stringTimer:add(43, function()
+			murderBaller = murderBallerStandAnim
+			camdx = 0
+			camdz = 1
+			camdy = 0
+		end)
+		
 	stringTimer:add(45, function()
 				currentString = "with guest appearances by"
 				state:zoomToTitle()
+				drawMurderBaller = false
 			      --state:endAtTitle()
 			end)
-
-
-	stringTimer:add(46, function()
-			murderBaller = murderBallerStandAnim
-			camdx = 0
-		end)
 
 
 	stringTimer:add(49, function()
 				state:zoomToTitle()
 				currentString = "Wendell Pierce as Detective Bunk"
-				drawMurderBaller = false
+				
 			end)
 
 	stringTimer:add(54, function()
@@ -227,7 +232,7 @@ function state:leave()
 end
 
 function state:update(dt)
-	dt = math.min(dt, 1/60)
+	dt = frameLimiter(dt)
 	world:update(dt)
 
 	stringTimer:update(dt)
@@ -245,7 +250,7 @@ function state:update(dt)
 		murderBaller:update(dt)
 	end
 
-	cam:move(camdx,camdy)
+	cam:move(camdx / framesPerSecond,camdy / framesPerSecond)
 	cam:zoom(camdz)
 	state.explosion:update(dt)
 end
@@ -304,7 +309,7 @@ end
 
 function state:zoomCrispy()
 	crispyForce = Vector(2000,0)
-	camdx = 0.5
+	camdx = 7
 	camdz = 1.001
 	cam:lookAt(player1.position.x+35, player1.position.y)
 	cam:zoomTo(5)
@@ -313,7 +318,7 @@ end
 
 function state:zoomMcGuff()
 	mcGuffForce = Vector(2000,0)
-	camdx = 0.5
+	camdx = 7
 	camdz = 1.001
 	cam:lookAt(player2.position.x+35, player2.position.y)
 	cam:zoomTo(5)

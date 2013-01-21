@@ -65,7 +65,7 @@ function state:enter()
 	camTop = 0
 	camBottom = 1000
 	-- camera movement params --
-	camdx = 1.5
+	camdx = 15
 	camdy = 0
 	camdz = 1
 
@@ -407,7 +407,7 @@ function state:movecam()
 	end
 
 	if camstatic then
-		cam:move(camdx, camdy)
+		cam:move(camdx / framesPerSecond,camdy / framesPerSecond)
 		cam:zoom(camdz)
 		-- Nothing to do here just yet.
 	end

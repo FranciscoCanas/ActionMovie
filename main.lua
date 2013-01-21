@@ -21,6 +21,7 @@ require "bystander"
 -- TODO: organize these into groups
 -- note: Initialization order matters.
 dimScreen = Vector(1024, 768)
+framesPerSecond = 30
 love.physics.setMeter(32) --the height of a meter our worlds will be 32px
 world = love.physics.newWorld(
 	0, -- x grav
@@ -55,8 +56,8 @@ function love.load()
 	love.graphics.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		false, -- fullscreen
-		false, --vsync
+		true, -- fullscreen
+		true, --vsync
 		0 -- antialiasing
 		)
 		
@@ -93,4 +94,9 @@ function preSolve(a, b, coll)
 end
 
 function postSolve(a, b, coll)
+end
+
+function frameLimiter(dt)
+	--dt = math.max(dt, 1/60)
+	return math.min(dt, 1/60)
 end
