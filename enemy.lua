@@ -208,6 +208,7 @@ function Enemy:draw()
 			)
  love.graphics.draw(self.gunEmitter)
  love.graphics.draw(self.bloodEmitter)
+ jumperDebug.drawPath(font12, self.path, true)
 end
 
 -- when enemy decides where to go
@@ -215,13 +216,15 @@ function Enemy:idle()
 	if self.animation ~= self.standAnim then
 		self.animation = self.standAnim
 	end
-	print("idle")
 	if self.target == nil then
 		if (self.behaviour == FOLLOWPLAYER) then
 			self:SetNearestTarget()
 		elseif (self.behaviour == MOVETOSETSPOT) then
 			-- target is set to one of preapproved cover positions
-			self.target = movementPositions[math.random(1, 2)]
+			repeat
+				self.target = movementPositions[math.random(1, 3)]
+			until not self.target[5]
+			self.target[5] = true
 		end 
 	end
 	
@@ -240,6 +243,14 @@ function Enemy:idle()
 		end
 	end
 	
+end
+
+-- Sends to the enemy the order to move
+function Enemy:orderMove(path)
+  self.path = path -- the path to follow
+  self.isMoving = true -- whether or not the enemy should start moving
+  self.cur = 1 -- indexes the current reached step on the path to follow
+  self.there = true -- whether or not the enemy has reached a step
 end
 
 function Enemy:moveToCover()
@@ -275,14 +286,6 @@ function Enemy:moveToShoot()
 	end
 end
 
--- Sends to the enemy the order to move
-function Enemy:orderMove(path)
-  self.path = path -- the path to follow
-  self.isMoving = true -- whether or not the enemy should start moving
-  self.cur = 1 -- indexes the current reached step on the path to follow
-  self.there = true -- whether or not the enemy has reached a step
-end
-
 -- Moves the enemy by checking its current route and whether
 -- it has reached the end of it.
 function Enemy:move(dt)
@@ -291,8 +294,8 @@ function Enemy:move(dt)
     if not self.there then
       	-- Walk to the assigned location
      	--self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
-     	local dx = self.path[self.cur].x*32 - self.body:getX() 	
-		local dy = self.path[self.cur].y*32 - self.body:getY()
+     	local dx = (self.path[self.cur].x*32 + 16) - self.body:getX() 	
+		local dy = (self.path[self.cur].y*32 + 16) - self.body:getY()
 		if (math.pow(dx, 2) + math.pow(dy, 2) <= math.pow(10, 2)) then
 			self.there = true
 		else
@@ -309,7 +312,7 @@ function Enemy:move(dt)
         -- Reached the goal!
         self.isMoving = false
         self.path = nil
-        _path = nil
+       -- _path = nil
       end
     end
   end
@@ -417,6 +420,7 @@ function Enemy:stopShoot()
 	self.animation = self.standAnim
 	self.state = idle
 	if (self.behaviour == MOVETOSETSPOT) then
+		self.target[5] = false
 		self.target = nil
 	end
 end
