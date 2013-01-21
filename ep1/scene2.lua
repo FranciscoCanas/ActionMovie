@@ -226,7 +226,7 @@ function state:update(dt)
 
 	-- check for player loseage here
 	if outOfBounds(player1) and outOfBounds(player2) then
-		playersLose()
+		state:playersLose()
 	end
 
 end

@@ -6,8 +6,10 @@
 
 Gamestate.menu = Gamestate.new()
 local state = Gamestate.menu
+local font = love.graphics.setNewFont(24)
 
 function state:enter()
+	love.graphics.setFont(font)
 	-- Reinitialize the players when we enter menu
 	player1.isplaying = false
 	player2.isplaying = false

@@ -5,13 +5,15 @@ require 'TESound.TEsound'
 local Timer = require "hump.timer"
 local Camera = require "hump.camera"
 local font = love.graphics.setNewFont(32)
-love.graphics.setFont( font)
+
 
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
 local currentString = ""
 
 function state:enter()
+-- set the font here
+love.graphics.setFont( font)
 -- title graphics 
 	titleScene = love.graphics.newImage("art/titleScene.png")		
 	titleImage = love.graphics.newImage("art/title.png")

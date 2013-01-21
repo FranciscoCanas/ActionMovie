@@ -94,14 +94,14 @@ function(self, image, position, type)
 
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
-	self.bloodEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 100 )
 	self.bloodEmitter:setEmissionRate(500)
 	self.bloodEmitter:setLifetime(0.01)
-	self.bloodEmitter:setParticleLife(0.25)
+	self.bloodEmitter:setParticleLife(1.0)
 	self.bloodEmitter:setSpread(3.14/3)
-	self.bloodEmitter:setSizes(0.05, 0.5)
-	self.bloodEmitter:setGravity(0,0)
-	self.bloodEmitter:setSpeed(140,260)
+	self.bloodEmitter:setSizes(0.1, 2.50)
+	self.bloodEmitter:setGravity(0,9.8)
+	self.bloodEmitter:setSpeed(100,220)
 end
 }
 
@@ -190,9 +190,9 @@ end
 
 
 function Enemy:draw()
-	if self.isalive then
-		love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
-	end
+	--if self.isalive then
+		--love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+	--end
 	self.animation:drawf(self.image, 
 			self.position.x,
 			self.position.y,
@@ -206,7 +206,7 @@ function Enemy:draw()
 			)
  love.graphics.draw(self.gunEmitter)
  love.graphics.draw(self.bloodEmitter)
- jumperDebug.drawPath(font12, self.path, true)
+ --Gamestate.scene3.jumperDebug.drawPath(font12, self.path, true)
 end
 
 -- when enemy decides where to go
@@ -429,9 +429,13 @@ function Enemy:isShot(bullet, collision)
 local pos = Vector(self.position.x + 10, self.position.y + 20)
 
 -- set up the bloody splurty guy
-		self.gunEmitter:reset()
-		self.gunEmitter:setPosition(pos.x, pos.y - 20)
-		self.gunEmitter:start()	
+	self.bloodEmitter:setDirection(0)
+	if math.random(1,2) == 1 then
+		self.bloodEmitter:setDirection(3.14)
+	end
+		--self.bloodEmitter:reset()
+		self.bloodEmitter:setPosition(pos.x + 32, pos.y + 32)
+		self.bloodEmitter:start()	
 	
 	if self.state == dying then
 		return

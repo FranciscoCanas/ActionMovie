@@ -3,7 +3,7 @@ require 'TESound.TEsound'
 local Timer = require "hump.timer"
 local Camera = require "hump.camera"
 local font = love.graphics.setNewFont(28)
-love.graphics.setFont( font)
+
 
 Gamestate.story1 = Gamestate.new()
 local state = Gamestate.story1
@@ -11,7 +11,7 @@ local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
 local dialogue = {	"Last week, on ActionMovie...",
-			"Crispy, you're a lose canon!!!",
+			"Crispy, you're a loose canon!!!",
 			"That ice cream truck was illegally parked! He deserved what he got!",
 	"Who's gonna pay for the damages to that orphanage!?",
 		"If we don't find that bomb, they're gonna blow up the president!",
@@ -30,6 +30,7 @@ local shotFuncs = {
 	}
 
 function state:enter()
+love.graphics.setFont(font)
 -- background
 	backgroundScene = love.graphics.newImage("art/titleScene.png")
 
