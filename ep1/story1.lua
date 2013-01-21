@@ -2,7 +2,7 @@
 require 'TESound.TEsound'
 local Timer = require "hump.timer"
 local Camera = require "hump.camera"
-local font = love.graphics.setNewFont(24)
+local font = love.graphics.setNewFont(28)
 love.graphics.setFont( font)
 
 Gamestate.story1 = Gamestate.new()
@@ -118,7 +118,7 @@ function state:draw()
 	love.graphics.rectangle("fill", 0, dimScreen.y - 150, dimScreen.x, 150)
 	love.graphics.setColor(255,255,255,255)
 	
-	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y)-150, 400, "center" )
+	love.graphics.printf( currentString, (dimScreen.x/2) - 300, (dimScreen.y)-150, 600, "center" )
 end
 
 function state:leave()

@@ -34,12 +34,10 @@ function(self, image, position, type)
 	self.shootAnim = Anim8.newAnimation('loop',
 		self.grid('1-2, 2'),
 		self.frameDelay)
-
-	self.diesAnim = self.standAnim
 		
---	self.diesAnim = Anim8.newAnimation('once',
---		self.grid('4-7, 4'),
---		self.frameDelay)
+	self.diesAnim = Anim8.newAnimation('once',
+		self.grid('1-2, 3'),
+		self.frameDelay)
 		
 	self.animation = self.standAnim
 	
