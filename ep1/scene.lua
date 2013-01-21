@@ -84,13 +84,13 @@ function state:enter()
 	enemies = {}
 	enemiesPosition = {Vector(cam.x + 900, 600), Vector(cam.x + 600,700), Vector(cam.x + 700, 700)}
 	deadCount = 0
-	insertEnemy(enemiesPosition, FOLLOWPLAYER)
+	state:insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(10, spawnEnemy)
+	enemyTimer:addPeriodic(10, function() self:spawnEnemy() end)
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions, type) 
+function state:insertEnemy(positions, type) 
 	for i, screenPos in ipairs(positions) do 
 		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
 	end
@@ -98,6 +98,9 @@ end
 
 function state:leave()
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	enemies = {}
+	bullets = {}
+	enemyTimer:clear()
 end
 
 function state:update(dt)
@@ -136,7 +139,7 @@ function state:update(dt)
 	end
 
 	if deadCount >= MAXDEAD then 
-		removeDead()
+		state:removeDead()
 	end
 	state:movecam() -- Update camera. See movecam func below.
 
@@ -197,7 +200,7 @@ function state:draw()
 	jumperDebug.drawPath(font12, path, true)
 end 
 
-function removeDead() 
+function state:removeDead() 
 	for i, enemy in ipairs(enemies) do
 		if ((not enemy.isalive) and enemy.counted) then
 			table.remove(enemies, i)
@@ -207,11 +210,11 @@ function removeDead()
 	end
 end
 
-function spawnEnemy()
+function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(cam.x + dimScreen.x/2, 800)}, FOLLOWPLAYER)
+		state:insertEnemy({Vector((cam.x + dimScreen.x), 800)}, FOLLOWPLAYER)
 		totEnemy = totEnemy+1
 	end
 end

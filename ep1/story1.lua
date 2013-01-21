@@ -9,6 +9,7 @@ Gamestate.story1 = Gamestate.new()
 local state = Gamestate.story1
 local currentString = ""
 local currentStringNum = 0
+local diagInterval = 5
 local dialogue = {	"Last week, on ActionMovie...",
 			"Crispy, you're a lose canon!!!",
 			"That ice cream truck was illegally parked! He deserved what he got!",
@@ -76,7 +77,7 @@ function state:nextLine()
 			currentStringNum = currentStringNum + 1			
 			currentString = dialogue[currentStringNum]
 
-		stringTimer:add(3, function()
+		stringTimer:add(diagInterval, function()
 			if currentStringNum >= table.getn(dialogue) then
 				Gamestate.switch(Gamestate.scene)
 			else

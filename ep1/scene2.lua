@@ -101,7 +101,7 @@ function state:enter()
 --	bystanderPositions = {Vector(dimScreen.x,400), Vector(dimScreen.x,500), Vector(dimScreen.x,600)}
 	bystanderTimer = Timer.new()
 	bystanderTimer:addPeriodic(math.random(1,3), function()
-		spawnBystanders()
+		state:spawnBystanders()
 		end)
 	
 	-- enemies here --
@@ -132,7 +132,7 @@ function state:enter()
 	murderBallerDX = 0
 end
 
-function spawnBystanders()
+function state:spawnBystanders()
 	local posx, posy
 	for i = 1,math.random(1,5),1 do 
 		if math.random(1,2) == 1 then
@@ -148,7 +148,7 @@ function spawnBystanders()
 	end
 end
 
-function removeBystanders()
+function state:removeBystanders()
 	for i, bystander in ipairs(bystanders) do
 		if outOfBounds(bystander) then
 			table.remove(bystanders, i)
@@ -157,7 +157,7 @@ function removeBystanders()
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions, type) 
+function state:insertEnemy(positions, type) 
 	for i, screenPos in ipairs(enemiesPosition) do 
 		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
 	end
@@ -165,6 +165,11 @@ end
 
 function state:leave()
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	enemies = {}
+	bullets = {}
+	bystanders = {}
+	bystanderTimer:clear()
+	enemyTimer:clear()
 end
 
 function state:update(dt)
@@ -215,7 +220,7 @@ function state:update(dt)
 	end
 
 	if deadCount >= MAXDEAD then 
-		removeDead()
+		state:removeDead()
 	end
 	state:movecam() -- Update camera. See movecam func below.
 
@@ -311,7 +316,7 @@ function state:draw()
 
 end 
 
-function removeDead() 
+function state:removeDead() 
 	for i, enemy in ipairs(enemies) do
 		if ((not enemy.isalive) and enemy.counted) then
 			table.remove(enemies, i)
@@ -321,7 +326,7 @@ function removeDead()
 	end
 end
 
-function spawnEnemy()
+function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
@@ -436,7 +441,7 @@ function state:mousepressed(x,y,button)
 	end
 end
 
-function playersLose()
+function state:playersLose()
 	-- do stuff here when players go out of cam bounds
 	drawLoseString = true
 	camdx = 0
