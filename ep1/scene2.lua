@@ -41,6 +41,9 @@ function state:enter()
 		player2:setPosition(Vector(100,700)) 
 	end
 
+	loseString = "Lloyd the Rat got away!"
+	drawLoseString = false
+
 	-- set up camera ------------------------------------
 	cam = Camera(
 		dimScreen.x/2,
@@ -70,7 +73,6 @@ function state:enter()
 	self.started = true
 
 	
-	
 
 	-- make objects in map solid
 	background = Level("ep1", false)
@@ -86,6 +88,9 @@ function state:enter()
 	pather:setMode(searchMode)
 	pather:setHeuristic(heuristics[current_heuristic])
 	pather:setAutoFill(filling)
+
+	-- set up an event timer
+	eventTimer = Timer.new()
 	
 	-- set up bullets table --
 	bullets = {}
@@ -124,6 +129,7 @@ function state:enter()
 		0.2) 
 
 	murderBaller = murderBallerRunAnim
+	murderBallerDX = 0
 end
 
 function spawnBystanders()
@@ -179,6 +185,7 @@ function state:update(dt)
 	end
 
 	-- update the murderballer
+	murderBallerPos.x = murderBallerPos.x + murderBallerDX
 	murderBaller:update(math.min(dt, 1/60))
 	
 	for i,enemy in ipairs(enemies) do
@@ -279,7 +286,10 @@ function state:draw()
 			false -- v flip
 			)
 --		end
-	
+	-- lose string here
+	if drawLoseString then
+		love.graphics.printf( loseString, (dimScreen.x/2) - 200, (dimScreen.y/2)-100, 400, "center" )
+	end
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
@@ -428,5 +438,11 @@ end
 
 function playersLose()
 	-- do stuff here when players go out of cam bounds
-	
+	drawLoseString = true
+	camdx = 0
+	murderBallerPosDX = 1.5
+
+	eventTimer:add(5, function()
+			Gamestate.switch(Gamestate.menu)
+		end)
 end

@@ -1,5 +1,6 @@
 -- This is the menu for episode one.
 -- Players will be able to select a scene to start from.
+require "ep1/story1"
 require "ep1/scene"
 require "ep1/scene2"
 require "ep1/scene3"
@@ -56,7 +57,7 @@ function state:keyreleased(key)
 	elseif key == "return" then
 		-- Start scene 1
 		if (epi == 0) then
-			Gamestate.switch(Gamestate.scene)
+			Gamestate.switch(Gamestate.story1)
 		elseif (epi == 1) then
 			Gamestate.switch(Gamestate.scene2)
 		elseif (epi == 2) then

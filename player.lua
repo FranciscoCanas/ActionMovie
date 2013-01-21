@@ -129,6 +129,8 @@ end
 function Player:setPosition(v)
 	self.body:setX(v.x)
 	self.body:setY(v.y)
+	self.position.x = v.x
+	self.position.y = v.y
 end
 
 function Player:update(dt)

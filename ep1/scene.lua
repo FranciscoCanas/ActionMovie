@@ -178,7 +178,7 @@ function state:draw()
 		bullet:draw()
 	end
 	cam:detach()
-	
+	love.graphics.setFont( font12 )
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
