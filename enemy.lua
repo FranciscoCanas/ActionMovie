@@ -215,7 +215,7 @@ function Enemy:idle()
 	if self.animation ~= self.standAnim then
 		self.animation = self.standAnim
 	end
-	
+	print("idle")
 	if self.target == nil then
 		if (self.behaviour == FOLLOWPLAYER) then
 			self:SetNearestTarget()
@@ -240,16 +240,6 @@ function Enemy:idle()
 		end
 	end
 	
-end
-
-function Enemy:DistanceToTarget()
-	local dx = self.maxTargetRange + 1
-	if self.target ~= null then
-		local tx = self.target.body:getX()
-		dx = math.abs(tx - self.body:getX())
-	end
-	
-	return dx
 end
 
 function Enemy:moveToCover()
@@ -462,6 +452,16 @@ function Enemy:dies()
 	
 	self.animation = self.diesAnim
 	
+end
+
+function Enemy:DistanceToTarget()
+	local dx = self.maxTargetRange + 1
+	if self.target ~= null then
+		local tx = self.target.body:getX()
+		dx = math.abs(tx - self.body:getX())
+	end
+	
+	return dx
 end
 
 -- Some simple AI decision making functions
