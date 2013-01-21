@@ -75,8 +75,12 @@ function(self, image, position, type)
 	-- object that owns the fixture during collision
 	-- detection:
 	self.fixture:setUserData(self)
-	--self.fixture:setCategory(ENEMY)	
-		
+	
+	self.fixture:setCategory(ENEMY)	
+	if (self.behaviour == MOVETOSETSPOT) then 
+		self.fixture:setMask(OBSTACLE)
+	end
+
 	self.body:setLinearDamping( self.damping )
 
 -- particle sys stuff go here now!
@@ -206,19 +210,6 @@ function Enemy:draw()
  love.graphics.draw(self.bloodEmitter)
 end
 
-function Enemy:moveToShoot()
-	-- Find nearest target if we don't have a target
-	if self.target == nil then
-		self:SetNearestTarget()
-	end
-	
-	if self.target ~= nil then
-		self:MoveToShootingSpot()
-	else 
-		self.state = idle
-	end
-end
-
 -- when enemy decides where to go
 function Enemy:idle()
 	if self.animation ~= self.standAnim then
@@ -278,6 +269,111 @@ function Enemy:moveToCover()
 			end)
 		-- path, length = pather:getPath(self.tile_x, self.tile_x, self.target[3], self.target[4])
 		-- self:orderMove(path)
+	end
+end
+
+function Enemy:moveToShoot()
+	-- Find nearest target if we don't have a target
+	if self.target == nil then
+		self:SetNearestTarget()
+	end
+	
+	if self.target ~= nil then
+		self:MoveToShootingSpot()
+	else 
+		self.state = idle
+	end
+end
+
+-- Sends to the enemy the order to move
+function Enemy:orderMove(path)
+  self.path = path -- the path to follow
+  self.isMoving = true -- whether or not the enemy should start moving
+  self.cur = 1 -- indexes the current reached step on the path to follow
+  self.there = true -- whether or not the enemy has reached a step
+end
+
+-- Moves the enemy by checking its current route and whether
+-- it has reached the end of it.
+function Enemy:move(dt)
+  if self.isMoving then
+  	self.animation = self.runAnim
+    if not self.there then
+      	-- Walk to the assigned location
+     	--self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
+     	local dx = self.path[self.cur].x*32 - self.body:getX() 	
+		local dy = self.path[self.cur].y*32 - self.body:getY()
+		if (math.pow(dx, 2) + math.pow(dy, 2) <= math.pow(10, 2)) then
+			self.there = true
+		else
+			self.delta.x = dx
+			self.delta.y = dy
+			self.delta:normalize_inplace()	
+		end
+    else
+      -- Make the next step move
+      if self.path[self.cur+1] then
+        self.cur = self.cur + 1
+        self.there = false
+      else
+        -- Reached the goal!
+        self.isMoving = false
+        self.path = nil
+        _path = nil
+      end
+    end
+  end
+end
+
+-- Will move the bad guy towards a shooting channel
+-- within range so they can fire at player.
+function Enemy:MoveToShootingSpot()
+	if (self.behaviour == FOLLOWPLAYER) then
+		local tx, ty = background:toTile(
+			self.target.body:getX(),
+			self.target.body:getY())
+		local dx = self.target.body:getX() - self.body:getX() 	
+		local dy = self.target.body:getY() - self.body:getY()
+		
+		-- figure out where we need to go to shoot the target
+		-- case 1: player is sufficiently far from enemy 
+		-- on the x axis:
+		if (math.abs(dx) < self.minTargetRange) then
+			-- enemy too close to player. must back off.
+			 self.delta.x = -dx		
+		elseif (math.abs(dx) > self.maxTargetRange) then
+			-- enemy too far from player. must go approach.
+			 self.delta.x = dx
+		end
+		
+		-- are we close enough to shoot?
+		if (math.abs(dy) < self.inRange) then
+			-- is there anything (specifically another enemy) between this enemy and the target?
+			toShoot = true
+			curEnemy = self
+			world:rayCast(self.body:getX(), self.body:getY(), --enemy location
+						self.target.body:getX(), self.target.body:getY(), --target location
+						rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
+			if toShoot then
+				-- has a clear shot
+				self.state = shoot
+			else
+				-- doesn't have a clear shot.
+				self.delta.y = self.body:getY() + self.height
+			end
+		
+		else
+			-- player not in range, but right distance apart
+			-- player is just right. so move to his y coord
+			self.delta.y = dy
+			self.delta:normalize_inplace()	
+		end
+	elseif (self.behaviour == MOVETOSETSPOT) then
+		if self.isMoving then
+			self:move(dt)
+		else
+			self.state = shoot
+		end
 	end
 end
 
@@ -397,58 +493,6 @@ function Enemy:SetNearestTarget()
 	end
 end
 
--- Will move the bad guy towards a shooting channel
--- within range so they can fire at player.
-function Enemy:MoveToShootingSpot()
-	if (self.behaviour == FOLLOWPLAYER) then
-		local tx, ty = background:toTile(
-			self.target.body:getX(),
-			self.target.body:getY())
-		local dx = self.target.body:getX() - self.body:getX() 	
-		local dy = self.target.body:getY() - self.body:getY()
-		
-		-- figure out where we need to go to shoot the target
-		-- case 1: player is sufficiently far from enemy 
-		-- on the x axis:
-		if (math.abs(dx) < self.minTargetRange) then
-			-- enemy too close to player. must back off.
-			 self.delta.x = -dx		
-		elseif (math.abs(dx) > self.maxTargetRange) then
-			-- enemy too far from player. must go approach.
-			 self.delta.x = dx
-		end
-		
-		-- are we close enough to shoot?
-		if (math.abs(dy) < self.inRange) then
-			-- is there anything (specifically another enemy) between this enemy and the target?
-			toShoot = true
-			curEnemy = self
-			world:rayCast(self.body:getX(), self.body:getY(), --enemy location
-						self.target.body:getX(), self.target.body:getY(), --target location
-						rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
-			if toShoot then
-				-- has a clear shot
-				self.state = shoot
-			else
-				-- doesn't have a clear shot.
-				self.delta.y = self.body:getY() + self.height
-			end
-		
-		else
-			-- player not in range, but right distance apart
-			-- player is just right. so move to his y coord
-			self.delta.y = dy
-			self.delta:normalize_inplace()	
-		end
-	elseif (self.behaviour == MOVETOSETSPOT) then
-		if self.isMoving then
-			self:move(dt)
-		else
-			self.state = shoot
-		end
-	end
-end
-
 -- the function to call when the ray casted by rayCast hits a fixture
 function rayCallback(fixture, x, y, xn, yn, fraction)
 	object = fixture:getUserData()
@@ -462,45 +506,6 @@ function rayCallback(fixture, x, y, xn, yn, fraction)
 	end
 
 	return 1 -- Continues with ray cast through all shapes.
-end
-
--- Sends to the enemy the order to move
-function Enemy:orderMove(path)
-  self.path = path -- the path to follow
-  self.isMoving = true -- whether or not the enemy should start moving
-  self.cur = 1 -- indexes the current reached step on the path to follow
-  self.there = true -- whether or not the enemy has reached a step
-end
-
--- Moves the enemy by checking its current route and whether
--- it has reached the end of it.
-function Enemy:move(dt)
-  if self.isMoving then
-  	self.animation = self.runAnim
-    if not self.there then
-      	-- Walk to the assigned location
-     	--self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
-     	local dx = self.path[self.cur].x*32 - self.body:getX() 	
-		local dy = self.path[self.cur].y*32 - self.body:getY()
-		if (math.pow(dx, 2) + math.pow(dy, 2) <= math.pow(20, 2)) then
-			self.there = true
-		else
-			self.delta.x = dx
-			self.delta.y = dy
-			self.delta:normalize_inplace()	
-		end
-    else
-      -- Make the next step move
-      if self.path[self.cur+1] then
-        self.cur = self.cur + 1
-        self.there = false
-      else
-        -- Reached the goal!
-        self.isMoving = false
-        self.path = nil
-      end
-    end
-  end
 end
 
 -- sets the logical map tile position for this enemy
