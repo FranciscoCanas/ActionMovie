@@ -9,6 +9,9 @@ local state = Gamestate.epmenu
 local epi = 0 
 
 function state:enter()
+
+	local font = love.graphics.setNewFont(16)
+	love.graphics.setFont( font)
 	--player1:init()
 	--player2:init()
 end

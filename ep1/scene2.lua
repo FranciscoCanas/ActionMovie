@@ -65,7 +65,7 @@ function state:enter()
 	camTop = 0
 	camBottom = 1000
 	-- camera movement params --
-	camdx = 2
+	camdx = 1.5
 	camdy = 0
 	camdz = 1
 
@@ -159,7 +159,7 @@ end
 -- add an enemy at position x, y
 function insertEnemy(positions, type) 
 	for i, screenPos in ipairs(enemiesPosition) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, type))
+		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
 	end
 end
 

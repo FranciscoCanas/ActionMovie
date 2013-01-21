@@ -7,20 +7,26 @@ love.graphics.setFont( font)
 
 Gamestate.story1 = Gamestate.new()
 local state = Gamestate.story1
-local currentString = "Hey"
+local currentString = ""
 local currentStringNum = 0
-local dialogue = {
-			"You really did it this time, Crispy!",
-			"*sigh* what now?",
+local dialogue = {	"Last week, on ActionMovie...",
+			"Crispy, you're a lose canon!!!",
+			"That ice cream truck was illegally parked! He deserved what he got!",
+	"Who's gonna pay for the damages to that orphanage!?",
+		"If we don't find that bomb, they're gonna blow up the president!",
 			"Big Boss is sending his goons over.",
-			"Welp.",
+			"Quick, out the back! We'll escape through the alleyway!",
 			}
 local currentShot = 0
 local shotFuncs = {
-		function()state:shot2() end,
-		function() state:shot1() end,
-		function() state:shot3() end,
-		function() state:shot1() end	}
+		function() state:startingShot() end,
+		function() state:closeUp(player2) end,
+		function() state:closeUp(player1) end,
+		function() state:closeUp(player2) end,
+		function() state:closeUp(player1) end,
+		function() state:closeUp(player2) end,
+		function() state:bothPlayers() end,
+	}
 
 function state:enter()
 -- background
@@ -57,30 +63,27 @@ function state:enter()
 	-- start music
 	TEsound.play(bgMusicList, "bgMusic")
 
-	stringTimer:add(3, function()
-			--currentStringNum = currentStringNum + 1
-			--currentString = dialogue[currentStringNum]
-
-			--state:shot1()
-			state:nextLine()
-			state:nextShot()
-		end)
-
-	stringTimer:add(6, function()
-			--currentStringNum = currentStringNum + 1
-			--currentString = dialogue[currentStringNum]
-			state:shot2()
-			state:nextLine()
-			state:nextShot()
-
-		end)
+	
+	-- init camera and diag here
+	state:nextLine()
+	state:nextShot()
 
 end
 
 function state:nextLine()
-			currentStringNum = currentStringNum + 1
-			
+		stringTimer:clear()
+
+			currentStringNum = currentStringNum + 1			
 			currentString = dialogue[currentStringNum]
+
+		stringTimer:add(3, function()
+			if currentStringNum >= table.getn(dialogue) then
+				Gamestate.switch(Gamestate.scene)
+			else
+			state:nextLine()
+			state:nextShot()
+			end
+		end)
 end
 
 function state:nextShot()
@@ -107,11 +110,18 @@ function state:draw()
 	player1:draw()
 	player2:draw()
 	cam:detach()	
-
-	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y)-100, 400, "center" )
+	
+	-- cinematic letterboxing here
+	love.graphics.setColor(0,0,0,255)
+	love.graphics.rectangle("fill", 0, 0, dimScreen.x, 150)
+	love.graphics.rectangle("fill", 0, dimScreen.y - 150, dimScreen.x, 150)
+	love.graphics.setColor(255,255,255,255)
+	
+	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y)-150, 400, "center" )
 end
 
 function state:leave()
+	stringTimer:clear()
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
 end
 
@@ -133,10 +143,15 @@ function state:keyreleased(key)
 	end	
 end
 
+function state:startingShot()
+	cam:lookAt(600,400)
+	cam:zoomTo(1)
+end
 
-function state:shot1()
-	cam:lookAt(player1.position.x + 30, player1.position.y+30)
-	cam:zoomTo(12)
+
+function state:closeUp(p)
+	cam:lookAt(p.position.x + 25, p.position.y + 15)
+	cam:zoomTo(16)
 end
 
 function state:shot2()
@@ -144,7 +159,7 @@ function state:shot2()
 	cam:zoomTo(12)
 end
 
-function state:shot3()
-	cam:lookAt(player1.position.x + 60, player1.position.y)
+function state:bothPlayers()
+	cam:lookAt(player1.position.x + 60, player1.position.y+30)
 	cam:zoomTo(8)	
 end

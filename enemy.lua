@@ -16,25 +16,30 @@ function(self, image, position, type)
 	self.frameDelay = 0.2
 	self.frameFlipH = false
 	self.frameFlipV = false
-	self.grid = Anim8.newGrid(80, 94, 
+	self.grid = Anim8.newGrid(128, 128, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
+--	self.scalex = math.random(0.5, 0.8)
+--	self.scaley = math.random(0.6, 0.8)
+
 	self.standAnim = Anim8.newAnimation('loop', 
-			self.grid:getFrames('1-8, 1'),
+			self.grid:getFrames('1, 1'),
 			self.frameDelay)
 			
 	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('1-3, 2'),
+		self.grid('1-3, 1'),
 		self.frameDelay)
 		
 	self.shootAnim = Anim8.newAnimation('loop',
-		self.grid('1-2, 3'),
+		self.grid('1-2, 2'),
 		self.frameDelay)
+
+	self.diesAnim = self.standAnim
 		
-	self.diesAnim = Anim8.newAnimation('once',
-		self.grid('4-7, 4'),
-		self.frameDelay)
+--	self.diesAnim = Anim8.newAnimation('once',
+--		self.grid('4-7, 4'),
+--		self.frameDelay)
 		
 	self.animation = self.standAnim
 	
@@ -84,6 +89,17 @@ function(self, image, position, type)
 	self.gunEmitter:setSizes(0.05, 0.5)
 	self.gunEmitter:setGravity(0,0)
 	self.gunEmitter:setSpeed(140,260)
+
+-- particle sys stuff go here now!
+	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
+	self.bloodEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.bloodEmitter:setEmissionRate(500)
+	self.bloodEmitter:setLifetime(0.01)
+	self.bloodEmitter:setParticleLife(0.25)
+	self.bloodEmitter:setSpread(3.14/3)
+	self.bloodEmitter:setSizes(0.05, 0.5)
+	self.bloodEmitter:setGravity(0,0)
+	self.bloodEmitter:setSpeed(140,260)
 end
 }
 
@@ -98,9 +114,11 @@ function Enemy:init()
 	self.maxTargetRange = 400 --/ max distance from player to shoot
 	self.minTargetRange = 250 --/ min distance from player to shoot
 	self.observePlayerRange = 600 -- distance to interact with player
-	
-	self.width = 64
-	self.height = 64
+	self.scalex = 0.75
+	self.scaley = 0.75
+
+	self.width = 128 * self.scalex
+	self.height = 128 * self.scaley
 
 	self.counted = false
 	
@@ -116,7 +134,7 @@ function Enemy:init()
 	self.delta = Vector(0,0)
 	
 	-- sound stuff
-	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
+	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg", "sfx/gunshot3.ogg"}
 	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", 
 		"sfx/scream3.ogg"}
 	
@@ -125,6 +143,7 @@ end
 function Enemy:update(dt)
 	-- update particles
 	self.gunEmitter:update(dt)
+	self.bloodEmitter:update(dt)
 	-- update the timer
 	self.timer:update(dt)
 	-- delta holds direction of movement input
@@ -176,13 +195,15 @@ function Enemy:draw()
 			self.position.x,
 			self.position.y,
 			0, -- angle
-			1, -- x scale
-			1, -- y scale
+			self.scalex, -- x scale
+			self.scaley, -- y scale
 			0, -- x offset
 			0, -- y offset
 			self.frameFlipH,
 			self.frameFlipV
 			)
+ love.graphics.draw(self.gunEmitter)
+ love.graphics.draw(self.bloodEmitter)
 end
 
 function Enemy:moveToShoot()
@@ -317,6 +338,13 @@ end
 -- Resolve being shot here.
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
+local pos = Vector(self.position.x + 10, self.position.y + 20)
+
+-- set up the bloody splurty guy
+		self.gunEmitter:reset()
+		self.gunEmitter:setPosition(pos.x, pos.y - 20)
+		self.gunEmitter:start()	
+	
 	if self.state == dying then
 		return
 	end

@@ -82,7 +82,7 @@ function state:enter()
 	
 	-- set up some baddies here --
 	enemies = {}
-	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
+	enemiesPosition = {Vector(cam.x + 900, 600), Vector(cam.x + 600,700), Vector(cam.x + 700, 700)}
 	deadCount = 0
 	insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
@@ -92,7 +92,7 @@ end
 -- add an enemy at position x, y
 function insertEnemy(positions, type) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, type))
+		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
 	end
 end
 
@@ -211,7 +211,7 @@ function spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(800, 800)}, FOLLOWPLAYER)
+		insertEnemy({Vector(cam.x + dimScreen.x/2, 800)}, FOLLOWPLAYER)
 		totEnemy = totEnemy+1
 	end
 end
