@@ -1,35 +1,45 @@
+--different types of enemies
+FOLLOWPLAYER = 1
+MOVETOSETSPOT = 2
+movementPositions = {}
+
 Enemy = Class{
-function(self, image, position)
+function(self, image, position, type)
 	
 	self:init()
 	wx, wy = cam:worldCoords(position.x, position.y)
 	self.position = Vector(wx, wy)
-	
+	self.behaviour = type
 	self.image = image --love.graphics.newImage(image)
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.2
 	self.frameFlipH = false
 	self.frameFlipV = false
-	self.grid = Anim8.newGrid(80, 94, 
+	self.grid = Anim8.newGrid(128, 128, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
+--	self.scalex = math.random(0.5, 0.8)
+--	self.scaley = math.random(0.6, 0.8)
+
 	self.standAnim = Anim8.newAnimation('loop', 
-			self.grid:getFrames('1-8, 1'),
+			self.grid:getFrames('1, 1'),
 			self.frameDelay)
 			
 	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('1-3, 2'),
+		self.grid('1-3, 1'),
 		self.frameDelay)
 		
 	self.shootAnim = Anim8.newAnimation('loop',
-		self.grid('1-2, 3'),
+		self.grid('1-2, 2'),
 		self.frameDelay)
+
+	self.diesAnim = self.standAnim
 		
-	self.diesAnim = Anim8.newAnimation('once',
-		self.grid('4-7, 4'),
-		self.frameDelay)
+--	self.diesAnim = Anim8.newAnimation('once',
+--		self.grid('4-7, 4'),
+--		self.frameDelay)
 		
 	self.animation = self.standAnim
 	
@@ -68,6 +78,28 @@ function(self, image, position)
 	--self.fixture:setCategory(ENEMY)	
 		
 	self.body:setLinearDamping( self.damping )
+
+-- particle sys stuff go here now!
+	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
+	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.gunEmitter:setEmissionRate(500)
+	self.gunEmitter:setLifetime(0.01)
+	self.gunEmitter:setParticleLife(0.25)
+	self.gunEmitter:setSpread(3.14/3)
+	self.gunEmitter:setSizes(0.05, 0.5)
+	self.gunEmitter:setGravity(0,0)
+	self.gunEmitter:setSpeed(140,260)
+
+-- particle sys stuff go here now!
+	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
+	self.bloodEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.bloodEmitter:setEmissionRate(500)
+	self.bloodEmitter:setLifetime(0.01)
+	self.bloodEmitter:setParticleLife(0.25)
+	self.bloodEmitter:setSpread(3.14/3)
+	self.bloodEmitter:setSizes(0.05, 0.5)
+	self.bloodEmitter:setGravity(0,0)
+	self.bloodEmitter:setSpeed(140,260)
 end
 }
 
@@ -77,12 +109,16 @@ function Enemy:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
-	self.inRange = 10  -- y axis shooting boundary
-	self.maxTargetRange = 400 --/ background.map.tileWidth
-	self.minTargetRange = 250 --/ background.map.tileHeight
-	self.observePlayerRange = 600
-	self.width = 64
-	self.height = 64
+
+	self.inRange = 32  -- y axis shooting boundary
+	self.maxTargetRange = 400 --/ max distance from player to shoot
+	self.minTargetRange = 250 --/ min distance from player to shoot
+	self.observePlayerRange = 600 -- distance to interact with player
+	self.scalex = 0.75
+	self.scaley = 0.75
+
+	self.width = 128 * self.scalex
+	self.height = 128 * self.scaley
 
 	self.counted = false
 	
@@ -98,13 +134,16 @@ function Enemy:init()
 	self.delta = Vector(0,0)
 	
 	-- sound stuff
-	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
+	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg", "sfx/gunshot3.ogg"}
 	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", 
 		"sfx/scream3.ogg"}
 	
 end
 
 function Enemy:update(dt)
+	-- update particles
+	self.gunEmitter:update(dt)
+	self.bloodEmitter:update(dt)
 	-- update the timer
 	self.timer:update(dt)
 	-- delta holds direction of movement input
@@ -156,13 +195,15 @@ function Enemy:draw()
 			self.position.x,
 			self.position.y,
 			0, -- angle
-			1, -- x scale
-			1, -- y scale
+			self.scalex, -- x scale
+			self.scaley, -- y scale
 			0, -- x offset
 			0, -- y offset
 			self.frameFlipH,
 			self.frameFlipV
 			)
+ love.graphics.draw(self.gunEmitter)
+ love.graphics.draw(self.bloodEmitter)
 end
 
 function Enemy:moveToShoot()
@@ -178,18 +219,34 @@ function Enemy:moveToShoot()
 	end
 end
 
+-- when enemy decides where to go
 function Enemy:idle()
 	if self.animation ~= self.standAnim then
 		self.animation = self.standAnim
 	end
 	
 	if self.target == nil then
-		self:SetNearestTarget()
+		if (self.behaviour == FOLLOWPLAYER) then
+			self:SetNearestTarget()
+		elseif (self.behaviour == MOVETOSETSPOT) then
+			-- target is set to one of preapproved cover positions
+			self.target = movementPositions[math.random(1, 2)]
+		end 
 	end
 	
-	if (self:DistanceToTarget() 
+	if (self.behaviour == FOLLOWPLAYER) and (self:DistanceToTarget() 
 			< self.observePlayerRange) then
 		self.state = moveToShoot
+	elseif (self.behaviour == MOVETOSETSPOT) then
+		--calculate the path and order the move
+		--change state to move to cover
+		x_, y_ = self:getCenter()
+		tx, ty = background:toTile(x_, y_)
+		if not ((tx == self.target[1]) and (ty == self.target[2])) then
+			_path, length = pather:getPath(tx, ty, self.target[1], self.target[2])
+			self:orderMove(_path)
+			self.state = moveToCover
+		end
 	end
 	
 end
@@ -205,7 +262,23 @@ function Enemy:DistanceToTarget()
 end
 
 function Enemy:moveToCover()
---
+	-- call move until reach end
+	-- if end add timer to pause for a random amount of time 
+	-- and then change target, calculate path  to call moveToShootingSpot
+	-- 
+	if self.isMoving then
+		self:move(dt)
+	else
+		self.animation = self.standAnim
+		self.state = idle
+		self.timer:add(math.random(1, 5), function()
+			_path, length = pather:getPath(tx, ty, self.target[3], self.target[4])
+			self:orderMove(_path)
+			self.state = moveToShoot
+			end)
+		-- path, length = pather:getPath(self.tile_x, self.tile_x, self.target[3], self.target[4])
+		-- self:orderMove(path)
+	end
 end
 
 function Enemy:shoot()
@@ -220,7 +293,12 @@ function Enemy:shoot()
 					self:stopShoot() 
 				end)
 		-- face the target
-		local tx, ty = self.target.body:getWorldCenter()
+		if self.behaviour == FOLLOWPLAYER then
+			targetBody = self.target.body--:getWorldCenter()
+		else
+			targetBody = player1.body or player2.body
+		end
+		local tx, ty = targetBody:getWorldCenter()
 		local pos = Vector(0,0)
 		-- figure out origin to fire from first
 		pos.x, pos.y = self.body:getWorldCenter()
@@ -231,10 +309,20 @@ function Enemy:shoot()
 		-- randomness
 		local ry = (math.random(0, 4) - 2) / 10
 		local bulletDir = Vector(self.facing.x,ry)
+		local aim = 0
+		if (bulletDir.x < 0) then
+			aim = 3.14
+		end
+
+		self.timer:add(0.10, function()
+				self.gunEmitter:setDirection( aim )
+			end)
 		
 		pos = pos + self.facing * 25
-		table.insert(bullets,Bullet(null, pos, bulletDir))	
-		TEsound.play(gunsoundlist)		
+		self.timer:add(0.25, function()
+			table.insert(bullets,Bullet(null, pos, bulletDir))	
+			TEsound.play(gunsoundlist)	
+		end)	
 	end
 end
 
@@ -242,12 +330,21 @@ function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
 	self.state = idle
-	
+	if (self.behaviour == MOVETOSETSPOT) then
+		self.target = nil
+	end
 end
 
 -- Resolve being shot here.
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
+local pos = Vector(self.position.x + 10, self.position.y + 20)
+
+-- set up the bloody splurty guy
+		self.gunEmitter:reset()
+		self.gunEmitter:setPosition(pos.x, pos.y - 20)
+		self.gunEmitter:start()	
+	
 	if self.state == dying then
 		return
 	end
@@ -278,20 +375,23 @@ end
 -- is within range.
 function Enemy:SetNearestTarget()
 	self.target = nil
-	local leastdist = self.observePlayerRange
-	local mx, my = self.body:getWorldCenter()
-	
-	
-	-- Update the players.
-	for i,player in ipairs(players) do
-		if player.isplaying and player.isalive then
-			local px, py = player.body:getWorldCenter()
-			
-			thisdist = (Vector(px, py) - Vector(mx, my)):len()
-			
-			if thisdist < leastdist then
-				leastdist = thisdist
-				self.target = player
+
+	if self.behaviour == FOLLOWPLAYER then 
+		local leastdist = self.observePlayerRange
+		local mx, my = self.body:getWorldCenter()
+		
+		
+		-- Update the players.
+		for i,player in ipairs(players) do
+			if player.isplaying and player.isalive then
+				local px, py = player.body:getWorldCenter()
+				
+				thisdist = (Vector(px, py) - Vector(mx, my)):len()
+				
+				if thisdist < leastdist then
+					leastdist = thisdist
+					self.target = player
+				end
 			end
 		end
 	end
@@ -300,33 +400,68 @@ end
 -- Will move the bad guy towards a shooting channel
 -- within range so they can fire at player.
 function Enemy:MoveToShootingSpot()
-	local tx, ty = background:toTile(
+	if (self.behaviour == FOLLOWPLAYER) then
+		local tx, ty = background:toTile(
 			self.target.body:getX(),
 			self.target.body:getY())
-	
-	local dx = self.target.body:getX() - self.body:getX() 
-	
-	local dy = self.target.body:getY() - self.body:getY()
-	
-	-- figure out where we need to go to shoot the target
-	-- case 1: player is sufficiently far from enemy 
-	-- on the x axis:
-	if (math.abs(dx) < self.minTargetRange) then
-		-- enemy too close to player. must back off.
-		 self.delta.x = -dx		
-	elseif (math.abs(dx) > self.maxTargetRange) then
-		-- enemy too far from player. must go approach.
-		 self.delta.x = dx
+		local dx = self.target.body:getX() - self.body:getX() 	
+		local dy = self.target.body:getY() - self.body:getY()
+		
+		-- figure out where we need to go to shoot the target
+		-- case 1: player is sufficiently far from enemy 
+		-- on the x axis:
+		if (math.abs(dx) < self.minTargetRange) then
+			-- enemy too close to player. must back off.
+			 self.delta.x = -dx		
+		elseif (math.abs(dx) > self.maxTargetRange) then
+			-- enemy too far from player. must go approach.
+			 self.delta.x = dx
+		end
+		
+		-- are we close enough to shoot?
+		if (math.abs(dy) < self.inRange) then
+			-- is there anything (specifically another enemy) between this enemy and the target?
+			toShoot = true
+			curEnemy = self
+			world:rayCast(self.body:getX(), self.body:getY(), --enemy location
+						self.target.body:getX(), self.target.body:getY(), --target location
+						rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
+			if toShoot then
+				-- has a clear shot
+				self.state = shoot
+			else
+				-- doesn't have a clear shot.
+				self.delta.y = self.body:getY() + self.height
+			end
+		
+		else
+			-- player not in range, but right distance apart
+			-- player is just right. so move to his y coord
+			self.delta.y = dy
+			self.delta:normalize_inplace()	
+		end
+	elseif (self.behaviour == MOVETOSETSPOT) then
+		if self.isMoving then
+			self:move(dt)
+		else
+			self.state = shoot
+		end
 	end
-	
-	-- are we close enough to shoot?
-	if (math.abs(dy) < self.inRange) then
-		self.state = shoot
+end
+
+-- the function to call when the ray casted by rayCast hits a fixture
+function rayCallback(fixture, x, y, xn, yn, fraction)
+	object = fixture:getUserData()
+	if object:is_a(Enemy) then 
+		if (player1.isplaying and player2.isplaying) then
+			curEnemy:SetNearestTarget()
+		end
+		--curEnemy.delta.y = object.body:getY() + curEnemy.height - curEnemy.body:getY()
+		toShoot = false 
+		return 0 -- stops ray from going through other fixtures
 	end
-	
-	-- player is just right. so move to his y coord
-	self.delta.y = dy
-	self.delta:normalize_inplace()
+
+	return 1 -- Continues with ray cast through all shapes.
 end
 
 -- Sends to the enemy the order to move
@@ -341,9 +476,19 @@ end
 -- it has reached the end of it.
 function Enemy:move(dt)
   if self.isMoving then
+  	self.animation = self.runAnim
     if not self.there then
-      -- Walk to the assigned location
-      self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
+      	-- Walk to the assigned location
+     	--self.moveToTile(self.path[self.cur].x,self.path[self.cur].y, dt)
+     	local dx = self.path[self.cur].x*32 - self.body:getX() 	
+		local dy = self.path[self.cur].y*32 - self.body:getY()
+		if (math.pow(dx, 2) + math.pow(dy, 2) <= math.pow(20, 2)) then
+			self.there = true
+		else
+			self.delta.x = dx
+			self.delta.y = dy
+			self.delta:normalize_inplace()	
+		end
     else
       -- Make the next step move
       if self.path[self.cur+1] then
@@ -365,3 +510,6 @@ function Enemy:setTilePosition()
 						self.position.y)
 end
 
+function Enemy:getCenter()
+	return self.body:getX(), self.body:getY()
+end

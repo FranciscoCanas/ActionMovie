@@ -50,7 +50,6 @@ function(self, num)
 		
 	self.animation = self.standAnim
 	
-
 	-- love.physics code starts here -----------------------------------------
 	self.facing = Vector(1,0) -- normalized direction vector
 	self.acceleration = 12000
@@ -64,6 +63,7 @@ function(self, num)
 		--self.position.y,
 		"dynamic"
 		)
+	
 	self.body:setFixedRotation(true)
 
 	self.shape = love.physics.newRectangleShape(
@@ -91,12 +91,13 @@ function(self, num)
 	-- love.physics ends here
 	
 	-- sound stuffs go here
-	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
+	self.gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
 	--, "sfx/gunshot3.ogg" }
 	
 	
 	-- particle sys stuff go here now!
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
+<<<<<<< HEAD
 	gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 30 )
 	gunEmitter:setEmissionRate(30)
 	gunEmitter:setLifetime(0.01)
@@ -104,6 +105,16 @@ function(self, num)
 	gunEmitter:setSpread(30)
 	gunEmitter:setSizes(0.3, 0.7)
 	gunEmitter:setSpeed(100)
+=======
+	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
+	self.gunEmitter:setEmissionRate(500)
+	self.gunEmitter:setLifetime(0.01)
+	self.gunEmitter:setParticleLife(0.25)
+	self.gunEmitter:setSpread(3.14/4)
+	self.gunEmitter:setSizes(0.05, 0.25)
+	self.gunEmitter:setGravity(0,0)
+	self.gunEmitter:setSpeed(200,300)
+>>>>>>> 35391e28f32063808bd524ab391a67ff2f2bbf45
 end
 }
 
@@ -117,23 +128,30 @@ function Player:init()
 	self.fired = false -- keeps track of shooting state
 	self.isalive = true -- keeps track of aliveness. duh.
 	
-	if self.pnum == 2 then
-		self.position = Vector(
-			dimScreen.x - (50 + self.width),
-			dimScreen.y - 80)
-	elseif self.pnum == 1 then
-		self.position = Vector(50,dimScreen.y - 80)
+	if self.pnum == 1 then
+		self.position = Vector(4900, 900)
+	elseif self.pnum == 2 then
+		self.position = Vector(4200,940)
 	end
 	
 end
 
+function Player:setPosition(v)
+	self.body:setX(v.x)
+	self.body:setY(v.y)
+	self.position.x = v.x
+	self.position.y = v.y
+end
+
 function Player:update(dt)
+	-- animation stuff
+	self.animation:update(dt)
 	-- sound stuff
 	TEsound.cleanup()
 	-- Inc timers
 	self.timer:update(dt)
 	-- particle stuffs
-	gunEmitter:update(dt)
+	self.gunEmitter:update(dt)
 	
 	-- delta holds direction of movement input
 	local delta = Vector(0,0)
@@ -168,7 +186,10 @@ function Player:update(dt)
 	-- Handle the animation switching here as needed:
 	if not self.fired then
 		if moved then 
-			self.facing = delta
+			if delta.x ~= 0 then
+				self.facing.x = delta.x
+				self.facing.y = 0
+			end
 			self.animation = self.runAnim
 		else
 			self.animation = self.standAnim
@@ -193,9 +214,13 @@ function Player:draw()
 				self.frameFlipH,
 				self.frameFlipV
 				)
+<<<<<<< HEAD
     
 	local px, py = gunEmitter:getPosition()
 	love.graphics.draw(gunEmitter, px, py)
+=======
+ love.graphics.draw(self.gunEmitter)
+>>>>>>> 35391e28f32063808bd524ab391a67ff2f2bbf45
 end
 
 
@@ -211,28 +236,47 @@ function Player:fire()
 		self.fired = true
 		self.animation = self.shootingAnim
 		self.animation:gotoFrame(1)
-		self.timer:add(0.5, function() 
-								self:stopFire() 
-							end)
-		-- figure out origin to fire from first
+		self.timer:add(0.5, function()
+					self:stopFire() 
+				end)
+		-- figure out origin to fire from 
+		-- and direction to fire in
 		local pos = Vector(0,0)
+		local aiming = self.facing
+		aiming.y = 0
+		aiming:normalize_inplace()
+
 		pos.x, pos.y = self.body:getWorldCenter()
-		pos = pos + self.facing * 25
-		
+		pos = pos + aiming * 20
+
+		local rads
 		-- set up the flashy sparkly guy
-		gunEmitter:reset()
-		gunEmitter:setPosition(pos.x, pos.y)
+		self.gunEmitter:reset()
+		self.gunEmitter:setPosition(pos.x, pos.y - 20)
+		self.gunEmitter:start()
+		if aiming.x < 0 then
+			rads = 3.14
+		else
+			rads = 0
+		end
+
 		
+		self.timer:add(0.10, function()
+				self.gunEmitter:setDirection( rads )
+			end)
+
 		self.timer:add(0.25, function()	
-			gunEmitter:start()
-			table.insert(bullets,Bullet(null, pos, self.facing)) 
-			TEsound.play(gunsoundlist)
+
+			table.insert(bullets,Bullet(null, pos, aiming)) 
+			TEsound.play(self.gunsoundlist)
 		end)
 end
+
 
 function Player:stopFire()
 	self.fired = false
 	self.animation = self.standAnim
+	self.gunEmitter:stop()
 end
 
 function Player:keyReleaseHandler(key)

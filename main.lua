@@ -4,17 +4,18 @@ Class = require "hump.class"
 Vector = require "hump.vector"
 Anim8 = require "anim8.anim8"
 Timer = require "hump.timer"
-Sound = require "TEsound.TEsound"
+--require "TESound.TEsound"
+require 'TESound.TEsound'
 
 -- Entities requires
 require "player"
 require "enemy"
 require "bullet"
+require "bystander"
 
--- gamestate requires
-require "intro"
-require "menu"
-require "ep1/epmenu"
+
+
+
 
 -- Globals
 -- TODO: organize these into groups
@@ -26,14 +27,19 @@ world = love.physics.newWorld(
 	0, -- y grav
 	true)
 
--- OBSTACLE = 1 
--- PLAYER = 2
--- ENEMY = 3
--- BULLET = 4
-
 player1 = Player(1)
 player2 = Player(2)
 players = {player1, player2}
+
+OBSTACLE = 1 
+PLAYER = 2
+ENEMY = 3
+BULLET = 4
+-- gamestate requires
+require "intro"
+require "menu"
+require "ep1/epmenu"
+
 
 function love.update(dt)
 		
@@ -50,7 +56,7 @@ function love.load()
 		dimScreen.x, 
 		dimScreen.y, 
 		false, -- fullscreen
-		true, --vsync
+		false, --vsync
 		0 -- antialiasing
 		)
 		

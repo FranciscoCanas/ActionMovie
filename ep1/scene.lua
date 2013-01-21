@@ -28,17 +28,17 @@ end
 
 function state:enter()
 	-- set up sound objects here
-	bgMusicList = {"music/deathScene.ogg"}
+	bgMusicList = {"music/meanStreets.ogg"}
 	TEsound.playLooping(bgMusicList, "bgMusic")
 	
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())
 	-- Initialize players here
 	if player1.isplaying then
-		player1.position = Vector(100,100)
+		player1:setPosition(Vector(100,600))
 	end
 	if player2.isplaying then
-		player2.position = Vector(200,100)
+		player2:setPosition(Vector(100,700)) 
 	end
 
 	-- set up camera ------------------------------------
@@ -63,7 +63,7 @@ function state:enter()
 	
 
 	-- make objects in map solid
-	background = Level("ep1")
+	background = Level("ep1", false)
 	background:createObjects()
 
 	-- Initializing Jumper
@@ -82,19 +82,17 @@ function state:enter()
 	
 	-- set up some baddies here --
 	enemies = {}
-	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
+	enemiesPosition = {Vector(cam.x + 900, 600), Vector(cam.x + 600,700), Vector(cam.x + 700, 700)}
 	deadCount = 0
-
-	insertEnemy(enemiesPosition)
-
+	insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
 	enemyTimer:addPeriodic(10, spawnEnemy)
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions) 
+function insertEnemy(positions, type) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos))
+		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
 	end
 end
 
@@ -114,15 +112,16 @@ function state:update(dt)
 	for i,player in ipairs(players) do
 		if player.isplaying then
 			player:update(math.min(dt, 1/60))
-			player.animation:update(math.min(dt, 1/60))
+
 		end
 	end
 	
 	for i,enemy in ipairs(enemies) do
+		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
 		if ((not enemy.isalive) and (not enemy.counted)) then
 			deadCount = deadCount + 1
 			enemy.counted = true
-		else
+		elseif (enemy.isalive) then
 			enemy:update(math.min(dt,1/60))
 		end
 		enemy.animation:update(math.min(dt,1/60))
@@ -179,7 +178,7 @@ function state:draw()
 		bullet:draw()
 	end
 	cam:detach()
-	
+	love.graphics.setFont( font12 )
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
@@ -212,7 +211,7 @@ function spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(800, 800)})
+		insertEnemy({Vector(cam.x + dimScreen.x/2, 800)}, FOLLOWPLAYER)
 		totEnemy = totEnemy+1
 	end
 end
