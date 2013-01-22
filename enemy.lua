@@ -409,10 +409,10 @@ function Enemy:shoot()
 		pos = pos + self.facing * 25
 		self.timer:add(0.25, function()
 			table.insert(bullets,Bullet(null, pos, bulletDir))	
-			local vol = math.random(25, 40) / 100
+			local vol = math.random(15, 30) / 100
 			local pitch = math.random(25, 150) / 100
 	
-			TEsound.play(gunsoundlist, "scream", vol, pitch)		
+			TEsound.play(gunsoundlist, "gunshot", vol, pitch)		
 		end)	
 	end
 end
@@ -444,7 +444,7 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 	if self.state == dying then
 		return
 	end
-	local vol = math.random(25, 40) / 100
+	local vol = math.random(15, 40) / 100
 	local pitch = math.random(25, 150) / 100
 	
 	TEsound.play(screamsoundlist, "scream", vol, pitch)		

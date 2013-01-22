@@ -10,7 +10,7 @@ function(self, num)
 		self.keydown = "s"
 		self.keyfire = "f"
 		self.keyroll = "g" 
-		self.image = love.graphics.newImage('art/ManSprite.png')
+		self.image = love.graphics.newImage('art/WomanSprite.png')
 		
 	elseif num == 2 then
 		self.pnum = 2
@@ -276,7 +276,11 @@ function Player:fire()
 		self.timer:add(0.25, function()	
 
 			table.insert(bullets,Bullet(null, pos, aiming)) 
-			TEsound.play(self.gunsoundlist)
+			local vol = math.random(15, 30) / 100
+			local pitch = math.random(25, 150) / 100
+	
+			TEsound.play(self.gunsoundlist, "gunshot", vol, pitch)		
+	
 		end)
 end
 
