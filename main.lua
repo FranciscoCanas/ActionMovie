@@ -12,6 +12,7 @@ require "player"
 require "enemy"
 require "bullet"
 require "bystander"
+require 'murderballer'
 
 
 

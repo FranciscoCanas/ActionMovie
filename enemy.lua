@@ -84,7 +84,7 @@ function(self, image, position, type)
 -- particle sys stuff go here now!
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
 	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
-	self.gunEmitter:setEmissionRate(500)
+	self.gunEmitter:setEmissionRate(300)
 	self.gunEmitter:setLifetime(0.01)
 	self.gunEmitter:setParticleLife(0.25)
 	self.gunEmitter:setSpread(3.14/3)
@@ -95,13 +95,13 @@ function(self, image, position, type)
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
 	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 100 )
-	self.bloodEmitter:setEmissionRate(1000)
+	self.bloodEmitter:setEmissionRate(500)
 	self.bloodEmitter:setLifetime(0.01)
 	self.bloodEmitter:setParticleLife(1.0)
 	self.bloodEmitter:setSpread(3.14/3)
 	self.bloodEmitter:setSizes(0.1, 2.0)
 	self.bloodEmitter:setGravity(50,50)
-	self.bloodEmitter:setSpeed(100,220)
+	self.bloodEmitter:setSpeed(100,170)
 end
 }
 
@@ -138,6 +138,7 @@ function Enemy:init()
 	-- sound stuff
 	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg", "sfx/gunshot3.ogg"}
 	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", "sfx/scream3.ogg"}
+	self.isScreaming = false
 	
 end
 
@@ -444,10 +445,13 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 	if self.state == dying then
 		return
 	end
-	local vol = math.random(15, 40) / 100
-	local pitch = math.random(25, 150) / 100
 	
-	TEsound.play(screamsoundlist, "scream", vol, pitch)		
+	if not self.isScreaming then
+		local vol = math.random(15, 35) / 100
+		local pitch = math.random(25, 100) / 100
+		self.isScreaming = true
+		TEsound.play(screamsoundlist, "scream", vol, pitch, function() self.isScreaming = false end)		
+	end
 	self.health = self.health - 1
 	if self.health < 0 then 
 		self:dies()

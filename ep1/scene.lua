@@ -19,7 +19,8 @@ local keypressed = "none"
 font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
-local MAXDEAD = 12
+local MAXDEAD = 32
+local TARGETDEAD = 10 -- end scene once we kill this many dudes
 
 
 function state:init()	
@@ -49,9 +50,9 @@ function state:enter()
 		
 	camfollows = true -- follows players around.
 	camstatic = false -- does not.
-	camMaxZoom = 2.0
-	camMinZoom = 0.5
-	camZoomRatio = 500
+	camMaxZoom = 1.5
+	camMinZoom = 0.75
+	camZoomRatio = 600
 	--boundaries for the camera
 	camLeft = 0
 	camRight = 2000
@@ -86,7 +87,9 @@ function state:enter()
 	deadCount = 0
 	state:insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(10, function() self:spawnEnemy() end)
+	enemyTimer:addPeriodic(3, function() self:spawnEnemy() end)
+	
+	eventTimer = Timer.new()
 end
 
 -- add an enemy at position x, y
@@ -101,20 +104,30 @@ function state:leave()
 	enemies = {}
 	bullets = {}
 	enemyTimer:clear()
+	eventTimer:clear()
 end
 
 function state:update(dt)
+	dt = math.min(dt, 1/60)
 	-- Sound updates
 	TEsound.cleanup()
 	-- Update scene-related systems.
-	world:update(math.min(dt, 1/60))
+	world:update(dt)
 	--Timer.update(math.min(dt, 1/60))
-	enemyTimer:update(math.min(dt, 1/60))
+	enemyTimer:update(dt)
+	eventTimer:update(dt)
+	
+	-- check to see if we hit target number of dead baddies
+	if TARGETDEAD < 0 then
+		enemyTimer:clear()
+		eventTimer:add(3, function() Gamestate.switch(Gamestate.story2) end)
+	end
+	
 	
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying then
-			player:update(math.min(dt, 1/60))
+			player:update(dt)
 
 		end
 	end
@@ -123,18 +136,19 @@ function state:update(dt)
 		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
 		if ((not enemy.isalive) and (not enemy.counted)) then
 			deadCount = deadCount + 1
+			TARGETDEAD = TARGETDEAD - 1
 			enemy.counted = true
 		elseif (enemy.isalive) then
-			enemy:update(math.min(dt,1/60))
+			enemy:update(dt)
 		end
-		enemy.animation:update(math.min(dt,1/60))
+		enemy.animation:update(dt)
 	end
 	
 	for i,bullet in ipairs(bullets) do
 		if bullet.impacted then 
 			table.remove(bullets, i)
 		else 
-			bullet:update(math.min(dt,1/60))
+			bullet:update(dt)
 		end
 	end
 
@@ -215,7 +229,7 @@ function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		state:insertEnemy({Vector((cam.x + dimScreen.x + math.random(300,700)), 800 + math.random(100, 600))}, FOLLOWPLAYER)
+		state:insertEnemy({Vector((cam.x + dimScreen.x + math.random(400,800)), 800 + math.random(200, 500))}, FOLLOWPLAYER)
 		totEnemy = totEnemy+1
 	end
 end

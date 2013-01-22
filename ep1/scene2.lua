@@ -40,6 +40,7 @@ function state:enter()
 	if player2.isplaying then
 		player2:setPosition(Vector(100,700)) 
 	end
+	
 
 	loseString = "Lloyd the Rat got away!"
 	drawLoseString = false
@@ -55,7 +56,8 @@ function state:enter()
 		)
 		
 	camfollows = false -- follows players around.
-	camstatic = true -- does not.
+	camstatic = false -- does not.
+	camOnMurderballer = true
 	camMaxZoom = 2.0
 	camMinZoom = 0.5
 	camZoomRatio = 500
@@ -65,7 +67,7 @@ function state:enter()
 	camTop = 0
 	camBottom = 1000
 	-- camera movement params --
-	camdx = 15
+	camdx = 0
 	camdy = 0
 	camdz = 1
 
@@ -112,24 +114,28 @@ function state:enter()
 	enemyTimer = Timer.new()
 --	enemyTimer:addPeriodic(10, spawnEnemy)
 
-	-- set up murderballer
-	drawMurderBaller = true
-	murderBallerPos = Vector(dimScreen.x - 152,600)
-	murderBallerImage = love.graphics.newImage('art/murderballer.png')
-	murderBallerGrid = Anim8.newGrid(52, 52, 
-			murderBallerImage:getWidth(),
-			murderBallerImage:getHeight())
+	--set up murderballer
+	murderballer = Murderballer()
+	murderballer.position = Vector(dimScreen.x - 152, 600)
+	murderballer.animation = murderballer.runAnim
+	murderballer.delta = Vector(5/framesPerSecond,0)
+	-- drawMurderBaller = true
+	-- murderBallerPos = Vector(dimScreen.x - 152,600)
+	-- murderBallerImage = love.graphics.newImage('art/murderballer.png')
+	-- murderBallerGrid = Anim8.newGrid(52, 52, 
+			-- murderBallerImage:getWidth(),
+			-- murderBallerImage:getHeight())
 
-	murderBallerRunAnim = Anim8.newAnimation('loop',
-		murderBallerGrid('1-4, 1'),
-		0.2) 
+	-- murderBallerRunAnim = Anim8.newAnimation('loop',
+		-- murderBallerGrid('1-4, 1'),
+		-- 0.2) 
 
-	murderBallerStandAnim = Anim8.newAnimation('loop',
-		murderBallerGrid('1-4, 2'),
-		0.2) 
+	-- murderBallerStandAnim = Anim8.newAnimation('loop',
+		-- murderBallerGrid('1-4, 2'),
+		-- 0.2) 
 
-	murderBaller = murderBallerRunAnim
-	murderBallerDX = 0
+	-- murderBaller = murderBallerRunAnim
+	-- murderBallerDX = 0
 end
 
 function state:spawnBystanders()
@@ -173,25 +179,25 @@ function state:leave()
 end
 
 function state:update(dt)
+	dt = math.min(dt,1/60)
 	-- Sound updates
 	TEsound.cleanup()
 	-- Update scene-related systems.
-	world:update(math.min(dt, 1/60))
+	world:update(dt)
 	--Timer.update(math.min(dt, 1/60))
-	enemyTimer:update(math.min(dt, 1/60))
-	bystanderTimer:update(math.min(dt, 1/60))
+	enemyTimer:update(dt)
+	bystanderTimer:update(dt)
 	
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying then
-			player:update(math.min(dt, 1/60))
+			player:update(dt)
 
 		end
 	end
 
 	-- update the murderballer
-	murderBallerPos.x = murderBallerPos.x + murderBallerDX
-	murderBaller:update(math.min(dt, 1/60))
+	murderballer:update(dt)
 	
 	for i,enemy in ipairs(enemies) do
 		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
@@ -199,15 +205,15 @@ function state:update(dt)
 			deadCount = deadCount + 1
 			enemy.counted = true
 		elseif (enemy.isalive) then
-			enemy:update(math.min(dt,1/60))
+			enemy:update(dt)
 		end
-		enemy.animation:update(math.min(dt,1/60))
+		enemy.animation:update(dt)
 	end
 
 	for i,bystander in ipairs(bystanders) do
 		if bystander.isalive then
-			bystander:update(math.min(dt,1/60))
-			bystander.animation:update(math.min(dt,1/60))
+			bystander:update(dt)
+			bystander.animation:update(dt)
 		end	
 	end
 	
@@ -215,7 +221,7 @@ function state:update(dt)
 		if bullet.impacted then 
 			table.remove(bullets, i)
 		else 
-			bullet:update(math.min(dt,1/60))
+			bullet:update(dt)
 		end
 	end
 
@@ -279,17 +285,7 @@ function state:draw()
 	cam:detach()
 
 --	if drawMurderBaller then
-		murderBaller:drawf(murderBallerImage, 
-			murderBallerPos.x,
-			murderBallerPos.y,
-			0, -- angle
-			1, -- x scale
-			1, -- y scale
-			0, -- x offset
-			0, -- y offset
-			false, -- h flip
-			false -- v flip
-			)
+		murderballer:draw()
 --		end
 	-- lose string here
 	if drawLoseString then
@@ -312,7 +308,9 @@ function state:draw()
 	--love.graphics.print(playerY or 0, 80, 90)
 	--jumperDebug.drawPath(font12, path, true)
 	love.graphics.print(cam.x, 5,5)
-	love.graphics.print(cam.y, 50,5)
+	love.graphics.print(cam.y, 50,50)
+	love.graphics.print(murderballer.position.x - cam.x, 600,5)
+	love.graphics.print(murderballer.position.y, 600,50)
 
 end 
 
@@ -415,6 +413,11 @@ function state:movecam()
 		cam:move(camdx / framesPerSecond,camdy / framesPerSecond)
 		cam:zoom(camdz)
 		-- Nothing to do here just yet.
+	end
+	
+	if camOnMurderballer then
+		cam:lookAt(murderballer.position.x - (dimScreen.x/2) - 100, dimScreen.y/2)
+		cam:zoomTo(1)
 	end
 	-- Restrict zoom level to camera boundaries --NEEDS WORK--
 	-- if (y - ((dimScreen.y/2)*zoom)) < camTop then

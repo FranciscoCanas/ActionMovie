@@ -2,6 +2,7 @@
 -- Players will be able to select a scene to start from.
 require "ep1/story1"
 require "ep1/scene"
+require "ep1/story2"
 require "ep1/scene2"
 require "ep1/scene3"
 Gamestate.epmenu = Gamestate.new()
@@ -62,7 +63,7 @@ function state:keyreleased(key)
 		if (epi == 0) then
 			Gamestate.switch(Gamestate.story1)
 		elseif (epi == 1) then
-			Gamestate.switch(Gamestate.scene2)
+			Gamestate.switch(Gamestate.story2)
 		elseif (epi == 2) then
 			Gamestate.switch(Gamestate.scene3)
 		end
