@@ -95,12 +95,12 @@ function(self, image, position, type)
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
 	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 100 )
-	self.bloodEmitter:setEmissionRate(500)
+	self.bloodEmitter:setEmissionRate(1000)
 	self.bloodEmitter:setLifetime(0.01)
 	self.bloodEmitter:setParticleLife(1.0)
 	self.bloodEmitter:setSpread(3.14/3)
-	self.bloodEmitter:setSizes(0.1, 2.50)
-	self.bloodEmitter:setGravity(0,9.8)
+	self.bloodEmitter:setSizes(0.1, 2.0)
+	self.bloodEmitter:setGravity(50,50)
 	self.bloodEmitter:setSpeed(100,220)
 end
 }
@@ -113,11 +113,11 @@ function Enemy:init()
 	self.destination = nil
 
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = 400 --/ max distance from player to shoot
+	self.maxTargetRange = 400 --/ max d7istance from player to shoot
 	self.minTargetRange = 250 --/ min distance from player to shoot
 	self.observePlayerRange = 600 -- distance to interact with player
-	self.scalex = 0.75
-	self.scaley = 0.75
+	self.scalex = math.random(50, 70) / 100
+	self.scaley = math.random(50, 90)/ 100
 
 	self.width = 128 * self.scalex
 	self.height = 128 * self.scaley
@@ -137,8 +137,7 @@ function Enemy:init()
 	
 	-- sound stuff
 	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg", "sfx/gunshot3.ogg"}
-	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", 
-		"sfx/scream3.ogg"}
+	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", "sfx/scream3.ogg"}
 	
 end
 
@@ -344,11 +343,12 @@ function Enemy:MoveToShootingSpot()
 			curEnemy = self
 			world:rayCast(self.body:getX(), self.body:getY(), --enemy location
 						self.target.body:getX(), self.target.body:getY(), --target location
-						rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
+						Enemy.rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
 			if toShoot then
 				-- has a clear shot
 				self.state = shoot
 			else
+				self.state = moveToShoot
 				-- doesn't have a clear shot.
 				self.delta.y = self.body:getY() + self.height
 			end
@@ -357,8 +357,9 @@ function Enemy:MoveToShootingSpot()
 			-- player not in range, but right distance apart
 			-- player is just right. so move to his y coord
 			self.delta.y = dy
-			self.delta:normalize_inplace()	
+			--self.delta:normalize_inplace()	
 		end
+	self.delta:normalize_inplace()	
 	elseif (self.behaviour == MOVETOSETSPOT) then
 		if self.isMoving then
 			self:move(dt)
@@ -408,7 +409,10 @@ function Enemy:shoot()
 		pos = pos + self.facing * 25
 		self.timer:add(0.25, function()
 			table.insert(bullets,Bullet(null, pos, bulletDir))	
-			TEsound.play(gunsoundlist)	
+			local vol = math.random(25, 40) / 100
+			local pitch = math.random(25, 150) / 100
+	
+			TEsound.play(gunsoundlist, "scream", vol, pitch)		
 		end)	
 	end
 end
@@ -440,7 +444,10 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 	if self.state == dying then
 		return
 	end
-	TEsound.play(screamsoundlist)		
+	local vol = math.random(25, 40) / 100
+	local pitch = math.random(25, 150) / 100
+	
+	TEsound.play(screamsoundlist, "scream", vol, pitch)		
 	self.health = self.health - 1
 	if self.health < 0 then 
 		self:dies()
@@ -500,7 +507,7 @@ function Enemy:SetNearestTarget()
 end
 
 -- the function to call when the ray casted by rayCast hits a fixture
-function rayCallback(fixture, x, y, xn, yn, fraction)
+function Enemy.rayCallback(fixture, x, y, xn, yn, fraction)
 	object = fixture:getUserData()
 	if object:is_a(Enemy) then 
 		if (player1.isplaying and player2.isplaying) then

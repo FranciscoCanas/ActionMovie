@@ -10,7 +10,7 @@ function(self, num)
 		self.keydown = "s"
 		self.keyfire = "f"
 		self.keyroll = "g" 
-		self.image = love.graphics.newImage('art/WomanSprite.png')
+		self.image = love.graphics.newImage('art/ManSprite.png')
 		
 	elseif num == 2 then
 		self.pnum = 2
@@ -46,6 +46,10 @@ function(self, num)
 	--ready for shooting animation here:
 	self.shootingAnim = Anim8.newAnimation('loop',
 		self.grid('1-2, 2'),
+		self.frameDelay)
+		
+	self.hurtAnim = Anim8.newAnimation('loop',
+		self.grid('1-2, 3'),
 		self.frameDelay)
 		
 	self.animation = self.standAnim
@@ -106,6 +110,17 @@ function(self, num)
 	self.gunEmitter:setSizes(0.05, 0.25)
 	self.gunEmitter:setGravity(0,0)
 	self.gunEmitter:setSpeed(200,300)
+	
+	-- particle sys stuff go here now!
+	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
+	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 500 )
+	self.bloodEmitter:setEmissionRate(500)
+	self.bloodEmitter:setLifetime(0.01)
+	self.bloodEmitter:setParticleLife(1.0)
+	self.bloodEmitter:setSpread(3.14/3)
+	self.bloodEmitter:setSizes(0.3, 1.50)
+	self.bloodEmitter:setGravity(0,9.8)
+	self.bloodEmitter:setSpeed(100,220)
 
 end
 }
@@ -119,6 +134,7 @@ function Player:init()
 	self.facing = Vector(1,0)
 	self.fired = false -- keeps track of shooting state
 	self.isalive = true -- keeps track of aliveness. duh.
+	self.ishurt = false
 	
 	if self.pnum == 1 then
 		self.position = Vector(4900, 900)
@@ -144,12 +160,13 @@ function Player:update(dt)
 	self.timer:update(dt)
 	-- particle stuffs
 	self.gunEmitter:update(dt)
+	self.bloodEmitter:update(dt)
 	
 	-- delta holds direction of movement input
 	local delta = Vector(0,0)
 	local moved = false
 	
-	if not self.fired then
+	if (not self.fired) and (not self.ishurt) then
 		if love.keyboard.isDown(self.keyleft) then
 			delta.x = -1
 			self.body:applyForce(-self.acceleration,0)
@@ -176,7 +193,9 @@ function Player:update(dt)
     delta:normalize_inplace()
 	
 	-- Handle the animation switching here as needed:
-	if not self.fired then
+	if self.ishurt then
+		self.animation = self.hurtAnim
+	elseif (not self.fired) then
 		if moved then 
 			if delta.x ~= 0 then
 				self.facing.x = delta.x
@@ -208,6 +227,7 @@ function Player:draw()
 				)
 
  love.graphics.draw(self.gunEmitter)
+ love.graphics.draw(self.bloodEmitter)
 
 end
 
@@ -269,8 +289,10 @@ end
 
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
-		self:fire()
-		self.animation = self.shootingAnim
+		if (not self.isHurt) then
+			self:fire()
+			self.animation = self.shootingAnim
+		end
 	elseif key == self.keyroll then
 		-- animate roll here
 	end
@@ -279,7 +301,25 @@ end
 -- Resolve being shot here.
 -- called by world collision callback in main.lua
 function Player:isShot(bullet, collision)
+local pos = Vector(self.position.x + 10, self.position.y + 20)
+-- set up the bloody splurty guy
+	self.bloodEmitter:setDirection(0)
+	if math.random(1,2) == 1 then
+		self.bloodEmitter:setDirection(3.14)
+	end
+		--self.bloodEmitter:reset()
+	self.bloodEmitter:setPosition(pos.x + 32, pos.y + 32)
+	self.bloodEmitter:start()	
+		
 	self.health = self.health - 1
+	self.ishurt = true
+	self.animation = self.hurtAnim
+	self.timer:add(0.5, function() 
+			self.ishurt = false
+			self.animation = self.standAnim
+			self.bloodEmitter:stop()
+		end)
+			
 	
 end
 
