@@ -19,7 +19,7 @@ local keypressed = "none"
 font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
-local MAXDEAD = 4
+local MAXDEAD = 12
 
 
 function state:init()	
@@ -156,7 +156,14 @@ function state:draw()
 	love.graphics.print("Attached to cam for reference", 30,30)
 
 	-- need to determin drawing order which depends on y values of things
-
+	for i,enemy in ipairs(enemies) do
+		enemy:draw()
+	end
+	
+	for i,bullet in ipairs(bullets) do
+		bullet:draw()
+	end
+	
 	if (player1.isplaying and player2.isplaying) then
 		if player1.position.y >= player2.position.y then
 			player2:draw()
@@ -173,13 +180,7 @@ function state:draw()
 		end
 	end
 	
-	for i,enemy in ipairs(enemies) do
-		enemy:draw()
-	end
 	
-	for i,bullet in ipairs(bullets) do
-		bullet:draw()
-	end
 	cam:detach()
 	love.graphics.setFont( font12 )
 	-- Anything drawn out here is drawn according to screen
