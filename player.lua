@@ -293,7 +293,7 @@ end
 
 function Player:keyReleaseHandler(key)
 	if key == self.keyfire then
-		if (not self.isHurt) then
+		if (not self.isHurt) and (not self.fired) then
 			self:fire()
 			self.animation = self.shootingAnim
 		end

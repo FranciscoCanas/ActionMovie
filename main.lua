@@ -21,6 +21,7 @@ require 'murderballer'
 -- Globals
 -- TODO: organize these into groups
 -- note: Initialization order matters.
+hudFont = love.graphics.setNewFont(24)
 dimScreen = Vector(1024, 768)
 framesPerSecond = 30
 love.physics.setMeter(32) --the height of a meter our worlds will be 32px
@@ -100,4 +101,16 @@ end
 function frameLimiter(dt)
 	--dt = math.max(dt, 1/60)
 	return math.min(dt, 1/60)
+end
+
+function drawHud(oldFont)
+	love.graphics.setFont(hudFont)
+	if player1.isplaying then
+		love.graphics.printf( player1.health, 5, 5, 100, "center" )
+	end
+	
+	if player2.isplaying then
+		love.graphics.printf( player1.health, dimScreen.x - 105, 5, 100, "center" )
+	end
+	love.graphics.setFont(oldFont)
 end

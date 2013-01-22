@@ -41,11 +41,11 @@ end
 
 function Bullet:draw()
 	--love.graphics.setColor(255,0,0)
-	love.graphics.circle('fill',
-		self.position.x,
-		self.position.y,
-		self.radius,
-		self.segments)
+	-- love.graphics.circle('fill',
+		-- self.position.x,
+		-- self.position.y,
+		-- self.radius,
+		-- self.segments)
 	--love.graphics.clear()	
 end
 
