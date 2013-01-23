@@ -10,7 +10,16 @@ function(self, image, position, type)
 --	wx, wy = cam:worldCoords(position.x, position.y)
 	self.position = position
 	self.behaviour = type
-	self.image = image --love.graphics.newImage(image)
+	images = {'art/Enemy1Sprite.png','art/Enemy1SpriteB.png','art/Enemy1SpriteC.png'}
+
+	-- set up image stuffs here
+	if not image then
+		randImage = images[math.random(1,3)]
+		
+		self.image = love.graphics.newImage(randImage)
+	else
+		self.image = image --love.graphics.newImage(image)
+	end
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.2

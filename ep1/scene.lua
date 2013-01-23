@@ -95,7 +95,7 @@ end
 -- add an enemy at position x, y
 function state:insertEnemy(positions, type) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
+		table.insert(enemies, Enemy(false, screenPos, type))
 	end
 end
 
