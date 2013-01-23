@@ -21,10 +21,11 @@ font12 = love.graphics.newFont(12)
 
 -- Stuffs local to scene
 local MAXDEAD = 4
+
+--bomb explodes after 5 minutes
 local countdown = Timer.new()
 local minutes = 4
 local seconds = 59
-local background
 
 function state:init()	
 	self.started = false
@@ -110,7 +111,7 @@ function timed()
 end
 
 -- add an enemy at position x, y
-function insertEnemy(positions) 
+function state:insertEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
 		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, MOVETOSETSPOT))
 	end
@@ -231,7 +232,7 @@ function s3spawnEnemy()
 	-- local totEnemy = #enemies
 	-- local curDead = deadCount
 	-- while totEnemy - curDead < 3 do
-		insertMEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+		state:insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
 		-- totEnemy = totEnemy+1
 	-- end
 end
