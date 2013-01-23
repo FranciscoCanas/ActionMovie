@@ -5,7 +5,7 @@ require "../level"
 -- Required libraries that are locally used
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
-Jumper = require 'Jumper.jumper'
+local Jumper = require 'Jumper.jumper'
 local jumperDebug = require 'Jumper.debug_utils'
 local Timer = require "hump.timer"
 require 'TESound.TEsound'
@@ -21,7 +21,10 @@ font12 = love.graphics.newFont(12)
 
 -- Stuffs local to scene
 local MAXDEAD = 4
-
+local countdown = Timer.new()
+local minutes = 4
+local seconds = 59
+local background
 
 function state:init()	
 	self.started = false
@@ -70,7 +73,7 @@ function state:enter()
 	background:createObjects()
 
 	-- Initializing Jumper
-	searchMode = 'ORTHOGONAL' -- whether or not diagonal moves are allowed
+	searchMode = 'DIAGONAL' --'ORTHOGONAL' -- whether or not diagonal moves are allowed
 	heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
 	current_heuristic = 2 -- indexes the chosen heuristics within 'heuristics' table
 	filling = false -- whether or not returned paths will be smoothed
@@ -88,23 +91,38 @@ function state:enter()
 	deadCount = 0
 
 	-- tiled coordinates
-	--(cover.x, cover.y, shoot.x, shoot.y)
-	movementPositions = {{20, 17, 20, 19}, {24, 12, 24, 14}} --, {20, 16, 20, 15}}
+	--(cover.x, cover.y, shoot.x, shoot.y, covered)
+	movementPositions = {{20, 17, 20, 19, false}, {24, 12, 24, 14, false}, {20, 6, 20, 4, false}} --, {20, 16, 20, 15}}
 --	insertEnemy(enemiesPosition)
 	enemyTimer = Timer.new()
 	enemyTimer:add(5, s3spawnEnemy)
+
+	countdown:addPeriodic(1, timed, 300)
+end
+
+function timed()
+	if (seconds == 0) then
+		seconds = 59
+		minutes = minutes - 1
+	else
+		seconds = seconds - 1 
+	end
 end
 
 -- add an enemy at position x, y
 function insertEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
-		print("position")
-		table.insert(enemies, Enemy(love.graphics.newImage('art/gunman.png'), screenPos, MOVETOSETSPOT))
+		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, MOVETOSETSPOT))
 	end
 end
 
 function state:leave()
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	for i, enemy in ipairs(enemies) do
+		enemy.fixture:destroy()
+	end
+	enemyTimer:clear()
+	countdown:clear()
 end
 
 function state:update(dt)
@@ -117,7 +135,7 @@ function state:update(dt)
 	world:update(math.min(dt, 1/60))
 	--Timer.update(math.min(dt, 1/60))
 	enemyTimer:update(math.min(dt, 1/60))
-	
+	countdown:update(math.min(dt, 1/60))
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying then
@@ -194,9 +212,9 @@ function state:draw()
 	-- love.graphics.print("Scene Placeholder", 10, 10)
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
-	love.graphics.print(background.map.viewX..", "..background.map.viewY, 200, 10)
-	jumperDebug.drawPath(font12, path, true)
-	jumperDebug.drawPath(font12, _path, true)
+	love.graphics.print("Time Left: "..minutes..":"..seconds, dimScreen.x/2, 20)
+	-- jumperDebug.drawPath(font12, path, true)
+	-- jumperDebug.drawPath(font12, _path, true)
 end 
 
 function s3removeDead() 
@@ -213,7 +231,7 @@ function s3spawnEnemy()
 	-- local totEnemy = #enemies
 	-- local curDead = deadCount
 	-- while totEnemy - curDead < 3 do
-		insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+		insertMEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
 		-- totEnemy = totEnemy+1
 	-- end
 end
