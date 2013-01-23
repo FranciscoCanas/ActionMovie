@@ -23,7 +23,7 @@ function(self)
 end
 }
 function Murderballer:update(dt)
-	self.position = self.position + (self.delta)
+	self.position = self.position + (self.delta * dt)
 	self.animation:update(dt)
 end
 

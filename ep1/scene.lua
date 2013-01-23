@@ -42,29 +42,29 @@ function state:enter()
 		player2:setPosition(Vector(100,700)) 
 	end
 
-	-- set up camera ------------------------------------
-	cam = Camera(player1.position.x, player1.position.y, 
+	-- set up state.camera ------------------------------------
+	state.cam = Camera(player1.position.x, player1.position.y, 
 		1, -- zoom level
 		0 -- rotation angle
 		)
 		
-	camfollows = true -- follows players around.
-	camstatic = false -- does not.
-	camMaxZoom = 1.5
-	camMinZoom = 0.75
-	camZoomRatio = 600
-	--boundaries for the camera
-	camLeft = 0
-	camRight = 2000
-	camTop = 0
-	camBottom = 1000
+	state.camfollows = true -- follows players around.
+	state.camstatic = false -- does not.
+	state.camMaxZoom = 1.5
+	state.camMinZoom = 0.75
+	state.camZoomRatio = 400
+	--boundaries for the state.camera
+	state.camLeft = 0
+	state.camRight = 2000
+	state.camTop = 0
+	state.camBottom = 1000
 	-- camera code ends here --
 	self.started = true
 	
 	
 
 	-- make objects in map solid
-	background = Level("ep1", false)
+	background = Level("ep1", false, state.cam)
 	background:createObjects()
 
 	-- Initializing Jumper
@@ -83,11 +83,11 @@ function state:enter()
 	
 	-- set up some baddies here --
 	enemies = {}
-	enemiesPosition = {Vector(cam.x + 900, 600), Vector(cam.x + 600,700), Vector(cam.x + 700, 700)}
+--	enemiesPosition = {Vector(state.cam.x + 900, 600), Vector(state.cam.x + 600,700), Vector(state.cam.x + 700, 700)}
 	deadCount = 0
-	state:insertEnemy(enemiesPosition, FOLLOWPLAYER)
+--	state:insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(3, function() self:spawnEnemy() end)
+	enemyTimer:addPeriodic(2, function() self:spawnEnemy() end)
 	
 	eventTimer = Timer.new()
 end
@@ -108,6 +108,8 @@ function state:leave()
 end
 
 function state:update(dt)
+-- trying this frame limiter here
+	frameLimiter(dt)
 	dt = math.min(dt, 1/60)
 	-- Sound updates
 	TEsound.cleanup()
@@ -155,7 +157,7 @@ function state:update(dt)
 	if deadCount >= MAXDEAD then 
 		state:removeDead()
 	end
-	state:movecam() -- Update camera. See movecam func below.
+	state:movecam(dt) -- Update camera. See movecam func below.
 
 end
 
@@ -164,7 +166,7 @@ function state:draw()
 	-- from camera perspective. 
 	-- Game objects and anything in the scene's physical space
 	-- will go here.
-	cam:attach()	
+	state.cam:attach()	
 	background:draw()
 
 	love.graphics.print("Attached to cam for reference", 30,30)
@@ -195,7 +197,7 @@ function state:draw()
 	end
 	
 	
-	cam:detach()
+	state.cam:detach()
 	love.graphics.setFont( font12 )
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
@@ -230,7 +232,7 @@ function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		state:insertEnemy({Vector((cam.x + dimScreen.x + math.random(400,800)), 800 + math.random(200, 500))}, FOLLOWPLAYER)
+		state:insertEnemy({Vector((state.cam.x + dimScreen.x + math.random(400,800)), 800 + math.random(200, 500))}, FOLLOWPLAYER)
 		totEnemy = totEnemy+1
 	end
 end
@@ -267,23 +269,23 @@ end
 function state:quit()
 end
 
-function state:movecam()
+function state:movecam(dt)
 	local x, y = 0,0
 	local dist
 	local zoom = 1
 	
 	-- Code to move the camera around.
-	if camfollows then
-		-- Camera sticks to the midpoint between the two players if 
+	if state.camfollows then
+		-- state.camera sticks to the midpoint between the two players if 
 		-- both are playing, zooming out and in as necessary. 
 		-- Otherwise it just follows the single player.
 		if player1.isplaying and player2.isplaying then
 			x = (player1.position.x + player2.position.x) / 2
 			y = (player1.position.y + player2.position.y) / 2
 			dist = (player1.position - player2.position):len()
-			zoom = camZoomRatio / dist 
-			if zoom > camMaxZoom then zoom = camMaxZoom end
-			if zoom < camMinZoom then zoom = camMinZoom end
+			zoom = state.camZoomRatio / dist 
+			if zoom > state.camMaxZoom then zoom = state.camMaxZoom end
+			if zoom < state.camMinZoom then zoom = state.camMinZoom end
 		elseif player1.isplaying and (not player2.isplaying) then
 			x = player1.position.x
 			y = player1.position.y
@@ -293,21 +295,21 @@ function state:movecam()
 		end
 		
 	end
-	if camstatic then
+	if state.camstatic then
 		-- Nothing to do here just yet.
 	end
 
-	camWorldWidth = love.graphics.getWidth() / zoom
-	camWorldHeight = love.graphics.getHeight() / zoom
+	state.camWorldWidth = love.graphics.getWidth() / zoom
+	state.camWorldHeight = love.graphics.getHeight() / zoom
 	
-	x = math.max(x, camLeft + (camWorldWidth / 2))
-	x = math.min(x, camRight - (camWorldWidth / 2))
+	x = math.max(x, state.camLeft + (state.camWorldWidth / 2))
+	x = math.min(x, state.camRight - (state.camWorldWidth / 2))
 
-	y = math.max(y, camTop + (camWorldHeight / 2))
-	y = math.min(y, camBottom - (camWorldWidth / 2))
+	y = math.max(y, state.camTop + (state.camWorldHeight / 2))
+	y = math.min(y, state.camBottom - (state.camWorldWidth / 2))
 
 	-- Move the cam to the coordinates calculated above.
-	cam:lookAt(x, y)
+	state.cam:lookAt(x, y)
 
 	-- Restrict zoom level to camera boundaries --NEEDS WORK--
 	-- if (y - ((dimScreen.y/2)*zoom)) < camTop then
@@ -315,11 +317,11 @@ function state:movecam()
 	-- end
 
 	-- Zoom the cam to the appropriate level.
-	cam:zoomTo(zoom)
+	state.cam:zoomTo(zoom)
 
-	camWorldX = cam.x - (camWorldWidth / 2)
-	camWorldY = cam.y - (camWorldHeight / 2)
-	background.map:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
+	state.camWorldX = state.cam.x - (state.camWorldWidth / 2)
+	state.camWorldY = state.cam.y - (state.camWorldHeight / 2)
+	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
 end
 
 function state:mousepressed(x,y,button)

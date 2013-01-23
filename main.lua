@@ -23,7 +23,7 @@ require 'murderballer'
 -- note: Initialization order matters.
 hudFont = love.graphics.setNewFont(24)
 dimScreen = Vector(1024, 768)
-framesPerSecond = 30
+framesPerSecond = 56
 love.physics.setMeter(32) --the height of a meter our worlds will be 32px
 world = love.physics.newWorld(
 	0, -- x grav
@@ -99,18 +99,24 @@ function postSolve(a, b, coll)
 end
 
 function frameLimiter(dt)
-	--dt = math.max(dt, 1/60)
-	return math.min(dt, 1/60)
+ if dt < 1/30 then
+      love.timer.sleep(1/framesPerSecond - dt)
+   end
 end
 
 function drawHud(oldFont)
 	love.graphics.setFont(hudFont)
 	if player1.isplaying then
-		love.graphics.printf( player1.health, 5, 5, 100, "center" )
+		for i=1,player1.health do
+			love.graphics.print( "@", 5 + (i*20), 5)
+		end
 	end
 	
 	if player2.isplaying then
-		love.graphics.printf( player1.health, dimScreen.x - 105, 5, 100, "center" )
+		for i=1,player2.health do
+			love.graphics.print( "@", dimScreen.x - 20 - (i*20), 5)
+		end
+
 	end
 	love.graphics.setFont(oldFont)
 end

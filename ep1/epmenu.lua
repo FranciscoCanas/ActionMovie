@@ -11,7 +11,7 @@ local epi = 0
 
 function state:enter()
 
-	local font = love.graphics.setNewFont(16)
+	local font = love.graphics.setNewFont(20)
 	love.graphics.setFont( font)
 	--player1:init()
 	--player2:init()
@@ -26,19 +26,23 @@ end
 
 function state:draw()
 	love.graphics.draw(titleScene, 0,0)
-
 	love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-240)
-
-
 	love.graphics.print("Episode One", (dimScreen.x / 2) - 10, 10)
 
-	if (epi == 0) then
-		love.graphics.print("Scene One", (dimScreen.x / 2) - 10, (dimScreen.y / 2) )
-	elseif (epi == 1) then
-		love.graphics.print("Scene Two", (dimScreen.x / 2) - 10, (dimScreen.y / 2))
-	elseif (epi == 2) then
-		love.graphics.print("Scene Three", (dimScreen.x / 2) - 10, (dimScreen.y / 2))
+	if epi==0 then
+		arrowCoord = 0
+	elseif epi==1 then
+		arrowCoord = 25
+	else
+		arrowCoord = 50
 	end
+
+
+	love.graphics.print("->", (dimScreen.x / 2) - 60, (dimScreen.y/1.75) + arrowCoord)
+	love.graphics.print("Scene One", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) )
+	love.graphics.print("Scene Two", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) + 25)
+	love.graphics.print("Scene Three", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) + 50)
+
 	-- Code to draw player when they join a game
 	if player1.isplaying then 
 		--love.graphics.print("Player1",

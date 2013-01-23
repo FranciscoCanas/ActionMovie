@@ -7,8 +7,8 @@ Bystander = Class{
 function(self, image, position)
 	
 	self:init()
-	wx, wy = cam:worldCoords(position.x, position.y)
-	self.position = Vector(wx, wy)
+--	wx, wy = cam:worldCoords(position.x, position.y)
+	self.position = position
 --	self.behaviour = type
 	self.image = image --love.graphics.newImage(image)
 	--self.image = love.graphics.newImage('art/gunman.png')

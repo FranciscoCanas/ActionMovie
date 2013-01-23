@@ -45,8 +45,8 @@ function state:enter()
 	loseString = "Lloyd the Rat got away!"
 	drawLoseString = false
 
-	-- set up camera ------------------------------------
-	cam = Camera(
+	-- set up state.camera ------------------------------------
+	state.cam = Camera(
 		dimScreen.x/2,
 		dimScreen.y/2,
 		--player1.body:getX(),
@@ -55,29 +55,29 @@ function state:enter()
 		0 -- rotation angle
 		)
 		
-	camfollows = false -- follows players around.
-	camstatic = false -- does not.
-	camOnMurderballer = true
-	camMaxZoom = 2.0
-	camMinZoom = 0.5
-	camZoomRatio = 500
-	--boundaries for the camera
-	camLeft = 0
-	camRight = 2000
-	camTop = 0
-	camBottom = 1000
-	-- camera movement params --
-	camdx = 0
-	camdy = 0
-	camdz = 1
+	state.camfollows = false -- follows players around.
+	state.camstatic = false -- does not.
+	state.camOnMurderballer = true
+	state.camMaxZoom = 2.0
+	state.camMinZoom = 0.5
+	state.camZoomRatio = 500
+	--boundaries for the state.camera
+	state.camLeft = 0
+	state.camRight = 2000
+	state.camTop = 0
+	state.camBottom = 1000
+	-- state.camera movement params --
+	state.camdx = 0
+	state.camdy = 0
+	state.camdz = 1
 
-	-- camera code ends here --
+	-- state.camera code ends here --
 	self.started = true
 
 	
 
 	-- make objects in map solid
-	background = Level("ep1", false)
+	background = Level("ep1", false, state.cam)
 	background:createObjects()
 
 	-- Initializing Jumper
@@ -118,7 +118,7 @@ function state:enter()
 	murderballer = Murderballer()
 	murderballer.position = Vector(dimScreen.x - 152, 600)
 	murderballer.animation = murderballer.runAnim
-	murderballer.delta = Vector(5/framesPerSecond,0)
+	murderballer.delta = Vector(50,0)
 	-- drawMurderBaller = true
 	-- murderBallerPos = Vector(dimScreen.x - 152,600)
 	-- murderBallerImage = love.graphics.newImage('art/murderballer.png')
@@ -147,7 +147,7 @@ function state:spawnBystanders()
 			img = 'art/maleBystander.png'
 		end
 
-		posx = cam.x + dimScreen.x + math.random(400,800)
+		posx = state.cam.x + dimScreen.x + math.random(400,800)
 		posy = math.random(dimScreen.y, dimScreen.y+600)
 
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
@@ -179,6 +179,9 @@ function state:leave()
 end
 
 function state:update(dt)
+-- trying this frame limiter here
+	frameLimiter(dt)
+
 	dt = math.min(dt,1/60)
 	-- Sound updates
 	TEsound.cleanup()
@@ -228,7 +231,7 @@ function state:update(dt)
 	if deadCount >= MAXDEAD then 
 		state:removeDead()
 	end
-	state:movecam() -- Update camera. See movecam func below.
+	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
 
 	-- check for player loseage here
 	if outOfBounds(player1) and outOfBounds(player2) then
@@ -238,18 +241,18 @@ function state:update(dt)
 end
 
 function outOfBounds(p)
-	return (p.position.x < (cam.x - dimScreen.x/2 - 200))
+	return (p.position.x < (state.cam.x - dimScreen.x/2 - 200))
 end
 
 function state:draw()
-	-- Anything drawn between camera attach and detach is drawn
-	-- from camera perspective. 
+	-- Anything drawn between state.camera attach and detach is drawn
+	-- from state.camera perspective. 
 	-- Game objects and anything in the scene's physical space
 	-- will go here.
-	cam:attach()	
+	state.cam:attach()	
 	background:draw()
 
---	love.graphics.print("Attached to cam for reference", 30,30)
+--	love.graphics.print("Attached to state.cam for reference", 30,30)
 
 	-- need to determin drawing order which depends on y values of things
 
@@ -282,7 +285,7 @@ function state:draw()
 	for i,bystander in ipairs(bystanders) do
 		bystander:draw()
 	end
-	cam:detach()
+	state.cam:detach()
 
 --	if drawMurderBaller then
 		murderballer:draw()
@@ -307,9 +310,9 @@ function state:draw()
 	--love.graphics.print(playerX or 0, 60, 90)
 	--love.graphics.print(playerY or 0, 80, 90)
 	--jumperDebug.drawPath(font12, path, true)
-	love.graphics.print(cam.x, 5,5)
-	love.graphics.print(cam.y, 50,50)
-	love.graphics.print(murderballer.position.x - cam.x, 600,5)
+	love.graphics.print(state.cam.x, 5,5)
+	love.graphics.print(state.cam.y, 50,50)
+	love.graphics.print(murderballer.position.x - state.cam.x, 600,5)
 	love.graphics.print(murderballer.position.y, 600,50)
 
 end 
@@ -365,15 +368,15 @@ end
 function state:quit()
 end
 
-function state:movecam()
+function state:movecam(dt)
 	local x, y = 0,0
 	local dist
 	local zoom = 1
-	camWorldWidth = love.graphics.getWidth() / zoom
-	camWorldHeight = love.graphics.getHeight() / zoom
+	state.camWorldWidth = love.graphics.getWidth() / zoom
+	state.camWorldHeight = love.graphics.getHeight() / zoom
 
-	-- Code to move the camera around.
-	if camfollows then
+	-- Code to move the state.camera around.
+	if state.camfollows then
 		-- Camera sticks to the midpoint between the two players if 
 		-- both are playing, zooming out and in as necessary. 
 		-- Otherwise it just follows the single player.
@@ -381,9 +384,9 @@ function state:movecam()
 			x = (player1.position.x + player2.position.x) / 2
 			y = (player1.position.y + player2.position.y) / 2
 			dist = (player1.position - player2.position):len()
-			zoom = camZoomRatio / dist 
-			if zoom > camMaxZoom then zoom = camMaxZoom end
-			if zoom < camMinZoom then zoom = camMinZoom end
+			zoom = state.camZoomRatio / dist 
+			if zoom > state.camMaxZoom then zoom = state.camMaxZoom end
+			if zoom < state.camMinZoom then zoom = state.camMinZoom end
 		elseif player1.isplaying and (not player2.isplaying) then
 			x = player1.position.x
 			y = player1.position.y
@@ -396,46 +399,46 @@ function state:movecam()
 	
 
 	
-	x = math.max(x, camLeft + (camWorldWidth / 2))
-	x = math.min(x, camRight - (camWorldWidth / 2))
+	x = math.max(x, state.camLeft + (state.camWorldWidth / 2))
+	x = math.min(x, state.camRight - (state.camWorldWidth / 2))
 
-	y = math.max(y, camTop + (camWorldHeight / 2))
-	y = math.min(y, camBottom - (camWorldWidth / 2))
+	y = math.max(y, state.camTop + (state.camWorldHeight / 2))
+	y = math.min(y, state.camBottom - (state.camWorldWidth / 2))
 
-	-- Move the cam to the coordinates calculated above.
-	cam:lookAt(x, y)
+	-- Move the state.cam to the coordinates calculated above.
+	state.cam:lookAt(x, y)
 	
 	
 	
 	end
 
-	if camstatic then
-		cam:move(camdx / framesPerSecond,camdy / framesPerSecond)
-		cam:zoom(camdz)
+--	if state.camstatic then
+--		state.cam:move(state.camdx * dt,state.camdy * dt)
+--		state.cam:zoom(state.camdz)
 		-- Nothing to do here just yet.
-	end
+--	end
 	
-	if camOnMurderballer then
-		cam:lookAt(murderballer.position.x - (dimScreen.x/2) - 100, dimScreen.y/2)
-		cam:zoomTo(1)
+	if state.camOnMurderballer then
+		state.cam:lookAt(murderballer.position.x - (dimScreen.x/2) - 100, dimScreen.y/2)
+		state.cam:zoomTo(1)
 	end
-	-- Restrict zoom level to camera boundaries --NEEDS WORK--
-	-- if (y - ((dimScreen.y/2)*zoom)) < camTop then
-	-- 	zoom = (2/dimScreen.y)*(camTop+y)
+	-- Restrict zoom level to state.camera boundaries --NEEDS WORK--
+	-- if (y - ((dimScreen.y/2)*zoom)) < state.camTop then
+	-- 	zoom = (2/dimScreen.y)*(state.camTop+y)
 	-- end
 
-	-- Zoom the cam to the appropriate level.
-	--cam:zoomTo(zoom)
-	camWorldX = cam.x - (camWorldWidth / 2)
-	camWorldY = cam.y - (camWorldHeight / 2)
-	background.map:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
+	-- Zoom the state.cam to the appropriate level.
+	--state.cam:zoomTo(zoom)
+	state.camWorldX = state.cam.x - (state.camWorldWidth / 2)
+	state.camWorldY = state.cam.y - (state.camWorldHeight / 2)
+	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
 
 	
 end
 
 function state:mousepressed(x,y,button)
 	if button == 'l' then
-		--x,y = cam:worldCoords(x_, y_)
+		--x,y = state.cam:worldCoords(x_, y_)
 		tileX, tileY = background:toTile(x, y)
 		x_, y_ = player1:getCenter()
 		playerX, playerY = background:toTile(x_, y_)
@@ -445,12 +448,12 @@ function state:mousepressed(x,y,button)
 end
 
 function state:playersLose()
-	-- do stuff here when players go out of cam bounds
+	-- do stuff here when players go out of state.cam bounds
 	drawLoseString = true
-	camdx = 0
+	state.camdx = 0
 	murderBallerPosDX = 1.5
 
-	eventTimer:add(5, function()
+	eventTimer:add(3, function()
 			Gamestate.switch(Gamestate.menu)
 		end)
 end

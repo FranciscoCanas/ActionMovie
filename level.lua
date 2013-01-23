@@ -10,7 +10,8 @@ ATL.Loader.path = 'maps/'
 -- local tx, ty = 0, 0
 
 Level = Class {
-	function(self, scene, drawAll)
+	function(self, scene, drawAll, camera)
+		self.cam = camera
 		self.map = ATL.Loader.load(scene..".tmx") 
 		self.collisionMap = collisionMapMaker.create(self.map, "Ground", "Collision")
 		self.drawObstacles = drawAll --if obstacles should be drawn or not 
@@ -22,7 +23,7 @@ Level = Class {
 -- if we clicked out of the map bounds
 --takes screen coordinates and converts to tile coordinates
 function Level:toTile(x,y)
-	x_,y_ = cam:worldCoords(x, y)
+	x_,y_ = self.cam:worldCoords(x, y)
 	local _x = math.floor(x_/(self.map.tileWidth))
 	local _y = math.floor(y_/(self.map.tileHeight))
 	if self.collisionMap[_y] and self.collisionMap[_y][_x] then 

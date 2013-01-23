@@ -10,12 +10,12 @@ local state = Gamestate.story2
 local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
-local dialogue = {	"Who's a baaaaaaaad mutha---.",
+local dialogue = {	"Who's a baaaaaaaad mutha--.",
 			"Shut your mouth! We gotta start thinking about finding that bomb!",
 		"Look, it's that rat Lloyd! He probably knows the score...",
 		"It's the fuzz! Aww sheeeeeeee--",
 			"Let's shake it outta him!",
-			"",
+			"T'ain't gonna catch me!",
 			"Dang, he's making a break for it into that crowd!",
 			"Why is it always mardi gras around here?!"
 			}
@@ -28,12 +28,12 @@ local shotFuncs = {
 		function() state:closeUp(murderballer) end,
 		function() state:closeUp(player1) end,
 		function() 
-			murderballer.delta = Vector(1,0)
-			camdx = murderballer.delta.x
+			murderballer.delta = Vector(25,0)
+			state.camdx = murderballer.delta.x
 			murderballer.animation = murderballer.runAnim
 			state:closeUp(murderballer) end,
 		function() 
-			camdx = 0
+			state.camdx = 0
 			state:closeUp(player2) end,
 		function() state:closeUp(player1) end
 	}
@@ -62,23 +62,23 @@ love.graphics.setFont(font)
 
 	
 
--- camera setup
--- set up camera ------------------------------------
-	cam = Camera(
+-- state.camera setup
+-- set up state.camera ------------------------------------
+	state.cam = Camera(
 		player1.position.x + 50, 
 		player1.position.y,  
 		10, -- zoom level
 		0 -- rotation angle
 		)
 
-	camdx = 0 -- camera x panning rate
-	camdy = 0
-	camdz = 1
+	state.camdx = 0 -- state.camera x panning rate
+	state.camdy = 0
+	state.camdz = 1
 
 
 	
 	
-	-- init camera and diag here
+	-- init state.camera and diag here
 	state:nextLine()
 	state:nextShot()
 	
@@ -145,26 +145,28 @@ function state:nextShot()
 end
 
 function state:update(dt)
+-- trying this frame limiter here
+	frameLimiter(dt)
 
 	dt = math.min(dt, 1/60)
 	stringTimer:update(dt)
 --	player1:update(dt)
 --	player2:update(dt)
-	cam:move(camdx,camdy)
-	cam:zoom(camdz)
+	state.cam:move(state.camdx*dt,state.camdy*dt)
+	state.cam:zoom(state.camdz)
 	murderballer:update(dt)
 	
 end
 
 
 function state:draw()
-	cam:attach()	
+	state.cam:attach()	
 	love.graphics.draw(backgroundScene, 0,0)
-	-- draw stuff that's camera locked here
+	-- draw stuff that's state.camera locked here
 	player1:draw()
 	player2:draw()
 	murderballer:draw()
-	cam:detach()	
+	state.cam:detach()	
 	
 	-- cinematic letterboxing here
 	love.graphics.setColor(0,0,0,255)
@@ -199,23 +201,23 @@ function state:keyreleased(key)
 end
 
 function state:startingShot()
-	cam:lookAt(600,400)
-	cam:zoomTo(1)
+	state.cam:lookAt(600,400)
+	state.cam:zoomTo(1)
 end
 
 
 function state:closeUp(p)
-	cam:lookAt(p.position.x + 25, p.position.y + 15)
-	cam:zoomTo(16)
+	state.cam:lookAt(p.position.x + 25, p.position.y + 15)
+	state.cam:zoomTo(16)
 end
 
 function state:shot2()
-	cam:lookAt(player2.position.x + 30, player2.position.y+30)
-	cam:zoomTo(12)
+	state.cam:lookAt(player2.position.x + 30, player2.position.y+30)
+	state.cam:zoomTo(12)
 end
 
 function state:bothPlayers()
-	cam:lookAt(player1.position.x + 60, player1.position.y+30)
-	cam:zoomTo(8)	
+	state.cam:lookAt(player1.position.x + 60, player1.position.y+30)
+	state.cam:zoomTo(8)	
 end
 

@@ -7,8 +7,8 @@ Enemy = Class{
 function(self, image, position, type)
 	
 	self:init()
-	wx, wy = cam:worldCoords(position.x, position.y)
-	self.position = Vector(wx, wy)
+--	wx, wy = cam:worldCoords(position.x, position.y)
+	self.position = position
 	self.behaviour = type
 	self.image = image --love.graphics.newImage(image)
 	--self.image = love.graphics.newImage('art/gunman.png')
@@ -113,8 +113,8 @@ function Enemy:init()
 	self.destination = nil
 
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = 400 --/ max d7istance from player to shoot
-	self.minTargetRange = 250 --/ min distance from player to shoot
+	self.maxTargetRange = 300 --/ max d7istance from player to shoot
+	self.minTargetRange = 150 --/ min distance from player to shoot
 	self.observePlayerRange = 600 -- distance to interact with player
 	self.scalex = math.random(50, 70) / 100
 	self.scaley = math.random(50, 90)/ 100

@@ -61,15 +61,15 @@ love.graphics.setFont( font)
 	mcGuffAnim = player2.standAnim
 	crispyAnim = player1.standAnim
 
--- set up camera ------------------------------------
-	cam = Camera(dimScreen.x/2, 400, 
+-- set up state.camera ------------------------------------
+	state.cam = Camera(dimScreen.x/2, 400, 
 		1, -- zoom level
 		0 -- rotation angle
 		)
 
-	camdx = 7 -- camera x panning rate per 30 frames
-	camdy = 0
-	camdz = 1
+	state.camdx = 7 -- state.camera x panning rate per 30 frames
+	state.camdy = 0
+	state.camdz = 1
 
 -- set up sound objects here
 	stringTimer = Timer.new()
@@ -104,7 +104,7 @@ love.graphics.setFont( font)
 
 	-- around 28 or so
 	stringTimer:add(28, function()
-				camdx = 0
+				state.camdx = 0
 				state:titleExplosion()
 				currentString = ""
 			end)
@@ -118,10 +118,10 @@ love.graphics.setFont( font)
 	stringTimer:add(33, function()
 				crispyAnim = player1.shootingAnim
 				crispyForce = Vector(0,0)
-				camdz = 1
-				camdx = 0
-				cam:lookAt(player1.position.x+50, player1.position.y)
-				cam:zoomTo(10)
+				state.camdz = 1
+				state.camdx = 0
+				state.cam:lookAt(player1.position.x+50, player1.position.y)
+				state.cam:zoomTo(10)
 			end)
 
 	stringTimer:add(34, function()
@@ -137,10 +137,10 @@ love.graphics.setFont( font)
 	stringTimer:add(39, function()
 				mcGuffAnim = player2.shootingAnim
 					mcGuffForce = Vector(0,0)
-				camdz = 1
-				camdx = 0
-				cam:lookAt(player2.position.x+50, player2.position.y)
-				cam:zoomTo(10)
+				state.camdz = 1
+				state.camdx = 0
+				state.cam:lookAt(player2.position.x+50, player2.position.y)
+				state.cam:zoomTo(10)
 
 			end)
 
@@ -154,11 +154,11 @@ love.graphics.setFont( font)
 	-- 42
 	stringTimer:add(42, function()
 				currentString = "Murderballer #2 as Lloyd the Rat"
-				cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
-				cam:zoomTo(4)
-				camdx = 7
-				camdy = 0
-				camdz = 1
+				state.cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
+				state.cam:zoomTo(4)
+				state.camdx = 7
+				state.camdy = 0
+				state.camdz = 1
 				drawMurderBaller = true		
 			end)
 
@@ -167,9 +167,9 @@ love.graphics.setFont( font)
 
 	stringTimer:add(43, function()
 			murderBaller = murderBallerStandAnim
-			camdx = 0
-			camdz = 1
-			camdy = 0
+			state.camdx = 0
+			state.camdz = 1
+			state.camdy = 0
 		end)
 		
 	stringTimer:add(45, function()
@@ -234,7 +234,8 @@ function state:leave()
 end
 
 function state:update(dt)
-	dt = frameLimiter(dt)
+-- trying this frame limiter here
+	frameLimiter(dt)
 	world:update(dt)
 
 	stringTimer:update(dt)
@@ -252,20 +253,20 @@ function state:update(dt)
 		murderBaller:update(dt)
 	end
 
-	cam:move(camdx / framesPerSecond,camdy / framesPerSecond)
-	cam:zoom(camdz)
+	state.cam:move((state.camdx * (dt)), state.camdy * (dt))
+	state.cam:zoom(state.camdz)
 	state.explosion:update(dt)
 end
 
 function state:draw()
 
 
-	cam:attach()	
+	state.cam:attach()	
 	love.graphics.draw(titleScene, 0,0)
-	-- draw stuff that's camera locked here
+	-- draw stuff that's state.camera locked here
 	player1:draw()
 	player2:draw()
-	cam:detach()	
+	state.cam:detach()	
 
 		if drawMurderBaller then
 		murderBaller:drawf(murderBallerImage, 
@@ -283,7 +284,7 @@ function state:draw()
 	
 
 
-	-- draw the credits and other non-camera locked stuff here
+	-- draw the credits and other non-state.camera locked stuff here
 	love.graphics.draw(self.explosion)
 	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y/2)-100, 400, "center" )
 
@@ -311,33 +312,33 @@ end
 
 function state:zoomCrispy()
 	crispyForce = Vector(2000,0)
-	camdx = 7
-	camdz = 1.001
-	cam:lookAt(player1.position.x+35, player1.position.y)
-	cam:zoomTo(5)
+	state.camdx = 7
+	state.camdz = 1.001
+	state.cam:lookAt(player1.position.x+35, player1.position.y)
+	state.cam:zoomTo(5)
 	crispyAnim = player1.runAnim
 end
 
 function state:zoomMcGuff()
 	mcGuffForce = Vector(2000,0)
-	camdx = 7
-	camdz = 1.001
-	cam:lookAt(player2.position.x+35, player2.position.y)
-	cam:zoomTo(5)
+	state.camdx = 7
+	state.camdz = 1.001
+	state.cam:lookAt(player2.position.x+35, player2.position.y)
+	state.cam:zoomTo(5)
 	mcGuffAnim = player2.runAnim
 end
 
 function state:zoomToTitle()
-	camdx = 0
-	camdy = 0
-	camdz = 1.001
-	cam:lookAt(dimScreen.x/2, dimScreen.y/2)
-	cam:zoomTo(1)
+	state.camdx = 0
+	state.camdy = 0
+	state.camdz = 1.001
+	state.cam:lookAt(dimScreen.x/2, dimScreen.y/2)
+	state.cam:zoomTo(1)
 end
 
 function state:endAtTitle()
-	cam:zoomTo(1)
-	camdz = 1
+	state.cam:zoomTo(1)
+	state.camdz = 1
 	drawTitle = true
 	player1:setPosition(Vector(300,900))
 	crispyAnim = player1.shootingAnim
