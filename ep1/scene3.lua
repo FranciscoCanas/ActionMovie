@@ -112,7 +112,7 @@ end
 -- add an enemy at position x, y
 function insertEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, MOVETOSETSPOT))
+		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, MOVETOSETSPOT, true))
 	end
 end
 

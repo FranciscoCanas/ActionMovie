@@ -44,7 +44,7 @@ function(self, num)
 		self.frameDelay)
 
 	--ready for shooting animation here:
-	self.shootingAnim = Anim8.newAnimation('loop',
+	self.shootingAnim = Anim8.newAnimation('once',
 		self.grid('1-2, 2'),
 		self.frameDelay)
 		
@@ -276,8 +276,8 @@ function Player:fire()
 		self.timer:add(0.25, function()	
 
 			table.insert(bullets,Bullet(null, pos, aiming)) 
-			local vol = math.random(15, 30) / 100
-			local pitch = math.random(25, 150) / 100
+			local vol = math.random(30, 50) / 100
+			local pitch = math.random(50, 125) / 100
 	
 			TEsound.play(self.gunsoundlist, "gunshot", vol, pitch)		
 	

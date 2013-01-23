@@ -232,7 +232,7 @@ function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
 	while totEnemy - curDead < 3 do
-		state:insertEnemy({Vector((state.cam.x + dimScreen.x + math.random(400,800)), 800 + math.random(200, 500))}, FOLLOWPLAYER)
+		state:insertEnemy({Vector((state.cam.x + dimScreen.x + math.random(400,800)), 800 + math.random(200, 500))}, FOLLOWPLAYER, true)
 		totEnemy = totEnemy+1
 	end
 end

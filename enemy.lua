@@ -4,8 +4,8 @@ MOVETOSETSPOT = 2
 movementPositions = {}
 
 Enemy = Class{
-function(self, image, position, type)
-	
+function(self, image, position, type, rand)
+	self.rand = rand
 	self:init()
 --	wx, wy = cam:worldCoords(position.x, position.y)
 	self.position = position
@@ -40,7 +40,7 @@ function(self, image, position, type)
 		self.grid('1-3, 1'),
 		self.frameDelay)
 		
-	self.shootAnim = Anim8.newAnimation('loop',
+	self.shootAnim = Anim8.newAnimation('once',
 		self.grid('1-2, 2'),
 		self.frameDelay)
 		
@@ -93,13 +93,13 @@ function(self, image, position, type)
 -- particle sys stuff go here now!
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
 	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
-	self.gunEmitter:setEmissionRate(300)
+	self.gunEmitter:setEmissionRate(500)
 	self.gunEmitter:setLifetime(0.01)
 	self.gunEmitter:setParticleLife(0.25)
-	self.gunEmitter:setSpread(3.14/3)
-	self.gunEmitter:setSizes(0.05, 0.5)
+	self.gunEmitter:setSpread(3.14/4)
+	self.gunEmitter:setSizes(0.05, 0.25)
 	self.gunEmitter:setGravity(0,0)
-	self.gunEmitter:setSpeed(140,260)
+	self.gunEmitter:setSpeed(200,300)
 
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
@@ -122,11 +122,17 @@ function Enemy:init()
 	self.destination = nil
 
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = 300 --/ max d7istance from player to shoot
+	self.maxTargetRange = 400 --/ max d7istance from player to shoot
 	self.minTargetRange = 150 --/ min distance from player to shoot
 	self.observePlayerRange = 600 -- distance to interact with player
-	self.scalex = math.random(50, 70) / 100
-	self.scaley = math.random(50, 90)/ 100
+	
+	if (self.rand) then
+		self.scalex = math.random(50, 70) / 100
+		self.scaley = math.random(50, 90)/ 100
+	else
+		self.scalex = 0.7
+		self.scaley = 0.7
+	end
 
 	self.width = 128 * self.scalex
 	self.height = 128 * self.scaley
@@ -411,16 +417,16 @@ function Enemy:shoot()
 		if (bulletDir.x < 0) then
 			aim = 3.14
 		end
-
-		self.timer:add(0.10, function()
-				self.gunEmitter:setDirection( aim )
-			end)
+		self.gunEmitter:reset()
+		self.gunEmitter:setDirection( aim )
 		
 		pos = pos + self.facing * 25
 		self.timer:add(0.25, function()
+			
+			self.gunEmitter:start()
 			table.insert(bullets,Bullet(null, pos, bulletDir))	
-			local vol = math.random(15, 30) / 100
-			local pitch = math.random(25, 150) / 100
+			local vol = math.random(30, 50) / 100
+			local pitch = math.random(50, 125) / 100
 	
 			TEsound.play(gunsoundlist, "gunshot", vol, pitch)		
 		end)	
@@ -457,7 +463,7 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 	
 	if not self.isScreaming then
 		local vol = math.random(15, 35) / 100
-		local pitch = math.random(25, 100) / 100
+		local pitch = math.random(45, 100) / 100
 		self.isScreaming = true
 		TEsound.play(screamsoundlist, "scream", vol, pitch, function() self.isScreaming = false end)		
 	end
