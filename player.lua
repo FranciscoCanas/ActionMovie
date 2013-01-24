@@ -258,23 +258,18 @@ function Player:fire()
 		pos = pos + aiming * 20
 
 		local rads
-		-- set up the flashy sparkly guy
-		self.gunEmitter:reset()
-		self.gunEmitter:setPosition(pos.x, pos.y - 20)
-		self.gunEmitter:start()
+
 		if aiming.x < 0 then
 			rads = 3.14
 		else
 			rads = 0
 		end
-
-		
-		self.timer:add(0.10, function()
-				self.gunEmitter:setDirection( rads )
-			end)
-
+		-- set up the flashy sparkly guy
+		self.gunEmitter:reset()
+		self.gunEmitter:setPosition(pos.x, pos.y - 20)
+		self.gunEmitter:setDirection( rads )		
 		self.timer:add(0.25, function()	
-
+			self.gunEmitter:start()
 			table.insert(bullets,Bullet(null, pos, aiming)) 
 			local vol = math.random(30, 50) / 100
 			local pitch = math.random(50, 125) / 100

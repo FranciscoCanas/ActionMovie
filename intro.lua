@@ -10,6 +10,7 @@ local font = love.graphics.setNewFont(32)
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
 local currentString = ""
+local currentStringPos = Vector((dimScreen.x/2) - 200, (dimScreen.y/2)-100)
 
 function state:enter()
 -- set the font here
@@ -20,6 +21,8 @@ love.graphics.setFont( font)
 	drawTitle = false
 
 -- extra char graphics/anims here
+	murderballer = {}
+
 	drawMurderBaller = false
 	murderBallerPos = Vector(400,500)
 	murderBallerImage = love.graphics.newImage('art/murderballer.png')
@@ -94,15 +97,15 @@ love.graphics.setFont( font)
 			end)
 
 	stringTimer:add(18, function() 
-				currentString = "Based on a Youtube Sensation viewed by the guy from Crouching Guy Production Pictures" 
+				currentString = "Based on a youtube sensation viewed by the guy from Crouching Guy Production Pictures" 
 			end)
 
 	stringTimer:add(24, function() 
-				currentString = "...which was in turn adapted from some Turkish movie..." 
+				currentString = "and adapted from some movie" 
 			end)
 
 	stringTimer:add(30, function() 
-				currentString = "...it's..." 
+				currentString = "it's" 
 			end)
 
 
@@ -115,7 +118,7 @@ love.graphics.setFont( font)
 
 	stringTimer:add(37, function()
 				drawTitle = false
-				currentString = "Starring Chun Chi Sham as Crispy"
+				
 				state:zoomCrispy()
 			end)
 
@@ -129,12 +132,14 @@ love.graphics.setFont( font)
 			end)
 
 	stringTimer:add(40, function()
+				currentString = "Starring Chung Chi Sham as Detective Crispy"
 				crispyAnim = player1.standAnim
+				state:closeUp(player1)
 				crispyForce = Vector(0,0)
 			end)
 
 	stringTimer:add(43, function()
-				currentString = "Cisco as McGuff"
+				currentString = ""
 				state:zoomMcGuff()
 			end)
 
@@ -150,13 +155,15 @@ love.graphics.setFont( font)
 
 	stringTimer:add(46, function()
 				mcGuffAnim = player2.standAnim					
+				currentString = "Cisco as McGuff: P.I."
+				state:closeUp(player2)
 			end)
 
 
 
 	-- 42
 	stringTimer:add(49, function()
-				currentString = "Murderballer #2 as Lloyd the Rat"
+				currentString = ""
 				state.cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
 				state.cam:zoomTo(4)
 				state.camdx = 15
@@ -169,7 +176,11 @@ love.graphics.setFont( font)
 
 
 	stringTimer:add(51, function()
+			currentString = "Murderballer #2 as Lloyd the Rat"
 			murderBaller = murderBallerStandAnim
+--			murderballer.position = Vector(murderBallerPos.x, murderBallerPos.y)
+--			state:closeUp(murderballer)
+			state.cam:zoomTo(6)
 			state.camdx = 0
 			state.camdz = 1
 			state.camdy = 0
@@ -200,13 +211,21 @@ love.graphics.setFont( font)
 	end)
 	
 	stringTimer:add(64, function()
-		currentString = "Professor Griffy McPeterly as \"Disco Fever\""
+		currentString = "Professor Griffy McPeterly as \"Disco Lex\""
 		state:bodyShot(e3)
 		e3.animation = e3.shootAnim
 	end)
 
 	stringTimer:add(65, function()
 		e3.animation = e3.runAnim
+	end)
+
+	stringTimer:add(67, function()
+		e3.frameFlipH = true
+	end)
+
+	stringTimer:add(68.5, function()
+		e3.frameFlipH = false
 	end)
 
 
@@ -296,7 +315,7 @@ function state:draw()
 
 	-- draw the credits and other non-state.camera locked stuff here
 	love.graphics.draw(self.explosion)
-	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y/2)-100, 400, "center" )
+	love.graphics.printf( currentString, currentStringPos.x, currentStringPos.y, 400, "center" )
 
 	if drawTitle then
 		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-220)
@@ -361,6 +380,7 @@ function state:startingShot()
 end
 
 function state:closeUp(p)
+	currentStringPos = Vector((dimScreen.x/2) - 200, 200)
 	state.cam:lookAt(p.position.x + 25, p.position.y + 15)
 	state.cam:zoomTo(16)
 end
