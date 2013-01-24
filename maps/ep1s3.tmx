@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="33" height="30" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="35" height="30" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="alt_viewX" value="3"/>
+  <property name="alt_viewY" value="0"/>
+ </properties>
  <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32">
   <image source="collision.png" width="320" height="320"/>
  </tileset>
@@ -9,29 +13,29 @@
  <tileset firstgid="164" name="Office1" tilewidth="32" tileheight="32">
   <image source="office.png" width="288" height="224"/>
  </tileset>
- <layer name="Ground" width="33" height="30">
+ <layer name="Ground" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztwzENAAAIA7D51wHoxAQHR5u0kpQvzoOtqqrq6QVyo33z
+   eJztzqEBACAMA7D+f8fGnRgOwG0iIj6VpIb1M/3YejkLNAAAAHy4/GOknw==
   </data>
  </layer>
- <layer name="Barricade" width="33" height="30">
+ <layer name="Barricade" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt07EKACAIRVH36v9/N0IaHaLQF9wzhTZcgsz+0qoDjIaNBqfWsM4juHMyv2mootLQg92r+S8N1VQbsv+o6jtko8HR4GgAkG0CCIoB4w==
+   eJztlDEKACAMA7ur//+uiy4SBzHQFHIg2iJ6gzGiJm3NfY0g1XbhuyhgF0w71uOy56XPcLm9v9f+j8s+D2UjywXdxehXdVFB3SUr28glK9vqLlnYBYP+ut/aLlwXY4w+EzdNBTc=
   </data>
  </layer>
- <layer name="Stuffs" width="33" height="30">
+ <layer name="Stuffs" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1LEKgDAMBND+/wcp6qCog6L9Jw9cSgiCQ3IZ8uCGCx2yNKXE1CG9Y9fMyOLYNQdyOvYUz4hMhHlrQ3bCvHUjlTD/Mvx8b2FlLwAXewGy/KOviH808cj7aN018j5ad428j9Y9pRTXA64XX24=
+   eJzt1DsKgEAMBNC9/4EUtVDUQtG9kyklhCBCPso8mGICC2k2peTWUFrHrhkpk2PXbJTdscP39JQhYC5ZKGvAXHJSasD8ie7lOwtz9AI3R/QCyeBvyzL/bciH31vrruH31rpr+L217gDwXxdpU19u
   </data>
  </layer>
- <layer name="Collision" width="33" height="30">
+ <layer name="Collision" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztkzEKACAIRT2Ae/e/aYM0ZElGaA7/gYOfwAcpExEXKI3OM3o47B2ygYNwcrBuJ8rBmuXZW5035/tIB29+OzeKyg6ZwEGwdtiTjfz1Pqo6ZAMH4fQ30T0c5ux3AQBWOmORCNw=
+   eJztlVEKACEIBT1A/3v/m8Z+LERoGqSvhTcgpBgNlNREpIHjY1yPtbknM6fLvgsKuuh4LtbdZuDNt1Vfvb83nmB/hUu07p2zqmfyBxcEdNHZ+aOs/afm6XYXFHTRmV2qc7rEXNBBCDlHB87cCNw=
   </data>
  </layer>
- <layer name="Tile Layer 5" width="33" height="30">
+ <layer name="Tile Layer 5" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAJxGsuPglEwVAGutE2q+FADO2ksTgw4RGNxYsBpGouPAsrBSM2jo2BwgNH20ygYBaNgJAEAFowKLQ==
+   eJzt1rENADAIA0G2YP8x0qZlqUyQwiguUP7Kp7ZEBF5L8x34xW0Lap9umbtim7uizB0+bBsT8M8BQN8BHY4KLQ==
   </data>
  </layer>
 </map>

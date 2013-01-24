@@ -76,7 +76,7 @@ function state:enter()
 	-- Initializing Jumper
 	searchMode = 'DIAGONAL' --'ORTHOGONAL' -- whether or not diagonal moves are allowed
 	heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
-	current_heuristic = 3 -- indexes the chosen heuristics within 'heuristics' table
+	current_heuristic = 1 -- indexes the chosen heuristics within 'heuristics' table
 	filling = false -- whether or not returned paths will be smoothed
 	postProcess = false -- whether or not the grid should be postProcessed
 	pather = Jumper(background.collisionMap) -- Inits Jumper
@@ -91,12 +91,14 @@ function state:enter()
 	enemies = {}
 	deadCount = 0
 
+	-- **** GET LEVEL.LUA TO GENERATE ****
 	-- tiled coordinates
 	--(cover.x, cover.y, shoot.x, shoot.y, covered)
 	movementPositions =  {
 		--back most row to hide
 		{{31, 2, 31, 4, false}, {28, 8, 28, 6, false}, {30, 15, 30, 17, false}, {29, 21, 29, 19, false}},
-		{{23, 2, 23, 4, false}, {22, 8, 22, 10, false}, {24, 15, 24, 12, false}, {21, 21, 21, 19, false}}
+		{{23, 2, 23, 4, false}, {22, 8, 22, 10, false}, {24, 15, 24, 12, false}, {21, 21, 21, 19, false}}, 
+		{{15, 2, 15, 4, false}, {16, 8, 16, 6, false}, {18, 15, 18, 12, false}, {13, 21, 13, 19, false}}
 		} 
 --	insertEnemy(enemiesPosition)
 	enemyTimer = Timer.new()
@@ -117,7 +119,7 @@ end
 -- add an enemy at position x, y
 function state:insertEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, false, screenPos, MOVETOSETSPOT, true)
+		table.insert(enemies, Enemy(false, screenPos, MOVETOSETSPOT, true))
 	end
 end
 
@@ -245,8 +247,9 @@ function s3spawnEnemy()
 			end
 		end
 		if not spawn then
+			print(dimScreen.x..", "..dimScreen.y)
 			for i = 2, count, 1 do
-				state:insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+				state:insertEnemy({Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050))})
 			end
 		-- else
 		-- 	break

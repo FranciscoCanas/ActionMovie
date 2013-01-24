@@ -89,7 +89,7 @@ function(self, image, position, type, rand)
 	
 	self.fixture:setCategory(ENEMY)	
 	if (self.behaviour == MOVETOSETSPOT) then 
-		self.fixture:setMask(OBSTACLE)
+		self.fixture:setMask(OBSTACLE, BARRICADE)
 	end
 
 	self.body:setLinearDamping( self.damping )
@@ -478,6 +478,7 @@ function Enemy:stopShoot()
 			if (self.tier > #movementPositions) then
 				-- when no more tiers, follow players instead
 				self.behaviour = FOLLOWPLAYER
+				self.fixture:setMask(BARRICADE)
 			end
 		end 
 	end
