@@ -6,24 +6,32 @@
  <tileset firstgid="101" name="Ground" tilewidth="32" tileheight="32">
   <image source="ground.png" width="288" height="255"/>
  </tileset>
+ <tileset firstgid="164" name="Office1" tilewidth="32" tileheight="32">
+  <image source="office.png" width="288" height="224"/>
+ </tileset>
  <layer name="Ground" width="33" height="30">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6FzW/8OpmI/SFg1VVVV9eUBowiOYg==
+   eJztwzENAAAIA7D51wHoxAQHR5u0kpQvzoOtqqrq6QVyo33z
   </data>
  </layer>
  <layer name="Barricade" width="33" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzkENACEQALEVgH+995hggYOkVdCZt6y/A+OwOcQhDnGIQxziEIc45IYDcM4HuO8BCQ==
-  </data>
- </layer>
- <layer name="Collision" width="33" height="30">
-  <data encoding="base64" compression="zlib">
-   eJzt1jEKADAIBMF7gP9/b4prUookKLIDIZ1smmBIisaj6+5Eg9FgLxuqs7Y1VNFgPxuys7c3ZNFg2/6oCQ1VNBgN1rnXT3g/MNUBZBAEUQ==
+   eJzt07EKACAIRVH36v9/N0IaHaLQF9wzhTZcgsz+0qoDjIaNBqfWsM4juHMyv2mootLQg92r+S8N1VQbsv+o6jtko8HR4GgAkG0CCIoB4w==
   </data>
  </layer>
  <layer name="Stuffs" width="33" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1LENACAMA0EvC/uPQGFRI4oELP1N8IVlKct4HSAaNhrs1DBpaEOD3TZU7COxoQINlvBRPzR0oMFoANBtAW7dCxM=
+   eJzt1LEKgDAMBND+/wcp6qCog6L9Jw9cSgiCQ3IZ8uCGCx2yNKXE1CG9Y9fMyOLYNQdyOvYUz4hMhHlrQ3bCvHUjlTD/Mvx8b2FlLwAXewGy/KOviH808cj7aN018j5ad428j9Y9pRTXA64XX24=
+  </data>
+ </layer>
+ <layer name="Collision" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztkzEKACAIRT2Ae/e/aYM0ZElGaA7/gYOfwAcpExEXKI3OM3o47B2ygYNwcrBuJ8rBmuXZW5035/tIB29+OzeKyg6ZwEGwdtiTjfz1Pqo6ZAMH4fQ30T0c5ux3AQBWOmORCNw=
+  </data>
+ </layer>
+ <layer name="Tile Layer 5" width="33" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFlAJxGsuPglEwVAGutE2q+FADO2ksTgw4RGNxYsBpGouPAsrBSM2jo2BwgNH20ygYBaNgJAEAFowKLQ==
   </data>
  </layer>
 </map>

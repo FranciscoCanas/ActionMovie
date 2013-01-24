@@ -1,7 +1,11 @@
 --different types of enemies
 FOLLOWPLAYER = 1
+
+ --**********
+ -- This type of enemy moves to a position defined by the table 
+ -- movementPositions defined in the scene.
 MOVETOSETSPOT = 2
-movementPositions = {}
+--movementPositions = {}
 
 Enemy = Class{
 function(self, image, position, type)
@@ -148,6 +152,10 @@ function Enemy:init()
 	gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg", "sfx/gunshot3.ogg"}
 	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", "sfx/scream3.ogg"}
 	self.isScreaming = false
+
+	-- advancement info
+	self.tier = 1 
+	self.coverCount = math.random(1, 3) -- number of times cover before moving up
 	
 end
 
@@ -229,7 +237,7 @@ function Enemy:idle()
 		elseif (self.behaviour == MOVETOSETSPOT) then
 			-- target is set to one of preapproved cover positions
 			repeat
-				self.target = movementPositions[math.random(1, 3)]
+				self.target = movementPositions[self.tier][math.random(1, 4)]
 			until not self.target[5]
 			self.target[5] = true
 		end 
@@ -245,8 +253,10 @@ function Enemy:idle()
 		tx, ty = background:toTile(x_, y_)
 		if not ((tx == self.target[1]) and (ty == self.target[2])) then
 			_path, length = pather:getPath(tx, ty, self.target[1], self.target[2])
-			self:orderMove(_path)
-			self.state = moveToCover
+			if _path then
+				self:orderMove(_path)
+				self.state = moveToCover
+			end
 		end
 	end
 	
@@ -271,9 +281,16 @@ function Enemy:moveToCover()
 		self.animation = self.standAnim
 		self.state = idle
 		self.timer:add(math.random(1, 5), function()
+			x_, y_ = self:getCenter()
+			tx, ty = background:toTile(x_, y_)
 			_path, length = pather:getPath(tx, ty, self.target[3], self.target[4])
-			self:orderMove(_path)
-			self.state = moveToShoot
+			if _path then
+				self:orderMove(_path)
+				self.state = moveToShoot
+			else 
+				--error handling
+				self.state = idle
+			end
 			end)
 		-- path, length = pather:getPath(self.tile_x, self.tile_x, self.target[3], self.target[4])
 		-- self:orderMove(path)
@@ -375,6 +392,20 @@ function Enemy:MoveToShootingSpot()
 			self:move(dt)
 		else
 			self.state = shoot
+			-- local targetX
+			-- if player1.isplaying then
+			-- 	targetX = player1.body:getX()
+			-- else
+			-- 	targetX = player2.body:getX() 
+			-- end
+			-- world:rayCast(self.body:getX(), self.body:getY(), --enemy location
+			-- 			targetX , self.body:getY(), --target location
+			-- 			Enemy.rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
+			-- if toShoot then
+			-- 	self.state = shoot
+			-- else
+			-- 	self.state = moveToCover
+			-- end
 		end
 	end
 end
@@ -434,6 +465,15 @@ function Enemy:stopShoot()
 	if (self.behaviour == MOVETOSETSPOT) then
 		self.target[5] = false
 		self.target = nil
+		self.coverCount = self.coverCount - 1
+		if (self.coverCount == 0) then
+			self.coverCount = math.random(1, 3)
+			self.tier = self.tier + 1
+			if (self.tier > #movementPositions) then
+				-- when no more tiers, follow players instead
+				self.behaviour = FOLLOWPLAYER
+			end
+		end 
 	end
 end
 

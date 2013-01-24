@@ -76,7 +76,7 @@ function state:enter()
 	-- Initializing Jumper
 	searchMode = 'DIAGONAL' --'ORTHOGONAL' -- whether or not diagonal moves are allowed
 	heuristics = {'MANHATTAN','EUCLIDIAN','DIAGONAL','CARDINTCARD'} -- valid distance heuristics names
-	current_heuristic = 2 -- indexes the chosen heuristics within 'heuristics' table
+	current_heuristic = 3 -- indexes the chosen heuristics within 'heuristics' table
 	filling = false -- whether or not returned paths will be smoothed
 	postProcess = false -- whether or not the grid should be postProcessed
 	pather = Jumper(background.collisionMap) -- Inits Jumper
@@ -93,7 +93,11 @@ function state:enter()
 
 	-- tiled coordinates
 	--(cover.x, cover.y, shoot.x, shoot.y, covered)
-	movementPositions = {{20, 17, 20, 19, false}, {24, 12, 24, 14, false}, {20, 6, 20, 4, false}} --, {20, 16, 20, 15}}
+	movementPositions =  {
+		--back most row to hide
+		{{31, 2, 31, 4, false}, {28, 8, 28, 6, false}, {30, 15, 30, 17, false}, {29, 21, 29, 19, false}},
+		{{23, 2, 23, 4, false}, {22, 8, 22, 10, false}, {24, 15, 24, 12, false}, {21, 21, 21, 19, false}}
+		} 
 --	insertEnemy(enemiesPosition)
 	enemyTimer = Timer.new()
 	enemyTimer:add(5, s3spawnEnemy)
@@ -120,7 +124,9 @@ end
 function state:leave()
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
 	for i, enemy in ipairs(enemies) do
-		enemy.fixture:destroy()
+		if enemy.isalive then
+			enemy.fixture:destroy()
+		end
 	end
 	enemyTimer:clear()
 	countdown:clear()
@@ -214,7 +220,7 @@ function state:draw()
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
 	love.graphics.print("Time Left: "..minutes..":"..seconds, dimScreen.x/2, 20)
-	-- jumperDebug.drawPath(font12, path, true)
+	jumperDebug.drawPath(font12, path, true)
 	-- jumperDebug.drawPath(font12, _path, true)
 end 
 
@@ -229,10 +235,23 @@ function s3removeDead()
 end
 
 function s3spawnEnemy()
-	-- local totEnemy = #enemies
-	-- local curDead = deadCount
-	-- while totEnemy - curDead < 3 do
-		state:insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+	--spawn whenever there is more than one empty space in the first tier
+		spawn = true
+		local count = 0
+		for i, position in ipairs(movementPositions[1]) do
+			spawn = (spawn and position[5])
+			if not position[5] then
+				count = count + 1
+			end
+		end
+		if not spawn then
+			for i = 2, count, 1 do
+				state:insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+			end
+		-- else
+		-- 	break
+		end
+	
 		-- totEnemy = totEnemy+1
 	-- end
 end
