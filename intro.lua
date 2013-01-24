@@ -176,7 +176,7 @@ love.graphics.setFont( font)
 		end)
 		
 	stringTimer:add(55, function()
-				currentString = "with Bink Bufferson as \"Burgertime\""
+				currentString = "with Griff Peterson as \"Burgertime\""
 				state:bodyShot(e1)
 				e1.animation = e1.shootAnim
 				drawMurderBaller = false
@@ -188,7 +188,7 @@ love.graphics.setFont( font)
 	end)
 
 	stringTimer:add(59, function()
-		currentString = "Larry Stumpstown as \"Limpy\""
+		currentString = "P. Tear Griffon as \"Limpy\""
 		state:bodyShot(e2)
 		e2.animation = e2.shootAnim
 	
@@ -200,11 +200,11 @@ love.graphics.setFont( font)
 	end)
 	
 	stringTimer:add(64, function()
-		currentString = "Professor Gilly Hamslingtown as \"Disco Fever\""
+		currentString = "Professor Griffy McPeterly as \"Disco Fever\""
 		state:bodyShot(e3)
 		e3.animation = e3.shootAnim
-		  --state:endAtTitle()
 	end)
+
 	stringTimer:add(65, function()
 		e3.animation = e3.runAnim
 	end)

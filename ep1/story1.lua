@@ -10,13 +10,13 @@ local state = Gamestate.story1
 local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
-local dialogue = {	"Last week, on ActionMovie...",
-			"Crispy, you're a loose canon!!!",
-			"That ice cream truck was illegally parked! He deserved what he got!",
-	"Who's gonna pay for the damages to that orphanage!?",
+local dialogue = {	"Last week in Action Movie...",
+			"Crispy, you're a loose canon!",
+			"That ice cream truck was illegally parked. He deserved what he got!",
+	"And who's gonna pay for the damages to that orphanage!?",
 		"If we don't find that bomb, they're gonna blow up the president!",
-			"Big Boss is sending his goons over.",
-			"Quick, out the back! We'll escape through the alleyway!",
+			"Big Boss is sending his goons over, we gotta split.",
+			"We'll shoot our way out!",
 			}
 local currentShot = 0
 local shotFuncs = {

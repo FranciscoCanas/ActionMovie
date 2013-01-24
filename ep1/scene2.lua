@@ -45,7 +45,7 @@ function state:enter()
 	loseString = "Lloyd the Rat got away!"
 	drawLoseString = false
 
-	-- set up state.camera ------------------------------------
+	-- set up state.camera --
 	state.cam = Camera(
 		dimScreen.x/2,
 		dimScreen.y/2,
@@ -119,23 +119,6 @@ function state:enter()
 	murderballer.position = Vector(dimScreen.x - 152, 600)
 	murderballer.animation = murderballer.runAnim
 	murderballer.delta = Vector(50,0)
-	-- drawMurderBaller = true
-	-- murderBallerPos = Vector(dimScreen.x - 152,600)
-	-- murderBallerImage = love.graphics.newImage('art/murderballer.png')
-	-- murderBallerGrid = Anim8.newGrid(52, 52, 
-			-- murderBallerImage:getWidth(),
-			-- murderBallerImage:getHeight())
-
-	-- murderBallerRunAnim = Anim8.newAnimation('loop',
-		-- murderBallerGrid('1-4, 1'),
-		-- 0.2) 
-
-	-- murderBallerStandAnim = Anim8.newAnimation('loop',
-		-- murderBallerGrid('1-4, 2'),
-		-- 0.2) 
-
-	-- murderBaller = murderBallerRunAnim
-	-- murderBallerDX = 0
 end
 
 function state:spawnBystanders()
@@ -195,7 +178,6 @@ function state:update(dt)
 	for i,player in ipairs(players) do
 		if player.isplaying then
 			player:update(dt)
-
 		end
 	end
 
@@ -234,13 +216,13 @@ function state:update(dt)
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
 
 	-- check for player loseage here
-	if outOfBounds(player1) and outOfBounds(player2) then
+	if state:outOfBounds(player1) and outOfBounds(player2) then
 		state:playersLose()
 	end
 
 end
 
-function outOfBounds(p)
+function state:outOfBounds(p)
 	return (p.position.x < (state.cam.x - dimScreen.x/2 - 200))
 end
 
@@ -297,19 +279,6 @@ function state:draw()
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
-	--love.graphics.print("Scene Placeholder", 10, 10)
-	-- love.graphics.print(player1.position.x, 200, 10)
-	-- love.graphics.print(player1.position.y, 220, 10)
-	--love.graphics.print(player1.facing.x, 200, 30)
-	--love.graphics.print(player1.facing.y, 210, 30)
-	--love.graphics.print(player1.health, 50, 50)
-	--love.graphics.print("clicked", 10, 70)
-	--love.graphics.print(tileX or 0, 60, 70)
-	--love.graphics.print(tileY or 0, 80, 70)
-	--love.graphics.print("player1", 10, 90)
-	--love.graphics.print(playerX or 0, 60, 90)
-	--love.graphics.print(playerY or 0, 80, 90)
-	--jumperDebug.drawPath(font12, path, true)
 	love.graphics.print(state.cam.x, 5,5)
 	love.graphics.print(state.cam.y, 50,50)
 	love.graphics.print(murderballer.position.x - state.cam.x, 600,5)
@@ -399,14 +368,14 @@ function state:movecam(dt)
 	
 
 	
-	x = math.max(x, state.camLeft + (state.camWorldWidth / 2))
-	x = math.min(x, state.camRight - (state.camWorldWidth / 2))
+		x = math.max(x, state.camLeft + (state.camWorldWidth / 2))
+		x = math.min(x, state.camRight - (state.camWorldWidth / 2))
 
-	y = math.max(y, state.camTop + (state.camWorldHeight / 2))
-	y = math.min(y, state.camBottom - (state.camWorldWidth / 2))
+		y = math.max(y, state.camTop + (state.camWorldHeight / 2))
+		y = math.min(y, state.camBottom - (state.camWorldWidth / 2))
 
-	-- Move the state.cam to the coordinates calculated above.
-	state.cam:lookAt(x, y)
+		-- Move the state.cam to the coordinates calculated above.
+		state.cam:lookAt(x, y)
 	
 	
 	
@@ -432,8 +401,6 @@ function state:movecam(dt)
 	state.camWorldX = state.cam.x - (state.camWorldWidth / 2)
 	state.camWorldY = state.cam.y - (state.camWorldHeight / 2)
 	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
-
-	
 end
 
 function state:mousepressed(x,y,button)

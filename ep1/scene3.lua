@@ -112,7 +112,7 @@ end
 -- add an enemy at position x, y
 function insertEnemy(positions) 
 	for i, screenPos in ipairs(positions) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, MOVETOSETSPOT, true))
+		table.insert(enemies, false, screenPos, MOVETOSETSPOT, true)
 	end
 end
 
@@ -231,7 +231,7 @@ function s3spawnEnemy()
 	-- local totEnemy = #enemies
 	-- local curDead = deadCount
 	-- while totEnemy - curDead < 3 do
-		insertMEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
+		insertEnemy({Vector(1900, 650)}, MOVETOSETSPOT)
 		-- totEnemy = totEnemy+1
 	-- end
 end
