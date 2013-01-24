@@ -1,10 +1,12 @@
 -- This is the menu for episode one.
 -- Players will be able to select a scene to start from.
+---------------------------------------------------------
 require "ep1/story1"
 require "ep1/scene"
 require "ep1/story2"
 require "ep1/scene2"
 require "ep1/scene3"
+
 Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
 local epi = 0 
@@ -13,8 +15,6 @@ function state:enter()
 
 	local font = love.graphics.setNewFont(20)
 	love.graphics.setFont( font)
-	--player1:init()
-	--player2:init()
 end
 
 function state:leave()

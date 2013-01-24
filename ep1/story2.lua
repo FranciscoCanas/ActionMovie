@@ -12,10 +12,10 @@ local currentStringNum = 0
 local diagInterval = 5
 local dialogue = {	"Who's a baaaaaaaad mutha--.",
 			"Shut your mouth! We gotta start thinking about finding that bomb!",
-		"Look, it's that rat Lloyd! He probably knows the score...",
+		"Look, it's that rat Lloyd. He probably knows the score...",
 		"It's the fuzz! Aww sheeeeeeee--",
 			"Let's shake it outta him!",
-			"T'ain't gonna catch me!",
+			"Ain't gonna catch me. I'm from the future!",
 			"Dang, he's making a break for it into that crowd!",
 			"Why is it always mardi gras around here?!"
 			}
@@ -155,7 +155,6 @@ function state:update(dt)
 	state.cam:move(state.camdx*dt,state.camdy*dt)
 	state.cam:zoom(state.camdz)
 	murderballer:update(dt)
-	
 end
 
 

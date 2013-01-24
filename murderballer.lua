@@ -1,6 +1,6 @@
 Murderballer = Class { 
 function(self)
--- extra char graphics/anims here
+	-- extra char graphics/anims here
 	self.isAlive = false
 	self.position = Vector(1000,500)
 	self.image = love.graphics.newImage('art/murderballer.png')

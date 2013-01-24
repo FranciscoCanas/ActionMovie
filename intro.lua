@@ -10,6 +10,7 @@ local font = love.graphics.setNewFont(32)
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
 local currentString = ""
+local currentStringPos = Vector((dimScreen.x/2) - 200, (dimScreen.y/2)-100)
 
 function state:enter()
 -- set the font here
@@ -20,6 +21,8 @@ love.graphics.setFont( font)
 	drawTitle = false
 
 -- extra char graphics/anims here
+	murderballer = {}
+
 	drawMurderBaller = false
 	murderBallerPos = Vector(400,500)
 	murderBallerImage = love.graphics.newImage('art/murderballer.png')
@@ -36,6 +39,10 @@ love.graphics.setFont( font)
 		0.2) 
 
 	murderBaller = murderBallerRunAnim
+	
+	e1 = Enemy(love.graphics.newImage('art/Enemy1Sprite.png'),Vector(2800,420),MOVETOSETSPOT,false)
+	e2 = Enemy(love.graphics.newImage('art/Enemy1SpriteB.png'),Vector(2900,420),MOVETOSETSPOT, false)
+	e3 = Enemy(love.graphics.newImage('art/Enemy1SpriteC.png'),Vector(3000,420),MOVETOSETSPOT, false)
 
 	
 
@@ -67,7 +74,7 @@ love.graphics.setFont( font)
 		0 -- rotation angle
 		)
 
-	state.camdx = 7 -- state.camera x panning rate per 30 frames
+	state.camdx = 15 -- state.camera x panning rate per 30 frames
 	state.camdy = 0
 	state.camdz = 1
 
@@ -80,42 +87,42 @@ love.graphics.setFont( font)
 				currentString = "Crouching Guy Pictures Presents" 
 			end)
 
-	stringTimer:add(5, function() 
+	stringTimer:add(6, function() 
 				currentString = "A Crouching Guy Productions Picture Production" 
 			end)
 
 
-	stringTimer:add(10, function() 
+	stringTimer:add(12, function() 
 				currentString = "in Association with Crazy Cup Entertainment Studios" 
 			end)
 
-	stringTimer:add(15, function() 
-				currentString = "Based on a Youtube Sensation viewed by the guy from Crouching Guy Production Pictures" 
+	stringTimer:add(18, function() 
+				currentString = "Based on a youtube sensation viewed by the guy from Crouching Guy Production Pictures" 
 			end)
 
-	stringTimer:add(20, function() 
-				currentString = "...which was in turn adapted from some Turkish movie..." 
+	stringTimer:add(24, function() 
+				currentString = "and adapted from some movie" 
 			end)
 
-	stringTimer:add(25, function() 
-				currentString = "...it's..." 
+	stringTimer:add(30, function() 
+				currentString = "it's" 
 			end)
 
 
-	-- around 28 or so
-	stringTimer:add(28, function()
+	-- around 32.75 or so
+	stringTimer:add(33, function()
 				state.camdx = 0
 				state:titleExplosion()
 				currentString = ""
 			end)
 
-	stringTimer:add(30, function()
+	stringTimer:add(37, function()
 				drawTitle = false
-				currentString = "Starring Chun Chi Sham as Crispy"
+				
 				state:zoomCrispy()
 			end)
 
-	stringTimer:add(33, function()
+	stringTimer:add(39, function()
 				crispyAnim = player1.shootingAnim
 				crispyForce = Vector(0,0)
 				state.camdz = 1
@@ -124,17 +131,19 @@ love.graphics.setFont( font)
 				state.cam:zoomTo(10)
 			end)
 
-	stringTimer:add(34, function()
+	stringTimer:add(40, function()
+				currentString = "Starring Chung Chi Sham as Detective Crispy"
 				crispyAnim = player1.standAnim
+				state:closeUp(player1)
 				crispyForce = Vector(0,0)
 			end)
 
-	stringTimer:add(36, function()
-				currentString = "Cisco as McGuff"
+	stringTimer:add(43, function()
+				currentString = ""
 				state:zoomMcGuff()
 			end)
 
-	stringTimer:add(39, function()
+	stringTimer:add(45, function()
 				mcGuffAnim = player2.shootingAnim
 					mcGuffForce = Vector(0,0)
 				state.camdz = 1
@@ -144,19 +153,20 @@ love.graphics.setFont( font)
 
 			end)
 
-	stringTimer:add(40, function()
-				mcGuffAnim = player2.standAnim
-					
+	stringTimer:add(46, function()
+				mcGuffAnim = player2.standAnim					
+				currentString = "Cisco as McGuff: P.I."
+				state:closeUp(player2)
 			end)
 
 
 
 	-- 42
-	stringTimer:add(42, function()
-				currentString = "Murderballer #2 as Lloyd the Rat"
+	stringTimer:add(49, function()
+				currentString = ""
 				state.cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
 				state.cam:zoomTo(4)
-				state.camdx = 7
+				state.camdx = 15
 				state.camdy = 0
 				state.camdz = 1
 				drawMurderBaller = true		
@@ -165,59 +175,69 @@ love.graphics.setFont( font)
 	
 
 
-	stringTimer:add(43, function()
+	stringTimer:add(51, function()
+			currentString = "Murderballer #2 as Lloyd the Rat"
 			murderBaller = murderBallerStandAnim
+--			murderballer.position = Vector(murderBallerPos.x, murderBallerPos.y)
+--			state:closeUp(murderballer)
+			state.cam:zoomTo(6)
 			state.camdx = 0
 			state.camdz = 1
 			state.camdy = 0
 		end)
 		
-	stringTimer:add(45, function()
-				currentString = "with guest appearances by"
-				state:zoomToTitle()
+	stringTimer:add(55, function()
+				currentString = "with Griff Peterson as \"Burgertime\""
+				state:bodyShot(e1)
+				e1.animation = e1.shootAnim
 				drawMurderBaller = false
 			      --state:endAtTitle()
 			end)
-
-
-	stringTimer:add(49, function()
-				state:zoomToTitle()
-				currentString = "Wendell Pierce as Detective Bunk"
-				
-			end)
-
-	stringTimer:add(54, function()
-				currentString = "Drex Gillicudy as Pato"
-			end)
+			
+	stringTimer:add(56, function()
+		e1.animation = e1.standAnim
+	end)
 
 	stringTimer:add(59, function()
-				currentString = "Mr. T as Skinny Pete"
-			end)
+		currentString = "P. Tear Griffon as \"Limpy\""
+		state:bodyShot(e2)
+		e2.animation = e2.shootAnim
 	
-
+		  --state:endAtTitle()
+	end)
+	
+	stringTimer:add(60, function()
+		e2.animation = e2.standAnim
+	end)
+	
 	stringTimer:add(64, function()
-				currentString = "And a special guest appearance by..."
-			end)
+		currentString = "Professor Griffy McPeterly as \"Disco Lex\""
+		state:bodyShot(e3)
+		e3.animation = e3.shootAnim
+	end)
+
+	stringTimer:add(65, function()
+		e3.animation = e3.runAnim
+	end)
+
+	stringTimer:add(67, function()
+		e3.frameFlipH = true
+	end)
+
+	stringTimer:add(68.5, function()
+		e3.frameFlipH = false
+	end)
 
 
-	stringTimer:add(66, function()
-				currentString = "Barack Obama as himself"
-			end)
-
-
-	stringTimer:add(71, function()
-			currentString = ""
-			state:endAtTitle()
-			end)
+	stringTimer:add(70, function()
+		currentString = ""
+		state:startingShot()
+		state.camdz = 1.001
+	end)
 	
-	stringTimer:add(73, function()
-			crispyAnim = player1.standAnim
-			mcGuffAnim = player2.standAnim	
-			end)
 
-	stringTimer:add(76, function()
-				currentString = ""
-			end)
+
+	
 
 
 	stringTimer:add(100, function()
@@ -248,6 +268,12 @@ function state:update(dt)
 	player2.animation = mcGuffAnim
 	player2.body:applyForce(mcGuffForce.x, mcGuffForce.y)
 	player2.animation:update(dt)
+	--e1:update(dt)
+	e1.animation:update(dt)
+	--e1:update(dt)
+	e2.animation:update(dt)
+	--e1:update(dt)
+	e3.animation:update(dt)
 	
 	if drawMurderBaller then
 		murderBaller:update(dt)
@@ -266,6 +292,9 @@ function state:draw()
 	-- draw stuff that's state.camera locked here
 	player1:draw()
 	player2:draw()
+	e1:draw()
+	e2:draw()
+	e3:draw()
 	state.cam:detach()	
 
 		if drawMurderBaller then
@@ -286,7 +315,7 @@ function state:draw()
 
 	-- draw the credits and other non-state.camera locked stuff here
 	love.graphics.draw(self.explosion)
-	love.graphics.printf( currentString, (dimScreen.x/2) - 200, (dimScreen.y/2)-100, 400, "center" )
+	love.graphics.printf( currentString, currentStringPos.x, currentStringPos.y, 400, "center" )
 
 	if drawTitle then
 		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-220)
@@ -312,7 +341,7 @@ end
 
 function state:zoomCrispy()
 	crispyForce = Vector(2000,0)
-	state.camdx = 7
+	state.camdx = 15
 	state.camdz = 1.001
 	state.cam:lookAt(player1.position.x+35, player1.position.y)
 	state.cam:zoomTo(5)
@@ -321,7 +350,7 @@ end
 
 function state:zoomMcGuff()
 	mcGuffForce = Vector(2000,0)
-	state.camdx = 7
+	state.camdx = 15
 	state.camdz = 1.001
 	state.cam:lookAt(player2.position.x+35, player2.position.y)
 	state.cam:zoomTo(5)
@@ -344,4 +373,30 @@ function state:endAtTitle()
 	crispyAnim = player1.shootingAnim
 	player2:setPosition(Vector(350,1000))
 	mcGuffAnim = player2.shootingAnim
+end
+function state:startingShot()
+	state.cam:lookAt(600,400)
+	state.cam:zoomTo(1)
+end
+
+function state:closeUp(p)
+	currentStringPos = Vector((dimScreen.x/2) - 200, 200)
+	state.cam:lookAt(p.position.x + 25, p.position.y + 15)
+	state.cam:zoomTo(16)
+end
+
+function state:bodyShot(p)
+	state.cam:lookAt(p.position.x+50, p.position.y + 25)
+	state.cam:zoomTo(8)
+	state.camdz = 1.001
+end
+
+function state:shot2()
+	state.cam:lookAt(player2.position.x + 30, player2.position.y+30)
+	state.cam:zoomTo(12)
+end
+
+function state:bothPlayers()
+	state.cam:lookAt(player1.position.x + 60, player1.position.y+30)
+	state.cam:zoomTo(8)	
 end
