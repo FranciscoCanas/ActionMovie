@@ -59,7 +59,7 @@ function(self, image, position, type, rand)
 	
 	-- love.physics code starts here
 	self.facing = Vector(-1,0)
-	self.acceleration = 8000
+	self.acceleration = 8000 * 120
 	self.damping = 15
 	self.density = 2
 	
@@ -201,8 +201,8 @@ function Enemy:update(dt)
 		self.frameFlipH = false
 	end
    
-   self.body:applyForce(self.delta.x * self.acceleration, 
-		self.delta.y * self.acceleration)
+   self.body:applyForce(self.delta.x * self.acceleration * dt, 
+		self.delta.y * self.acceleration * dt)
 	
 	self.position.x, self.position.y = 
 		self.body:getX() - self.width / 2, 

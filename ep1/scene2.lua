@@ -61,6 +61,7 @@ function state:enter()
 	state.camMaxZoom = 2.0
 	state.camMinZoom = 0.5
 	state.camZoomRatio = 500
+
 	--boundaries for the state.camera
 	state.camLeft = 0
 	state.camRight = 2000
@@ -102,6 +103,7 @@ function state:enter()
 --	table.insert(bystanders, Bystander(love.graphics.newImage('art/femaleBystander.png'), Vector(1000,800)))
 --	bystanderPositions = {Vector(dimScreen.x,400), Vector(dimScreen.x,500), Vector(dimScreen.x,600)}
 	bystanderTimer = Timer.new()
+
 	bystanderTimer:addPeriodic(math.random(1,3), function()
 		state:spawnBystanders()
 		end)
@@ -116,9 +118,10 @@ function state:enter()
 
 	--set up murderballer
 	murderballer = Murderballer()
-	murderballer.position = Vector(dimScreen.x - 152, 600)
+	murderballer.position = Vector(dimScreen.x - 100, 700)
 	murderballer.animation = murderballer.runAnim
 	murderballer.delta = Vector(50,0)
+	murderballer.scale = 1
 end
 
 function state:spawnBystanders()
@@ -234,9 +237,7 @@ function state:draw()
 	state.cam:attach()	
 	background:draw()
 
---	love.graphics.print("Attached to state.cam for reference", 30,30)
-
-	-- need to determin drawing order which depends on y values of things
+	-- need to determine drawing order which depends on y values of things
 
 	if (player1.isplaying and player2.isplaying) then
 		if player1.position.y >= player2.position.y then
@@ -267,15 +268,18 @@ function state:draw()
 	for i,bystander in ipairs(bystanders) do
 		bystander:draw()
 	end
+
+		murderballer:draw()
 	state.cam:detach()
 
 --	if drawMurderBaller then
-		murderballer:draw()
+
 --		end
 	-- lose string here
 	if drawLoseString then
 		love.graphics.printf( loseString, (dimScreen.x/2) - 200, (dimScreen.y/2)-100, 400, "center" )
 	end
+
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
@@ -363,11 +367,7 @@ function state:movecam(dt)
 			x = player2.position.x
 			y = player2.position.y
 		end
-		
-	
-	
-
-	
+			
 		x = math.max(x, state.camLeft + (state.camWorldWidth / 2))
 		x = math.min(x, state.camRight - (state.camWorldWidth / 2))
 
@@ -388,7 +388,7 @@ function state:movecam(dt)
 --	end
 	
 	if state.camOnMurderballer then
-		state.cam:lookAt(murderballer.position.x - (dimScreen.x/2) - 100, dimScreen.y/2)
+		state.cam:lookAt(murderballer.position.x - (dimScreen.x/2) + 100, dimScreen.y/2)
 		state.cam:zoomTo(1)
 	end
 	-- Restrict zoom level to state.camera boundaries --NEEDS WORK--

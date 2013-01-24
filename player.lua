@@ -56,7 +56,7 @@ function(self, num)
 	
 	-- love.physics code starts here -----------------------------------------
 	self.facing = Vector(1,0) -- normalized direction vector
-	self.acceleration = 12000
+	self.acceleration = 12000 * 120
 	self.damping = 15
 	self.density = 2
 	
@@ -169,22 +169,22 @@ function Player:update(dt)
 	if (not self.fired) and (not self.ishurt) then
 		if love.keyboard.isDown(self.keyleft) then
 			delta.x = -1
-			self.body:applyForce(-self.acceleration,0)
+			self.body:applyForce(-self.acceleration * dt,0)
 			moved = true
 			self.frameFlipH = true
 		elseif love.keyboard.isDown(self.keyright) then
 			delta.x =  1
-			self.body:applyForce(self.acceleration,0)
+			self.body:applyForce(self.acceleration * dt,0)
 			moved = true
 			self.frameFlipH = false
 		end	
 		if love.keyboard.isDown(self.keyup) then
 			delta.y = -1
-			self.body:applyForce(0,-self.acceleration)
+			self.body:applyForce(0,-self.acceleration * dt)
 			moved = true
 		elseif love.keyboard.isDown(self.keydown) then
 			delta.y =  1
-			self.body:applyForce(0,self.acceleration)
+			self.body:applyForce(0,self.acceleration * dt)
 			moved = true
 		end
 	end

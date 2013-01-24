@@ -38,6 +38,7 @@ OBSTACLE = 1
 PLAYER = 2
 ENEMY = 3
 BULLET = 4
+BARRICADE = 8
 -- gamestate requires
 require "intro"
 require "menu"

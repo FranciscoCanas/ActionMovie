@@ -34,8 +34,8 @@ function Murderballer:draw()
 			self.position.x,
 			self.position.y,
 			0, -- angle
-			0.75, -- x scale
-			0.75, -- y scale
+			self.scale, -- x scale
+			self.scale, -- y scale
 			0, -- x offset
 			0, -- y offset
 			false, -- H flip
