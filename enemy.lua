@@ -244,10 +244,16 @@ function Enemy:idle()
 		elseif (self.behaviour == MOVETOSETSPOT) then
 			-- target is set to one of preapproved cover positions
 			print("type:"..self.type.." tier:"..self.tier.."\n")
-			repeat
-				self.target = movementPositions[self.tier][math.random(1, 4)]
-				print("type: "..self.type.." target covered:", self.target[5])
-			until not self.target[5]
+			iter = math.random(1, 4)
+			print("type: ", self.type, "pos: ", iter)
+			for i = iter, iter+4, 1 do 
+				print("type", self.type, "pos: ", iter)
+				self.target = movementPositions[self.tier][i%4+1]
+				
+				if not self.target[5] then
+					break
+				end
+			end
 			print("type:"..self.type.." target:", self.target[1], self.target[2])
 			self.target[5] = true
 		end 
@@ -304,7 +310,8 @@ function Enemy:moveToCover()
 				print("type: "..self.type.." state changed to moveToShoot from idle")
 			else 
 				--error handling
-				print("error: type ".. self.type, tx, ty, self.target[3], self.target[4])
+				print("error")
+				self.target = nil
 				self.state = idle
 
 			end
