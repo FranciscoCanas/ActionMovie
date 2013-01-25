@@ -55,19 +55,55 @@ Obstacle = Class {
 			self.fixture:setMask(BULLET)
 		end
 
+		particleImage = love.graphics.newImage( "art/dustParticle.png" )
+		self.fxEmitter = love.graphics.newParticleSystem( particleImage, 500 )
+		self.fxEmitter:setEmissionRate(800)
+		self.fxEmitter:setLifetime(0.02)
+		self.fxEmitter:setParticleLife(0.075)
+		self.fxEmitter:setDirection(0)
+		self.fxEmitter:setSpread(2*3.14)
+		self.fxEmitter:setSizes(0.05, 0.25)
+		self.fxEmitter:setGravity(0,9)
+		self.fxEmitter:setSpeed(300,500)
+
 	end
 }
+
+function Obstacle:update(dt)
+	self.fxEmitter:update(dt)
+end
+
+function Obstacle:impactEffect(bullet)
+	self.fxEmitter:reset()
+	self.fxEmitter:setPosition(bullet.position.x + 3, bullet.position.y + 3)
+	self.fxEmitter:start()	
+end
+
+
+function Level:update(dt)
+	for id, object in ipairs(obstacles) do
+		object:update(dt)
+	end
+	
+end
 
 function Level:draw() 
 
 	-- Draw the map
 	self.map:draw()
+	
 
 	-- drawing out the position of collision boxes
 	if self.drawObstacles then
 		for id, object in next,obstacles,nil do
 			love.graphics.polygon("fill", object.body:getWorldPoints(object.shape:getPoints()))
+
+			
 		end	
+	end
+
+	for id, object in ipairs(obstacles) do
+		love.graphics.draw(object.fxEmitter)
 	end
 end
 

@@ -1,5 +1,4 @@
--- This is the template for a scene.
-
+-- This is the template for a scene --
 require "../level"
 
 -- Required libraries that are locally used
@@ -144,6 +143,7 @@ function state:update(dt)
 	TEsound.cleanup()
 	-- Update scene-related systems.
 	world:update(math.min(dt, 1/60))
+	background:update(math.min(dt,1/60))
 	--Timer.update(math.min(dt, 1/60))
 	enemyTimer:update(math.min(dt, 1/60))
 	countdown:update(math.min(dt, 1/60))

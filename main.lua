@@ -38,7 +38,7 @@ OBSTACLE = 1
 PLAYER = 2
 ENEMY = 3
 BULLET = 4
-BARRICADE= 5
+BARRICADE = 5
 
 -- gamestate requires
 require "intro"
@@ -85,6 +85,10 @@ function beginContact(a, b, coll)
 		b:isShot(a, coll)
 	elseif (b:is_a(Bullet) and (a:is_a(Player) or a:is_a(Enemy))) then
 		a:isShot(b, coll)
+	elseif (a:is_a(Obstacle) and (b:is_a(Bullet))) then
+		a:impactEffect(b)
+	elseif (b:is_a(Obstacle) and (a:is_a(Bullet))) then
+		b:impactEffect(a)
 	end
 	
 	if (a:is_a(Bullet)) then a:impact() end

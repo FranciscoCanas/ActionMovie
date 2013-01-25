@@ -142,7 +142,7 @@ end
 
 function state:removeBystanders()
 	for i, bystander in ipairs(bystanders) do
-		if outOfBounds(bystander) then
+		if state:outOfBounds(bystander) then
 			table.remove(bystanders, i)
 		end
 	end
@@ -173,6 +173,7 @@ function state:update(dt)
 	TEsound.cleanup()
 	-- Update scene-related systems.
 	world:update(dt)
+	background:update(dt)
 	--Timer.update(math.min(dt, 1/60))
 	enemyTimer:update(dt)
 	bystanderTimer:update(dt)
@@ -219,7 +220,7 @@ function state:update(dt)
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
 
 	-- check for player loseage here
-	if state:outOfBounds(player1) and outOfBounds(player2) then
+	if state:outOfBounds(player1) and state:outOfBounds(player2) then
 		state:playersLose()
 	end
 
