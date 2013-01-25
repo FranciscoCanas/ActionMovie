@@ -31,6 +31,10 @@ Bullet = Class{
 		self.body:setLinearDamping(self.damping)
 		self.body:setBullet(true)
 		self.body:applyLinearImpulse(self.vel.x,self.vel.y)
+
+
+
+	
 		
 	end
 }

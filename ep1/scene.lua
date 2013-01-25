@@ -114,7 +114,9 @@ function state:update(dt)
 	-- Sound updates
 	TEsound.cleanup()
 	-- Update scene-related systems.
+
 	world:update(dt)
+	background:update(dt)
 	--Timer.update(math.min(dt, 1/60))
 	enemyTimer:update(dt)
 	eventTimer:update(dt)
