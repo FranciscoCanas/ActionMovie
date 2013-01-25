@@ -13,14 +13,19 @@
  <tileset firstgid="164" name="Office1" tilewidth="32" tileheight="32">
   <image source="office.png" width="288" height="224"/>
  </tileset>
- <layer name="Ground" width="35" height="30">
+ <layer name="Collision" width="35" height="30" visible="0">
   <data encoding="base64" compression="zlib">
-   eJztzqEBACAMA7D+f8fGnRgOwG0iIj6VpIb1M/3YejkLNAAAAHy4/GOknw==
+   eJztk0EKACAIBH1A9/7/0+gQRFQqZFuwA0KK0JCZRCSBo9Gf+9rYE5nTxe+Cgi5zNJfVbCPQ9ntV3/2/GtnYf8PFWtfuQeF5i+j6Dy4IXnfxzvLUPr3ugoIuc0aX2zldbC7oIIScowBtuAk8
   </data>
  </layer>
  <layer name="Barricade" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztlDEKACAMA7ur//+uiy4SBzHQFHIg2iJ6gzGiJm3NfY0g1XbhuyhgF0w71uOy56XPcLm9v9f+j8s+D2UjywXdxehXdVFB3SUr28glK9vqLlnYBYP+ut/aLlwXY4w+EzdNBTc=
+   eJztlLEKACAIRN2t///dlqY4B+lAi3sQ5RHyhszsTXzvYy8j1XLhu3RALhg/zjO4k8kZLtH7y+a/uET9WHnGpQtywSCXqtlGLlXz1N2lCrlg0L97W8uF6yKE6M8CRiAE7w==
+  </data>
+ </layer>
+ <layer name="Ground" width="35" height="30" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJztzqEBACAMA7D+f8fGnRgOwG0iIj6VpIb1M/3YejkLNAAAAHy4/GOknw==
   </data>
  </layer>
  <layer name="Stuffs" width="35" height="30">
@@ -28,12 +33,7 @@
    eJzt1DsKgEAMBNC9/4EUtVDUQtG9kyklhCBCPso8mGICC2k2peTWUFrHrhkpk2PXbJTdscP39JQhYC5ZKGvAXHJSasD8ie7lOwtz9AI3R/QCyeBvyzL/bciH31vrruH31rpr+L217gDwXxdpU19u
   </data>
  </layer>
- <layer name="Collision" width="35" height="30">
-  <data encoding="base64" compression="zlib">
-   eJztlVEKACEIBT1A/3v/m8Z+LERoGqSvhTcgpBgNlNREpIHjY1yPtbknM6fLvgsKuuh4LtbdZuDNt1Vfvb83nmB/hUu07p2zqmfyBxcEdNHZ+aOs/afm6XYXFHTRmV2qc7rEXNBBCDlHB87cCNw=
-  </data>
- </layer>
- <layer name="Tile Layer 5" width="35" height="30">
+ <layer name="Tile Layer 5" width="35" height="30" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt1rENADAIA0G2YP8x0qZlqUyQwiguUP7Kp7ZEBF5L8x34xW0Lap9umbtim7uizB0+bBsT8M8BQN8BHY4KLQ==
   </data>
