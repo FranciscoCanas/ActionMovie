@@ -246,7 +246,7 @@ function Enemy:idle()
 			print("type:"..self.type.." tier:"..self.tier.."\n")
 			repeat
 				self.target = movementPositions[self.tier][math.random(1, 4)]
-				print("type: "..self.type.." target covered:", self.target[5])
+				--print("type: "..self.type.." target covered:", self.target[5])
 			until not self.target[5]
 			print("type:"..self.type.." target:", self.target[1], self.target[2])
 			self.target[5] = true
