@@ -6,7 +6,7 @@ require "../level"
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
 local Jumper = require 'Jumper.jumper'
-local jumperDebug = require 'Jumper.debug_utils'
+ jumperDebug = require 'Jumper.debug_utils'
 local Timer = require "hump.timer"
 require 'TESound.TEsound'
 
@@ -91,14 +91,16 @@ function state:enter()
 	enemies = {}
 	deadCount = 0
 
-	-- **** GET LEVEL.LUA TO GENERATE ****
+	-- **** TO-DO (when have time): GET LEVEL.LUA TO GENERATE From Map Layers****
 	-- tiled coordinates
 	--(cover.x, cover.y, shoot.x, shoot.y, covered)
 	movementPositions =  {
-		--back most row to hide
+		--back column of possible cover
 		{{31, 2, 31, 4, false}, {28, 8, 28, 6, false}, {30, 15, 30, 17, false}, {29, 21, 29, 19, false}},
-		{{23, 2, 23, 4, false}, {22, 8, 22, 10, false}, {24, 15, 24, 12, false}, {21, 21, 21, 19, false}}, 
-		{{15, 2, 15, 4, false}, {16, 8, 16, 6, false}, {18, 15, 18, 12, false}, {13, 21, 13, 19, false}}
+		--second column of possible cover
+		{{23, 2, 23, 4, false}, {22, 8, 22, 10, false}, {24, 15, 24, 13, false}, {21, 21, 21, 19, false}}, 
+		--thrid column of possible cover before reaching player
+		{{15, 2, 15, 4, false}, {16, 8, 16, 6, false}, {18, 15, 18, 13, false}, {13, 21, 13, 19, false}}
 		} 
 --	insertEnemy(enemiesPosition)
 	enemyTimer = Timer.new()
@@ -248,9 +250,14 @@ function s3spawnEnemy()
 		end
 		if not spawn then
 			print(dimScreen.x..", "..dimScreen.y)
-			for i = 2, count, 1 do
-				state:insertEnemy({Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050))})
-			end
+			table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
+			table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
+			table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
+		--*******
+			-- for i = 2, count, 1 do
+			-- 	state:insertEnemy({Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050))})
+			-- end
+		--******
 		-- else
 		-- 	break
 		end

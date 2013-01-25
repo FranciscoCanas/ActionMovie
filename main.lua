@@ -38,7 +38,8 @@ OBSTACLE = 1
 PLAYER = 2
 ENEMY = 3
 BULLET = 4
-BARRICADE = 8
+BARRICADE= 5
+
 -- gamestate requires
 require "intro"
 require "menu"
@@ -59,7 +60,7 @@ function love.load()
 	love.graphics.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		true, -- fullscreen
+		false, -- fullscreen
 		true, --vsync
 		0 -- antialiasing
 		)

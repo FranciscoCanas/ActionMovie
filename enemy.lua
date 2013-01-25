@@ -18,7 +18,8 @@ function(self, image, position, type, rand)
 
 	-- set up image stuffs here
 	if not image then
-		randImage = images[math.random(1,3)]
+		self.type = math.random(1,3)
+		randImage = images[self.type]
 		
 		self.image = love.graphics.newImage(randImage)
 	else
@@ -89,7 +90,7 @@ function(self, image, position, type, rand)
 	
 	self.fixture:setCategory(ENEMY)	
 	if (self.behaviour == MOVETOSETSPOT) then 
-		self.fixture:setMask(OBSTACLE, BARRICADE)
+		self.fixture:setMask(OBSTACLE, BARRICADE, ENEMY)
 	end
 
 	self.body:setLinearDamping( self.damping )
@@ -229,7 +230,7 @@ function Enemy:draw()
 			)
  love.graphics.draw(self.gunEmitter)
  love.graphics.draw(self.bloodEmitter)
- --Gamestate.scene3.jumperDebug.drawPath(font12, self.path, true)
+ jumperDebug.drawPath(font12, self.path, true)
 end
 
 -- when enemy decides where to go
@@ -242,9 +243,12 @@ function Enemy:idle()
 			self:SetNearestTarget()
 		elseif (self.behaviour == MOVETOSETSPOT) then
 			-- target is set to one of preapproved cover positions
+			print("type:"..self.type.." tier:"..self.tier.."\n")
 			repeat
 				self.target = movementPositions[self.tier][math.random(1, 4)]
+				print("type: "..self.type.." target covered:", self.target[5])
 			until not self.target[5]
+			print("type:"..self.type.." target:", self.target[1], self.target[2])
 			self.target[5] = true
 		end 
 	end
@@ -262,6 +266,9 @@ function Enemy:idle()
 			if _path then
 				self:orderMove(_path)
 				self.state = moveToCover
+				print("type:"..self.type.." state chaged to moveTocover from idle")
+			else 
+				self.target = nil
 			end
 		end
 	end
@@ -286,6 +293,7 @@ function Enemy:moveToCover()
 	else
 		self.animation = self.standAnim
 		self.state = idle
+		print("type: "..self.type.." state changed to idle from moveTocover")
 		self.timer:add(math.random(1, 5), function()
 			x_, y_ = self:getCenter()
 			tx, ty = background:toTile(x_, y_)
@@ -293,9 +301,12 @@ function Enemy:moveToCover()
 			if _path then
 				self:orderMove(_path)
 				self.state = moveToShoot
+				print("type: "..self.type.." state changed to moveToShoot from idle")
 			else 
 				--error handling
+				print("error: type ".. self.type, tx, ty, self.target[3], self.target[4])
 				self.state = idle
+
 			end
 			end)
 		-- path, length = pather:getPath(self.tile_x, self.tile_x, self.target[3], self.target[4])
@@ -312,6 +323,7 @@ function Enemy:moveToShoot()
 	if self.target ~= nil then
 		self:MoveToShootingSpot()
 	else 
+		print("type: "..self.type.." state changed to idle from moveToShoot")
 		self.state = idle
 	end
 end
@@ -397,6 +409,7 @@ function Enemy:MoveToShootingSpot()
 		if self.isMoving then
 			self:move(dt)
 		else
+			print("type: "..self.type.." state changed to shoot in moveToShootingSpot")
 			self.state = shoot
 			-- local targetX
 			-- if player1.isplaying then
@@ -468,7 +481,9 @@ function Enemy:stopShoot()
 	self.fired = false
 	self.animation = self.standAnim
 	self.state = idle
+	print("type: "..self.type.." state chagned to idle in stopShoot")
 	if (self.behaviour == MOVETOSETSPOT) then
+		print(self.type, "target removed")
 		self.target[5] = false
 		self.target = nil
 		self.coverCount = self.coverCount - 1
@@ -477,6 +492,7 @@ function Enemy:stopShoot()
 			self.tier = self.tier + 1
 			if (self.tier > #movementPositions) then
 				-- when no more tiers, follow players instead
+				print("behaviour changed")
 				self.behaviour = FOLLOWPLAYER
 				self.fixture:setMask(BARRICADE)
 			end
