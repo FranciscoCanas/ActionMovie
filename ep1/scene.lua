@@ -171,7 +171,7 @@ function state:draw()
 	state.cam:attach()	
 	background:draw()
 
-	love.graphics.print("Attached to cam for reference", 30,30)
+--	love.graphics.print("Attached to cam for reference", 30,30)
 
 	-- need to determin drawing order which depends on y values of things
 	for i,enemy in ipairs(enemies) do

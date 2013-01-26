@@ -78,6 +78,7 @@ function(self, num)
 		self.body, 
 		self.shape, 
 		self.density)
+
 	-- awkward but absolutely needed to pull out the
 	-- object that owns the fixture during collision
 	-- detection:
@@ -85,13 +86,6 @@ function(self, num)
 	--self.fixture:setCategory(PLAYER)
 		
 	self.body:setLinearDamping( self.damping )
-	
-	-- self.body:setMassData(
-		-- (self.position.x + self.image:getWidth()) / 2,
-		-- (self.position.y + self.image:getHeight()) / 2,
-		-- 64, -- mass (kg)
-		-- 10) -- inertia
-	-- love.physics ends here
 	
 	-- sound stuffs go here
 	self.gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
@@ -164,7 +158,7 @@ function Player:update(dt)
 	local delta = Vector(0,0)
 	local moved = false
 	
-	if (not self.fired) and (not self.ishurt) then
+	if (not self.fired) and (not self.ishurt) and (self.isalive) then
 		if love.keyboard.isDown(self.keyleft) then
 			delta.x = -1
 			self.body:applyForce(-self.acceleration * dt,0)
@@ -309,13 +303,23 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 	self.bloodEmitter:start()	
 		
 	self.health = self.health - 1
+	
+
 	self.ishurt = true
 	self.animation = self.hurtAnim
-	self.timer:add(0.5, function() 
-			self.ishurt = false
-			self.animation = self.standAnim
-			self.bloodEmitter:stop()
-		end)
+
+	if self.health < 1 then
+		self:dies()
+	else 
+
+		self.timer:add(0.5, function() 
+				self.ishurt = false
+				self.animation = self.standAnim
+				self.bloodEmitter:stop()
+			end)
 			
-	
+	end	
+end
+
+function Player:dies()
 end
