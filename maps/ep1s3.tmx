@@ -6,6 +6,24 @@
  </properties>
  <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32">
   <image source="collision.png" width="320" height="320"/>
+  <tile id="1">
+   <properties>
+    <property name="bulletPassable" value="false"/>
+    <property name="playerPassable" value="false"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="bulletPassable" value="false"/>
+    <property name="playerPassable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="bulletPassable" value="true"/>
+    <property name="playerPassable" value="false"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="101" name="Ground" tilewidth="32" tileheight="32">
   <image source="ground.png" width="288" height="255"/>
@@ -13,19 +31,24 @@
  <tileset firstgid="164" name="Office1" tilewidth="32" tileheight="32">
   <image source="office.png" width="288" height="224"/>
  </tileset>
- <layer name="Collision" width="35" height="30" visible="0">
+ <layer name="Collision" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztk0EKACAIBH1A9/7/0+gQRFQqZFuwA0KK0JCZRCSBo9Gf+9rYE5nTxe+Cgi5zNJfVbCPQ9ntV3/2/GtnYf8PFWtfuQeF5i+j6Dy4IXnfxzvLUPr3ugoIuc0aX2zldbC7oIIScowBtuAk8
+   eJztk0EKACEIRaX13P+8bSYYxAJJ+zn8B0K6qIdpE5EGjsH3PHjeOJWvXFDQxeYPLrP589Ytl6i7I1xuoILLrJ+Z9Qp9QeBxyd4n7YLc7ap/lA1dbLwueu5285VL9Fs7Lkhuc0EHISSODv1iA7E=
+  </data>
+ </layer>
+ <layer name="Unwalkable" width="35" height="30" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJztkzEKACAMA4uzu///qYuCiHUQayLkIGALwhXaZGYJnM747uSWV/XOBYVc1jC6ePsU3Wd3uU05+OO5eDNE9n9wQcDsgrwnZhckclnD7DLvVXT9iwsSNhd0hBD3qPX6BHA=
   </data>
  </layer>
  <layer name="Barricade" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztlLEKACAIRN2t///dlqY4B+lAi3sQ5RHyhszsTXzvYy8j1XLhu3RALhg/zjO4k8kZLtH7y+a/uET9WHnGpQtywSCXqtlGLlXz1N2lCrlg0L97W8uF6yKE6M8CRiAE7w==
+   eJzt00EKACAIRFH3df/zRlAQoYtIcJT50EJXLyiRnPVowNG2tHXEaa5iQYgWPVSL9f5e99Us0U2LdTevfVYLSuiWqP+EbomKFj00y/3ufucKFsYYfgP/RwOz
   </data>
  </layer>
- <layer name="Ground" width="35" height="30" visible="0">
+ <layer name="Ground" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzqEBACAMA7D+f8fGnRgOwG0iIj6VpIb1M/3YejkLNAAAAHy4/GOknw==
+   eJztwzENAAAIA7D59wJYxAE3R5u0kpSvz6OtqqqqxwXn+MmF
   </data>
  </layer>
  <layer name="Stuffs" width="35" height="30">
@@ -33,7 +56,7 @@
    eJzt1DsKgEAMBNC9/4EUtVDUQtG9kyklhCBCPso8mGICC2k2peTWUFrHrhkpk2PXbJTdscP39JQhYC5ZKGvAXHJSasD8ie7lOwtz9AI3R/QCyeBvyzL/bciH31vrruH31rpr+L217gDwXxdpU19u
   </data>
  </layer>
- <layer name="Tile Layer 5" width="35" height="30" visible="0">
+ <layer name="Tile Layer " width="35" height="30">
   <data encoding="base64" compression="zlib">
    eJzt1rENADAIA0G2YP8x0qZlqUyQwiguUP7Kp7ZEBF5L8x34xW0Lap9umbtim7uizB0+bBsT8M8BQN8BHY4KLQ==
   </data>

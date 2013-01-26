@@ -34,7 +34,7 @@ end
 -- Made obstacle class so we could more consistently
 -- handle collisions in the main:beginContact function
 Obstacle = Class {
-	function(self, map, x, y, bulletPassable, category)
+	function(self, map, x, y, bulletPassable, peoplePassable, category)
 		self.body = love.physics.newBody(world, 
 			((x * map.tileWidth) + map.tileWidth / 2),
 			((y * map.tileHeight) + map.tileHeight / 2))
@@ -53,6 +53,10 @@ Obstacle = Class {
 		self.fixture:setCategory(category)
 		if bulletPassable then
 			self.fixture:setMask(BULLET)
+		end
+
+		if peoplePassable then
+			self.fixture:setMask(PLAYER, ENEMY)
 		end
 
 		particleImage = love.graphics.newImage( "art/dustParticle.png" )
@@ -112,12 +116,12 @@ function Level:createObjects()
 	self:clearObstacles()
 	obstacles = {} -- clears out the table
 	for x, y, tile in self.map("Collision"):iterate() do
-		obstacles[x..","..y] = Obstacle(self.map, x, y, false, OBSTACLE)
+		obstacles[x..","..y] = Obstacle(self.map, x, y, tile.properties.bulletPassable,tile.properties.playerPassable, OBSTACLE)
 	end
 
 	if self.map("Barricade") then
 		for x, y, tile in self.map("Barricade"):iterate() do
-			obstacles[x..","..y] = Obstacle(self.map, x, y, true, BARRICADE)	
+			obstacles[x..","..y] = Obstacle(self.map, x, y, tile.properties.bulletPassable, tile.properties.playerPassable, BARRICADE)	
 		end
 	end
 end

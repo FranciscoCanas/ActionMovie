@@ -245,9 +245,8 @@ function Enemy:idle()
 			-- target is set to one of preapproved cover positions
 			print("type:"..self.type.." tier:"..self.tier.."\n")
 			iter = math.random(1, 4)
-			print("type: ", self.type, "pos: ", iter)
 			for i = iter, iter+4, 1 do 
-				print("type", self.type, "pos: ", iter)
+				print("type", self.type, "pos: ", i)
 				self.target = movementPositions[self.tier][i%4+1]
 				
 				if not self.target[5] then
