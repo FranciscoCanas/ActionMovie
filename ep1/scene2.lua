@@ -101,27 +101,39 @@ function state:enter()
 	-- set up some innocent bystanders here --
 	bystanders = {}
 --	table.insert(bystanders, Bystander(love.graphics.newImage('art/femaleBystander.png'), Vector(1000,800)))
---	bystanderPositions = {Vector(dimScreen.x,400), Vector(dimScreen.x,500), Vector(dimScreen.x,600)}
+	bystanderPositions = {Vector(dimScreen.x/2,1000), Vector(dimScreen.x/2,900), Vector(dimScreen.x,1200), Vector(700,1050)}
 	bystanderTimer = Timer.new()
-
+    state:spawnBystanders()
+    state:addBystanders(bystanderPositions)
 	bystanderTimer:addPeriodic(math.random(1,3), function()
 		state:spawnBystanders()
 		end)
 	
 	-- enemies here --
 	enemies = {}
-	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
+--	enemiesPosition = {Vector(900, 600), Vector(600,700), Vector(700, 700)}
 	deadCount = 0
 --	insertEnemy(bystandersPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
---	enemyTimer:addPeriodic(10, spawnEnemy)
+	enemyTimer:addPeriodic(2, function() self:spawnEnemy() end)
 
 	--set up murderballer
 	murderballer = Murderballer()
-	murderballer.position = Vector(dimScreen.x - 100, 700)
+	murderballer.position = Vector(dimScreen.x - 100, 650)
 	murderballer.animation = murderballer.runAnim
-	murderballer.delta = Vector(50,0)
+	murderballer.delta = Vector(100,0)
 	murderballer.scale = 1
+end
+
+function state:addBystanders(positions)
+    for i, pos in ipairs(positions) do
+        if math.random(1,2) == 1 then
+			img = 'art/femaleBystander.png'
+		else
+			img = 'art/maleBystander.png'
+		end
+		table.insert(bystanders, Bystander(love.graphics.newImage(img), pos))
+    end
 end
 
 function state:spawnBystanders()
@@ -133,7 +145,7 @@ function state:spawnBystanders()
 			img = 'art/maleBystander.png'
 		end
 
-		posx = state.cam.x + dimScreen.x + math.random(400,800)
+		posx = state.cam.x + dimScreen.x + math.random(800,1200)
 		posy = math.random(dimScreen.y, dimScreen.y+600)
 
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
@@ -150,8 +162,8 @@ end
 
 -- add an enemy at position x, y
 function state:insertEnemy(positions, type) 
-	for i, screenPos in ipairs(enemiesPosition) do 
-		table.insert(enemies, Enemy(love.graphics.newImage('art/Enemy1Sprite.png'), screenPos, type))
+	for i, screenPos in ipairs(positions) do 
+		table.insert(enemies, Enemy(false, screenPos, type))
 	end
 end
 
@@ -219,11 +231,21 @@ function state:update(dt)
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
 
+    -- check for player wineage here
+    if state:caughtMurderBaller(player1) or state:caughtMurderBaller(player2) then
+        state:playersWin()
+    end
+
 	-- check for player loseage here
 	if state:outOfBounds(player1) and state:outOfBounds(player2) then
 		state:playersLose()
 	end
 
+end
+
+function state:caughtMurderBaller(p)
+    return ((math.abs(p.position.x-murderballer.position.x) < 15) and
+        (math.abs(p.position.y-murderballer.position.y) < 15))
 end
 
 function state:outOfBounds(p)
@@ -286,7 +308,7 @@ function state:draw()
 	-- The HUD and any other overlays will go here.
 	love.graphics.print(state.cam.x, 5,5)
 	love.graphics.print(state.cam.y, 50,50)
-	love.graphics.print(murderballer.position.x - state.cam.x, 600,5)
+	love.graphics.print(murderballer.position.x, 600,5)
 	love.graphics.print(murderballer.position.y, 600,50)
 
 end 
@@ -304,10 +326,12 @@ end
 function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
-	while totEnemy - curDead < 3 do
-		insertEnemy({Vector(800, 800)}, FOLLOWPLAYER)
+    local spawnVector = {}
+	while totEnemy - curDead < 1 do
+        table.insert(spawnVector, Vector((state.cam.x + dimScreen.x + math.random(1000,1400)), 800 + math.random(100, 600)))
 		totEnemy = totEnemy+1
 	end
+	state:insertEnemy(spawnVector, FOLLOWPLAYER, true)
 end
 
 function state:focus()
@@ -420,8 +444,16 @@ function state:playersLose()
 	drawLoseString = true
 	state.camdx = 0
 	murderBallerPosDX = 1.5
+	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.play("music/actionHit.ogg")     
 
 	eventTimer:add(3, function()
 			Gamestate.switch(Gamestate.menu)
 		end)
+end
+
+function state:playersWin()
+	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.play("music/actionHit.ogg")     
+    Gamestate.switch(Gamestate.story3) 
 end

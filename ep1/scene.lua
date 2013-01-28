@@ -17,14 +17,16 @@ local keypressed = "none"
 
 -- some fonts
 font12 = love.graphics.newFont(12) 
+font16 = love.graphics.newFont(16)
 
 -- Stuffs local to scene
 local MAXDEAD = 32
-local TARGETDEAD = 10 -- end scene once we kill this many dudes
+local TARGETDEAD = 3 -- end scene once we kill this many dudes
 
 
 function state:init()	
-	self.started = false
+	self.started = true
+    self.ended = false
 end
 
 function state:enter()
@@ -50,8 +52,8 @@ function state:enter()
 		
 	state.camfollows = true -- follows players around.
 	state.camstatic = false -- does not.
-	state.camMaxZoom = 1.5
-	state.camMinZoom = 0.75
+	state.camMaxZoom = 1.1
+	state.camMinZoom = 0.9
 	state.camZoomRatio = 400
 	--boundaries for the state.camera
 	state.camLeft = 0
@@ -121,13 +123,26 @@ function state:update(dt)
 	enemyTimer:update(dt)
 	eventTimer:update(dt)
 	
-	-- check to see if we hit target number of dead baddies
-	if TARGETDEAD < 0 then
-		enemyTimer:clear()
-		eventTimer:add(3, function() Gamestate.switch(Gamestate.story2) end)
+	-- check for scene beaten conditions
+    if not self.ended then
+       
+	    if (TARGETDEAD <= 0) then
+            local alldead = true
+		    enemyTimer:clear()
+            for i,enemy in ipairs(enemies) do
+                if enemy.isalive then 
+                    alldead = false
+                end
+            end
+            if alldead then
+                self.ended = true
+            	TEsound.stop("bgMusic", false) -- stop bg music immediately
+			    TEsound.play("music/actionHit.ogg")
+           		eventTimer:add(3, function() Gamestate.switch(Gamestate.story2) end)
+            end
+	    end
+	
 	end
-	
-	
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying then
@@ -200,7 +215,9 @@ function state:draw()
 	
 	
 	state.cam:detach()
-	love.graphics.setFont( font12 )
+	love.graphics.setFont( font16 )
+    love.graphics.print("Bad Guys Left: ", dimScreen.x-25, 10)
+    love.graphics.print(TARGETDEAD, dimScreen.x,10)
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
@@ -233,10 +250,12 @@ end
 function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
+    local spawnVector = {}
 	while totEnemy - curDead < 3 do
-		state:insertEnemy({Vector((state.cam.x + dimScreen.x + math.random(400,800)), 800 + math.random(200, 500))}, FOLLOWPLAYER, true)
+        table.insert(spawnVector, Vector((state.cam.x + dimScreen.x + math.random(1000,1400)), 800 + math.random(100, 600)))
 		totEnemy = totEnemy+1
 	end
+	state:insertEnemy(spawnVector, FOLLOWPLAYER, true)
 end
 
 function state:focus()
@@ -282,17 +301,17 @@ function state:movecam(dt)
 		-- both are playing, zooming out and in as necessary. 
 		-- Otherwise it just follows the single player.
 		if player1.isplaying and player2.isplaying then
-			x = (player1.position.x + player2.position.x) / 2
+			x = ((player1.position.x + player2.position.x) / 2) + (dimScreen.x/2 - 100)
 			y = (player1.position.y + player2.position.y) / 2
 			dist = (player1.position - player2.position):len()
 			zoom = state.camZoomRatio / dist 
 			if zoom > state.camMaxZoom then zoom = state.camMaxZoom end
 			if zoom < state.camMinZoom then zoom = state.camMinZoom end
 		elseif player1.isplaying and (not player2.isplaying) then
-			x = player1.position.x
+			x = player1.position.x + dimScreen.x/2 - 100
 			y = player1.position.y
 		elseif player2.isplaying and (not player1.isplaying) then
-			x = player2.position.x
+			x = player2.position.x + dimScreen.x/2 - 100
 			y = player2.position.y
 		end
 		
@@ -324,7 +343,12 @@ function state:movecam(dt)
 	state.camWorldX = state.cam.x - (state.camWorldWidth / 2)
 	state.camWorldY = state.cam.y - (state.camWorldHeight / 2)
 	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
+
+    if isGameOver then
+        gameovercam(state.cam)
+    end
 end
+
 
 function state:mousepressed(x,y,button)
 	if button == 'l' then

@@ -20,12 +20,20 @@ local dialogue = {	"Last week in Action Movie...",
 			}
 local currentShot = 0
 local shotFuncs = {
-		function() state:startingShot() end,
-		function() state:closeUp(player2) end,
-		function() state:closeUp(player1) end,
-		function() state:closeUp(player2) end,
-		function() state:closeUp(player1) end,
-		function() state:closeUp(player2) end,
+		function() state:startingShot() end, -- last week...
+		function() state:closeUp(player2) end, --
+		function() state:closeUp(player1) end, --
+		function() state:closeUp(player2) end, --
+		function() 
+                    player1:setPosition(Vector(1200,370))
+                    player2:setPosition(Vector(1250,370))
+                    state:closeUp(player1) 
+                    end, -- If we don't...
+		function() 
+                    player1:setPosition(Vector(1800,400))
+                    player2:setPosition(Vector(1850,400))
+                    state:closeUp(player2) 
+                    end, -- Big Boss...
 		function() state:bothPlayers() end,
 	}
 
@@ -35,8 +43,8 @@ love.graphics.setFont(font)
 	backgroundScene = love.graphics.newImage("art/titleScene.png")
 
 -- players
-	player1:setPosition(Vector(800,500))
-	player2:setPosition(Vector(850,500))
+	player1:setPosition(Vector(1800,500))
+	player2:setPosition(Vector(1850,500))
 	player2.facing = Vector(-1,0)
 	player2.frameFlipH = true
 

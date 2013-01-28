@@ -1,3 +1,4 @@
+--require 'main'
 --require 'TESound.TEsound'
 Player = Class{
 function(self, num)
@@ -158,7 +159,7 @@ function Player:update(dt)
 	local delta = Vector(0,0)
 	local moved = false
 	
-	if (not self.fired) and (not self.ishurt) and (self.isalive) then
+	if (not self.fired) and (not self.ishurt) and (self.isalive) and (not isGameOver) then
 		if love.keyboard.isDown(self.keyleft) then
 			delta.x = -1
 			self.body:applyForce(-self.acceleration * dt,0)
@@ -185,7 +186,7 @@ function Player:update(dt)
     delta:normalize_inplace()
 	
 	-- Handle the animation switching here as needed:
-	if self.ishurt then
+	if self.ishurt or (not self.isalive) then
 		self.animation = self.hurtAnim
 	elseif (not self.fired) then
 		if moved then 
@@ -308,7 +309,7 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 	self.ishurt = true
 	self.animation = self.hurtAnim
 
-	if self.health < 1 then
+	if self.health < 1 and (not isGameOver) then
 		self:dies()
 	else 
 
@@ -322,4 +323,7 @@ local pos = Vector(self.position.x + 10, self.position.y + 20)
 end
 
 function Player:dies()
+    self.isalive = false
+    self.timer:clear()
+    StartGameOver(self)
 end

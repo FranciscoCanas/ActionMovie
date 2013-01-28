@@ -19,6 +19,8 @@ function state:enter()
 	player2:setPosition(Vector(dimScreen.x - (player1.width + 50), 
 		dimScreen.y-(player1.height + 20)))
 
+    gameOver = false
+
 end
 
 

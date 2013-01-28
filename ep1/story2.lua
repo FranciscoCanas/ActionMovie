@@ -12,12 +12,12 @@ local currentStringNum = 0
 local diagInterval = 5
 local dialogue = {	"Who's a baaaaaaaad mutha--.",
 			"Shut your mouth! We gotta start thinking about finding that bomb!",
-		"Look, it's that rat Lloyd. He probably knows the score...",
+		"Look, it's that rat Lloyd. If anyone knows about bombs, it's gonna be him.",
 		"It's the fuzz! Aww sheeeeeeee--",
 			"Let's shake it outta him!",
-			"Ain't gonna catch me. I'm from the future!",
+			"Ain't gonna catch me. I'm from the future. 2013!",
 			"Dang, he's making a break for it into that crowd!",
-			"Why is it always mardi gras around here?!"
+			"Why is there always a parade around here?!"
 			}
 			
 local currentShot = 0
@@ -204,8 +204,8 @@ function state:startingShot()
 	state.cam:zoomTo(1)
 end
 
-
 function state:closeUp(p)
+	currentStringPos = Vector((dimScreen.x/2) - 200, 200)
 	state.cam:lookAt(p.position.x + 25, p.position.y + 15)
 	state.cam:zoomTo(16)
 end

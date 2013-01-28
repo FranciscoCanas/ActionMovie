@@ -108,14 +108,14 @@ function(self, image, position, type, rand)
 
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
-	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 100 )
+	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 200 )
 	self.bloodEmitter:setEmissionRate(500)
 	self.bloodEmitter:setLifetime(0.01)
 	self.bloodEmitter:setParticleLife(0.5)
 	self.bloodEmitter:setSpread(3.14/3)
-	self.bloodEmitter:setSizes(0.1, 2.0)
+	self.bloodEmitter:setSizes(0.1, 1.0)
 	self.bloodEmitter:setGravity(50,50)
-	self.bloodEmitter:setSpeed(100,170)
+	self.bloodEmitter:setSpeed(200,370)
 end
 }
 
@@ -127,9 +127,9 @@ function Enemy:init()
 	self.destination = nil
 
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = 400 --/ max d7istance from player to shoot
-	self.minTargetRange = 150 --/ min distance from player to shoot
-	self.observePlayerRange = 600 -- distance to interact with player
+	self.maxTargetRange = dimScreen.x-100 --/ max d7istance from player to shoot
+	self.minTargetRange = 100 --/ min distance from player to shoot
+	self.observePlayerRange = dimScreen.x -- distance to interact with player
 	
 	if (self.rand) then
 		self.scalex = math.random(50, 70) / 100
@@ -298,7 +298,7 @@ function Enemy:moveToCover()
 	else
 		self.animation = self.standAnim
 		self.state = idle
-		print("type: "..self.type.." state changed to idle from moveTocover")
+--		print("type: "..self.type.." state changed to idle from moveTocover")
 		self.timer:add(math.random(1, 5), function()
 			x_, y_ = self:getCenter()
 			tx, ty = background:toTile(x_, y_)
@@ -306,7 +306,7 @@ function Enemy:moveToCover()
 			if _path then
 				self:orderMove(_path)
 				self.state = moveToShoot
-				print("type: "..self.type.." state changed to moveToShoot from idle")
+--				print("type: "..self.type.." state changed to moveToShoot from idle")
 			else 
 				--error handling
 				print("error")
@@ -329,7 +329,7 @@ function Enemy:moveToShoot()
 	if self.target ~= nil then
 		self:MoveToShootingSpot()
 	else 
-		print("type: "..self.type.." state changed to idle from moveToShoot")
+--		print("type: "..self.type.." state changed to idle from moveToShoot")
 		self.state = idle
 	end
 end

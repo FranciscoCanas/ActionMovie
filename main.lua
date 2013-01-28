@@ -22,6 +22,7 @@ require 'murderballer'
 -- TODO: organize these into groups
 -- note: Initialization order matters.
 hudFont = love.graphics.setNewFont(24)
+gameOverFont = love.graphics.setNewFont(48)
 dimScreen = Vector(1024, 768)
 framesPerSecond = 56
 love.physics.setMeter(32) --the height of a meter our worlds will be 32px
@@ -29,6 +30,7 @@ world = love.physics.newWorld(
 	0, -- x grav
 	0, -- y grav
 	true)
+
 
 player1 = Player(1)
 player2 = Player(2)
@@ -39,6 +41,11 @@ PLAYER = 2
 ENEMY = 3
 BULLET = 4
 BARRICADE = 5
+
+isGameOver = false
+gameOverTimer = Timer.new()
+deadPlayer = nil
+
 
 -- gamestate requires
 require "intro"
@@ -60,7 +67,7 @@ function love.load()
 	love.graphics.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		false, -- fullscreen
+		true, -- fullscreen
 		true, --vsync
 		0 -- antialiasing
 		)
@@ -86,9 +93,9 @@ function beginContact(a, b, coll)
 	elseif (b:is_a(Bullet) and (a:is_a(Player) or a:is_a(Enemy))) then
 		a:isShot(b, coll)
 	elseif (a:is_a(Obstacle) and (b:is_a(Bullet))) then
-		a:impactEffect(b)
+		a:impactEffect(coll)
 	elseif (b:is_a(Obstacle) and (a:is_a(Bullet))) then
-		b:impactEffect(a)
+		b:impactEffect(coll)
 	end
 	
 	if (a:is_a(Bullet)) then a:impact() end
@@ -124,5 +131,29 @@ function drawHud(oldFont)
 		end
 
 	end
+
+
+    if isGameOver then
+        love.graphics.setFont(gameOverFont)
+        love.graphics.print("FIN", dimScreen.x + 100, dimScreen.y/2 - 50)
+    end
 	love.graphics.setFont(oldFont)
 end
+
+
+function StartGameOver(player)
+        	TEsound.stop("bgMusic", false) -- stop bg music immediately
+			TEsound.play("music/actionHit.ogg")             
+            isGameOver = true
+            deadPlayer = player
+            player.timer:add(5.0, function()
+                Gamestate.switch(Gamestate.menu)
+            end)
+           
+end
+
+function gameovercam(cam)
+	cam:lookAt(deadPlayer.position.x + 35, deadPlayer.position.y + 20)
+	cam:zoomTo(12)
+end
+
