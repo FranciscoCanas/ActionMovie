@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="alt_offsetY" value="5"/>
+  <property name="alt_viewY" value="5"/>
+ </properties>
+ <tileset firstgid="1" name="Collsion" tilewidth="32" tileheight="32">
+  <image source="collision.png" width="320" height="320"/>
+ </tileset>
+ <tileset firstgid="101" name="Wall" tilewidth="32" tileheight="32">
+  <image source="wall.png" width="288" height="255"/>
+ </tileset>
+ <tileset firstgid="164" name="Ground 2" tilewidth="32" tileheight="32">
+  <image source="ground.png" width="288" height="255"/>
+ </tileset>
+ <tileset firstgid="227" name="Store Front" tilewidth="32" tileheight="32">
+  <image source="storefronts.png" width="320" height="224"/>
+ </tileset>
+ <layer name="Collision" width="100" height="100" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt2EkKgDAQAEEfkP+/17PgguLSSBXMcSBJ3zJNAADwX+PrA7CgR4seLXq06NEyTG62uhy5srO2+9TOG/e5c+fse/AsPVr0aNGjRY8WPVr0aNGjRY8WPVr2/krMNwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcJcZsjkMPQ==
+  </data>
+ </layer>
+ <layer name="Ground" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0UsKgCAUBdC3jhboztpnNAgitA9JZp0LB+SpA70pIhIAAAC/MwIAAAAAAHzMnCHyGXicHt7lbA+ROX90h3p9rGf+vU0fV/49Cmv91enjzv29jlu/r3fb5GalfX0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsBAR6SUTetxEFQ==
+  </data>
+ </layer>
+ <layer name="Bricks" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1seOE0EUBVAPYUVakX7Q7Nz+Dbb8Ipkh5wzPoi1KpXodB1bnSFftqa7keu2xN5th25H7c+yS9v2EsXcabd2KvfzLuZbKzufoUIv6rMr6DJ3jlDOeo1WPIdn5Ht7zkr0tGZPtYaz2d1dctyvHH6/dyP26HkPP0thzlp1tPa7sl53hfsJ6c91bcO3+87i5n4+zPqMl5u5h6DPYmqvsv62uc0zdZ7ne3HrU67Se9an7mPPdsvQ5qPe6LV5Pmb+uQ1e0Z3WeMnc29liPof8p5T7WGjvXLnmd2VfXbNz9yIPIwz6PIo8jJyebzbnI+T4XIhcjT+Pes8hp5HnkSZ+6PZu37FuuUfZvrbHk81G+5/K97xr3j+1ZHZbUecr3T72nF5GXkVd9XkfeRC7FGV2OXOlzNXIt8i7uvY98iHyMvO1Tt2fzln3LNcr+rTWyeiz93TM2rnV+u+q6RjbHp8jnyJc+XyPfItfjjG5Ebva5Fbkd+RH3fkZ+HQbH3983f1K3Z/OWfcs1yv6tNeb8vjpLrbq02rLv0V3yesqcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD89RsFgpzs
+  </data>
+ </layer>
+ <layer name="Tile Layer 4" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztzqsRgEAQBcHNP0/gHB/HgeBlsYLuqvFTBQDAX4y0pDVtzS9UXWlPRzqbX6h6051meppfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADo9QGIcQtH
+  </data>
+ </layer>
+</map>
