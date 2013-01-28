@@ -54,39 +54,6 @@ function(self, num)
 		
 	self.animation = self.standAnim
 	
-	-- love.physics code starts here -----------------------------------------
-	self.facing = Vector(1,0) -- normalized direction vector
-	self.acceleration = 12000 * 120
-	self.damping = 15
-	self.density = 2
-	
-	self.body = love.physics.newBody(world, 
-		((self.position.x + self.width) / 2 ),
-		((self.position.y + self.height) / 2 ), 
-		--self.position.x,
-		--self.position.y,
-		"dynamic"
-		)
-	
-	self.body:setFixedRotation(true)
-
-	self.shape = love.physics.newRectangleShape(
-		self.width/3,
-		self.height
-		)
-		
-	self.fixture = love.physics.newFixture(
-		self.body, 
-		self.shape, 
-		self.density)
-
-	-- awkward but absolutely needed to pull out the
-	-- object that owns the fixture during collision
-	-- detection:
-	self.fixture:setUserData(self)
-	--self.fixture:setCategory(PLAYER)
-		
-	self.body:setLinearDamping( self.damping )
 	
 	-- sound stuffs go here
 	self.gunsoundlist = { "sfx/gunshot1.ogg", "sfx/gunshot2.ogg"}
@@ -135,6 +102,39 @@ function Player:init()
 	elseif self.pnum == 2 then
 		self.position = Vector(4200,940)
 	end
+	-- love.physics code starts here -----------------------------------------
+	self.facing = Vector(1,0) -- normalized direction vector
+	self.acceleration = 12000 * 120
+	self.damping = 15
+	self.density = 2
+	
+	self.body = love.physics.newBody(world, 
+		((self.position.x + self.width) / 2 ),
+		((self.position.y + self.height) / 2 ), 
+		--self.position.x,
+		--self.position.y,
+		"dynamic"
+		)
+	
+	self.body:setFixedRotation(true)
+
+	self.shape = love.physics.newRectangleShape(
+		self.width/3,
+		self.height
+		)
+		
+	self.fixture = love.physics.newFixture(
+		self.body, 
+		self.shape, 
+		self.density)
+
+	-- awkward but absolutely needed to pull out the
+	-- object that owns the fixture during collision
+	-- detection:
+	self.fixture:setUserData(self)
+	--self.fixture:setCategory(PLAYER)
+		
+	self.body:setLinearDamping( self.damping )
 	
 end
 
