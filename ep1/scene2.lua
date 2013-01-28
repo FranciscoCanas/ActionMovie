@@ -16,7 +16,8 @@ local state = Gamestate.scene2
 local keypressed = "none"
 
 -- some fonts
-font12 = love.graphics.newFont(12) 
+font12 = love.graphics.newFont(12)
+font24 = love.graphics.newFont(24)  
 
 -- Stuffs local to scene
 local MAXDEAD = 4
@@ -189,6 +190,7 @@ function state:update(dt)
 	--Timer.update(math.min(dt, 1/60))
 	enemyTimer:update(dt)
 	bystanderTimer:update(dt)
+    eventTimer:update(dt)
 	
 	-- Update the players.
 	for i,player in ipairs(players) do
@@ -237,9 +239,11 @@ function state:update(dt)
     end
 
 	-- check for player loseage here
-	if state:outOfBounds(player1) and state:outOfBounds(player2) then
-		state:playersLose()
-	end
+    if not drawLoseString then
+	    if state:outOfBounds(player1) and state:outOfBounds(player2) then
+		    state:playersLose()
+	    end
+    end
 
 end
 
@@ -306,10 +310,7 @@ function state:draw()
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
-	love.graphics.print(state.cam.x, 5,5)
-	love.graphics.print(state.cam.y, 50,50)
-	love.graphics.print(murderballer.position.x, 600,5)
-	love.graphics.print(murderballer.position.y, 600,50)
+    drawHud(font24)
 
 end 
 
@@ -401,9 +402,6 @@ function state:movecam(dt)
 
 		-- Move the state.cam to the coordinates calculated above.
 		state.cam:lookAt(x, y)
-	
-	
-	
 	end
 
 --	if state.camstatic then

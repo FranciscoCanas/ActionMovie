@@ -16,7 +16,9 @@ function state:enter()
 -- set the font here
 love.graphics.setFont( font)
 -- title graphics 
-	titleScene = love.graphics.newImage("art/titleScene.png")		
+	alleyImage = love.graphics.newImage("art/titleScene.png")
+    cityImage = love.graphics.newImage("art/cityscape.png")		
+    titleScene = alleyImage
 	titleImage = love.graphics.newImage("art/title.png")
 	drawTitle = false
 
@@ -61,12 +63,12 @@ love.graphics.setFont( font)
 	self.explosion:stop()
 
 -- set up props here (like sprites and such)
---	player1:setPosition(Vector(400, 500))
---	player2.setPosition(Vector(600, 600))
 	mcGuffForce = Vector(0,0)
 	crispyForce = Vector(0,0)
 	mcGuffAnim = player2.standAnim
 	crispyAnim = player1.standAnim
+    player1:init()
+    player2:init()
 
 -- set up state.camera ------------------------------------
 	state.cam = Camera(dimScreen.x/2, 400, 
@@ -111,12 +113,14 @@ love.graphics.setFont( font)
 
 	-- around 32.75 or so
 	stringTimer:add(33, function()
+                titleScene = cityImage
 				state.camdx = 0
 				state:titleExplosion()
 				currentString = ""
 			end)
 
 	stringTimer:add(37, function()
+                titleScene = alleyImage
 				drawTitle = false
 				
 				state:zoomCrispy()
@@ -230,6 +234,8 @@ love.graphics.setFont( font)
 
 
 	stringTimer:add(70, function()
+        titleScene = cityImage
+        drawTitle = true
 		currentString = ""
 		state:startingShot()
 		state.camdz = 1.001
@@ -285,8 +291,6 @@ function state:update(dt)
 end
 
 function state:draw()
-
-
 	state.cam:attach()	
 	love.graphics.draw(titleScene, 0,0)
 	-- draw stuff that's state.camera locked here
@@ -318,7 +322,7 @@ function state:draw()
 	love.graphics.printf( currentString, currentStringPos.x, currentStringPos.y, 400, "center" )
 
 	if drawTitle then
-		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , (dimScreen.y/2)-220)
+		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , 25)
 	end
 
 
@@ -374,6 +378,7 @@ function state:endAtTitle()
 	player2:setPosition(Vector(350,1000))
 	mcGuffAnim = player2.shootingAnim
 end
+
 function state:startingShot()
 	state.cam:lookAt(600,400)
 	state.cam:zoomTo(1)

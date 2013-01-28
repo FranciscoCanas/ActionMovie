@@ -54,6 +54,9 @@ love.graphics.setFont(font)
 -- musics
 	bgMusicList = {"music/movemberBlues.ogg"}
 
+-- string stuff
+    currentStringNum = 0
+
 	
 
 -- state.camera setup

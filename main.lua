@@ -46,10 +46,15 @@ isGameOver = false
 gameOverTimer = Timer.new()
 deadPlayer = nil
 
+globalMenuBGdx=-20
+globalMenuBGx=0
+
+
 
 -- gamestate requires
 require "intro"
 require "menu"
+require "credits"
 require "ep1/epmenu"
 
 
@@ -135,7 +140,7 @@ function drawHud(oldFont)
 
     if isGameOver then
         love.graphics.setFont(gameOverFont)
-        love.graphics.print("FIN", dimScreen.x + 100, dimScreen.y/2 - 50)
+        love.graphics.print("FIN", dimScreen.x/2 + 100, dimScreen.y/2 - 50)
     end
 	love.graphics.setFont(oldFont)
 end

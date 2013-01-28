@@ -128,6 +128,7 @@ function Player:init()
 	self.fired = false -- keeps track of shooting state
 	self.isalive = true -- keeps track of aliveness. duh.
 	self.ishurt = false
+
 	
 	if self.pnum == 1 then
 		self.position = Vector(4900, 900)
@@ -159,7 +160,7 @@ function Player:update(dt)
 	local delta = Vector(0,0)
 	local moved = false
 	
-	if (not self.fired) and (not self.ishurt) and (self.isalive) and (not isGameOver) then
+	if (not self.ishurt) and (self.isalive) and (not isGameOver) then
 		if love.keyboard.isDown(self.keyleft) then
 			delta.x = -1
 			self.body:applyForce(-self.acceleration * dt,0)

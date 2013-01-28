@@ -34,10 +34,20 @@ local shotFuncs = {
         function() state:closeUp(player2) end,
 		function() state:closeUp(player1) end,
 		function() state:closeUp(player2) end,
-        function() state:startingShot() 
+        function() state:startingShot()
+                    TEsound.play("music/actionHit.ogg")  
+                    backgroundScene = cityScene
                     murderballer.position = Vector(2000,2000)
+            	player1:setPosition(Vector(400,5000))
+            	player2:setPosition(Vector(470,5000))
+
                 end,
-        function() state:closeUp(player2) end,
+        function() 
+        	player1:setPosition(Vector(400,500))
+        	player2:setPosition(Vector(470,500))
+
+            backgroundScene = alleyScene
+            state:closeUp(player2) end,
 		function() state:closeUp(player1) end,
         function() state:closeUp(player2)
 			TEsound.play("music/actionHit.ogg")  
@@ -53,7 +63,9 @@ love.graphics.setFont(font)
 	TEsound.play(bgMusicList, "bgMusic")
 
 -- background
-	backgroundScene = love.graphics.newImage("art/titleScene.png")
+	alleyScene = love.graphics.newImage("art/titleScene.png")
+    cityScene = love.graphics.newImage("art/cityscape.png")
+    backgroundScene = alleyScene
 
 -- players
 	player1:setPosition(Vector(400,500))
@@ -67,7 +79,8 @@ love.graphics.setFont(font)
 -- timer stuff
 	stringTimer = Timer.new()
 
-
+-- string stuff
+    currentStringNum = 0
 	
 
 -- state.camera setup

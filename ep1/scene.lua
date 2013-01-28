@@ -215,6 +215,7 @@ function state:draw()
 	
 	
 	state.cam:detach()
+
 	love.graphics.setFont( font16 )
     love.graphics.print("Bad Guys Left: ", dimScreen.x-25, 10)
     love.graphics.print(TARGETDEAD, dimScreen.x,10)

@@ -80,7 +80,7 @@ end
 function Obstacle:impactEffect(coll)
     local posx, posy, posa,posb
     posx, posy, posa, posb = coll:getPositions()
-    print("Bullet struck at "..posx..","..posy)
+    --print("Bullet struck at "..posx..","..posy)
 	self.fxEmitter:setPosition(posx + 3, posy + 3)
 	self.fxEmitter:start()	
 end
