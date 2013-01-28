@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="205" height="25" tilewidth="32" tileheight="32">
  <properties>
   <property name="alt_offsetY" value="5"/>
   <property name="alt_viewY" value="5"/>
@@ -8,47 +8,57 @@
   <image source="collision.png" width="320" height="320"/>
  </tileset>
  <tileset firstgid="101" name="Wall" tilewidth="32" tileheight="32">
-  <image source="wall.png" width="288" height="255"/>
+  <image source="wall.png" width="320" height="224"/>
  </tileset>
- <tileset firstgid="164" name="Ground 2" tilewidth="32" tileheight="32">
+ <tileset firstgid="171" name="Ground 2" tilewidth="32" tileheight="32">
   <image source="ground.png" width="288" height="255"/>
  </tileset>
- <layer name="Collision" width="100" height="100">
+ <tileset firstgid="234" name="building1" tilewidth="32" tileheight="32">
+  <image source="building1.png" width="288" height="224"/>
+ </tileset>
+ <layer name="Collision" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt2EkKgDAQAEEfkP+/17PgguLSSBXMcSBJ3zJNAADwX+PrA7CgR4seLXq06NEyTG62uhy5srO2+9TOG/e5c+fse/AsPVr0aNGjRY8WPVr0aNGjRY8WPVr2/krMNwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcJcZsjkMPQ==
+   eJzt2kEOQDAUBNAewKEd3ZpQGU1L5b1kNqTSr2anFAAAAAAAaLO8vQGYjM5ARmcgozOQ0RnYWyq5uy8i5ymV6zVP1pyt7bVmxDyj39vF89Zjeuzhy+c9cp7W84LEH763P8wAI+kMZHQGMjoDGZ2BjM5ARmcgozOQ0RnIvf3vjshM2QAZLxnl
   </data>
  </layer>
- <layer name="Ground" width="100" height="100">
+ <layer name="back back buildings" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt0UsKgCAUBdC3DhfoztpnNAgitA9KJpwLB+SpA705IjIAAAAAANBkAQAAAIbbkqKcxOf08C9Pe4jC+bs79OvjOPPvY/p48+9RWeuvTx8t9686Hv2+2Z1TmtX29QEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADATkRklqzxkbBe
+   eJzt0ykOwDAMBMAE9IDt/3/ZC/UyDixJI81IC2y0ZFPi75bi3iNHjSLQgDWyFb878lToAi04I1fxG3JKY67RBv6vi230xT6muGebAQAAAAAAAAAAAAAAAAAAAAA+egFJvQj8
   </data>
  </layer>
- <layer name="Bricks" width="100" height="100">
+ <layer name="Ground" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt2MuOhCAQAMD5Wo/q/582HkwIoXnvbDapujijgi0Ngn4+dUfj+Igz2H9P1nfNBvLLdc2K2uf15CJvqzQ/tXacbeNdovZ97nkmtpkyUQyrua+NkdKxnbFHan2p1c+i+PJy6XlRfHfH9Ua12qIU/2yOv/Vc2N1GM0ZjqPXjUl3p+Ue2HdEb5+ozL71Oqa/3xjHSh2b7QR7rkfzuqT/Pw5Xsj9qxp+5WDmrPlDSOVa12vYLfkTvb9pZrXX+0z/71uuXKto+zcPzdH+Vh5j5G2r5nXNXqKJVfeWbPlp1dO7TKle79zLYreuuIzquVL91b7xpm1rfm61JeSvuiefQMfvfUGUmvNTpuj0ocrfl2xeg1W/NSfrw1fqLr9Git5XueTb39ILe6hormtby98v871kEr9ZTK5209Ol/0SMfHu/3Nd/dSnFHOSt8aRufFI6g/XUes5qxnrrs/9fH+nHN86u8nu/rsbqW16ft/ZB7d1e/eet7cvzl+31Na75H5ODiSYzvsWDvm546uY3rnuJl7/ka/jMbKjvG8unYc0fpGuPN7OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L/9AHd5V/A=
+   eJzt0zEKwDAMBEF91s7nkj8G92quk2EE0wuO3VW1Geup/taA32AizUBGM5DRDGROM19DM9DTDGQ0AxnNQOY08zY0Az3NQEYzkNEMZDQDGc1ARjPzdHsAAAAAAAAAAHf6AUWuMkc=
   </data>
  </layer>
- <objectgroup name="Enemy" width="100" height="100" visible="0">
-  <object x="302" y="324"/>
- </objectgroup>
- <layer name="WallsStuffs" width="100" height="100">
+ <layer name="Bricks" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1rEKgzAUBdD3zR1rt9Yhq19ch4AlxDZahZSeAxchyU2CgzjFYioSDXM6x3Z6uotOX3fRiUjFmvTyLPetzeksY7VOKnot5wDvXecMOTedLjoptn/LdM7r1P4PPtE5p3Of88gZG/fc0wHgP1xyON6wMraW1nXfdqT+/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgN/2BAhK3cs=
+   eJztmsluxDAIhvO0uSbz/pcqB0sUsf7gdKTyXdrJwuIFY5zjsDmd+xku5foHlHejhghyOmQtGag/vH1QOdQWRO8uPZY/2j3PNqTfkHeibfTMF+4LnUNIG+yE6pTa5bl2HTnbVlt9hGse3IbLuc71eCBtbL0jtZnla1ZWRKamJ+urpt/Sbdmc1W+tNdI9pC+zc9/y3euTaEzz5uB6hr6n6UbsRdqxsmZoZOcSMvbeWi88JPvWNeqzp1uSg9q7w0+J6NjZMcY02ZF2zvRLJ6iuznxC6gvPrq61ocMPyX4q92R/q7Ilqn5oOc8t3LeIjic+5jN0z90dsSAiM7Kni8jZOd6z8UFbe07lvuYfnys3ua75EJHt+e/tk9F4yeWufU8kl4jo/LC/0nveb9QG7sNH+T8jI9PO9FkvL0ZyHi5DutaRd2TjEFoTejO/kHTf5P+Flv9ch94uiB/R8cht6gLdc2Sp7LsidlzH776U6jKcqH/ac9K4qch7sOY0Avruards3PP62dr3dozvzni2g8qc6qw/aSBthNqFxrtszRGtt0d5a1xpNWuOtq+L1NQyerIgNXIURH405lXm2l+c/9HxkJXzvBuZh5k8JkJWp7dPitTA6DqEnrl8E1Y/VM9vK+zQmYn7D16eEMnDovGUU/Vf6ztvP91V36rGbqnd3jpj0e5V6t3R+o+mz3o+Mla8c+OIP5lcrPPsdkHXmcjerYpV449805Ddp52KfLqHfCOP1GphUdD6f7ZuL8lCv4/JrP0ROyr5TWR/zOuwkv3nYZ/fdMX+bqS68Pqd2dd9e0620z5pbGT1Zc6D0Pez584ay7cVQ+l3Wtb5y7KBt9FJ7nXQWbf18qFq7fnNOLAzTlKsmnwV5FuAhRbrtOcqvNGv2prTkbu8+Z2MV8/v/A7co3pmtFMPqguR0V1fHIZhGIZhGIZhGIZhGIZhGIZhGIZhGIbh//ADTcCpLw==
   </data>
  </layer>
- <layer name="Ladder" width="100" height="100">
+ <layer name="Background buildings" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1MsKgkAYgFGfNqqFdnmELtu2tRGiF20WCjJYjmImdQ78yICfM6CYZQAA8F/u1Wi+05yjdZnw3Lk2xYzPltpcWrqu5w5tDmGO1Zw6mmJAM2SfuTVTvo+xms1E+4zZ5IlNfM8tzKPnWTT9mvp7amuu0bp+X8swq8asNR9v2pTVdRtm15j9i/s1WbZIaOJ/bN7SvNPn/JpxGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Hc8AcamiDc=
+   eJzt1iESgDAMRcEER7n/WQFHZVQVM43YnXk+7ieC7s6MGKUrd18Evd2zp/TuPQf6m7uSpcPOwJLfDAAAAAAAAAAAAAAAAAAAAAD40wcbMgVR
   </data>
  </layer>
- <layer name="Fire Escape" width="100" height="100">
+ <layer name="WallsStuffs" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJztzDEOgDAQA8F7PyI0EfDd+Ampcs2MtKVdBQAAcM6V7jTSY9O+melNX/o3f23ObQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAHgtxtSQx
+   eJzt2MEOgjAQRdH+rm51ywpZsvZ3jQkEnFTaDIVOmXuSiUR8+lpiooQQwlvM2r9zZMpnNCz09pZppaeHjIaF3t4yrfT0kNGw0NtbZj4eV48yHztHZnkulhlFLudzNCzvz1UzL8b8DOFXb6CT5wEA4GijmCCOW8vIrKVue9ZTs0PNTMrZ3b5i9wlS93UsZ2TWUrc966nZoWYm5exusf+TgziWLGdi2T6RaWE9qTVa610ys+XM68A9gHK62gUAAMh0m+ZeuwjUHtOgvNhvunm/nwXen2t3jG5jcl+3N8Mss/7OxPY0d28110GT8TgAAAAAAAAAAAAAAOA6PlSqheg=
   </data>
  </layer>
- <layer name="Tile Layer 7" width="100" height="100">
+ <layer name="Ladder" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt0DkKgEAQRFHvfxe3xO10VjKpDIqDwnvww+qguw4AAAAAgD+b0pz6NKTxpU3xxU2rH9Rs9nSkJa1pq7h7Z1N8cdPqB0/+BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAV06PcS+d
+   eJzt1U0OgjAQgFFOa9QN+HMJ1669qyyLAaNNrUN5L5kdXzpQE7sOAAAAAACA2m4NNUOlc2o2EXZwd9PmntHXaIZK50RvIuzg7qbNWvZMnSqdU7LpM88puUOEpoW7i7pny827302tHTT5zWPhmf04h2SOmp8334qy95ab1HmcSzJXzWKz+6B5/W/pZ5pSon2fyE3O3f1jT818U8oa3rWVBgAAAAAAAABYryftD5I0
+  </data>
+ </layer>
+ <layer name="Fire Escape" width="205" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzt1s0KglAQgFGfv0VYtAiLIgiit2xctLgm2I9dpjgHBsTLhwN3Y9MAAAAAAEOHmNNgjpo0TYYdNGVzGTkfezd1rvlOk2EHTXnePy9j2phVzDrm/ESvqdNk2EFTNv3zNqaL2cXsJ9p7r6nTZNhBUzbv/Bto6jUZdtA8/pvV/qZmHpn3/ufm+mK70FRrMuyg+fzuNppqTYYdNPPfHQAAAAAAAAAA/KobjBrlXQ==
+  </data>
+ </layer>
+ <layer name="Tile Layer 7" width="205" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzt0TkKwDAMBED//z25mlw/ixr3wSGOCDOw5YJYlQIAAAAAAAAAAAAAkMMcWSJDZIxML3WqjJ1eGzzZ7csbMv+75wbVETkja2SL7Df6LZ0qY+cofTZo6WS4oaVT/el3AAAAAAAAAJldwP1gDw==
   </data>
  </layer>
 </map>
