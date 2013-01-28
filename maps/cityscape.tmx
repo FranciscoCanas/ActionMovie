@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="10" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Buildings1" tilewidth="32" tileheight="32">
+  <image source="building1.png" width="288" height="224"/>
+ </tileset>
+ <layer name="Sky" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJzjZGBg4BzFo3gUj+IhgAHTUAqN
+  </data>
+ </layer>
+ <layer name="Tile Layer 3" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFwx0wAjHTANjLBcTcRKgjxX3EqBUGYhEizMLnPnR7kNXicoMMEMsSYa8WEGsDsQ4RbkL2C7HhCQKaWOwxBmITIDbFoh49zJD9Qmx4goARFntsgNgWiO2wqMcXZtjkAPshBUU=
+  </data>
+ </layer>
+ <layer name="Tile Layer 6" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2BgADMQswyAvTxAzDsA9ooCsdgA2CsHxPIDYK86EGtQ2UwAvrQA2A==
+  </data>
+ </layer>
+ <layer name="Tile Layer 7" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJytkCsSgEAMQ2sAV3CAK9z/kESsIXRK99OZJ9YkbyMy7iYwg2VgZuYUrGDrzKn138EBzs7eWn8DF7jLu3V3zz/KYs/W3U3e/n9Z7Jndnf/idURZ7Ol5e8c9UYeX1bor91jQkdk5cyrfXTToyOwc3QNTaAcO
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFpABmIGYZAHt5gJh3ANwiCsRiRLiF2kAOiOWJcAt6GFAaJtj8hs0t6OqIjR9NHPLEhjO6OmL1GeGQJzac0dURq88ahzy54QwA1VAEgQ==
+  </data>
+ </layer>
+ <layer name="Tile Layer 4" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFowA7YARiJiqr5wJibiqooYWZwkAsQoK9xKgnxl4ZIJYlwV5i1JMahtQCtLYXAOLjAVo=
+  </data>
+ </layer>
+ <layer name="Tile Layer 5" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DwAE0g1gJibSDWoaO9RkBsDMQmQGxKphnkuN0aiG2A2BaI7Yg0E1kMBMhxOyG3YjMTWYwYt2MDhNyKzUxkMQCMyAqC
+  </data>
+ </layer>
+ <layer name="Tile Layer 8" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAQYbBD4BubCBS3SgYBaNgGAIA2lYAtA==
+  </data>
+ </layer>
+ <layer name="Tile Layer 9" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAcCJKgVooK9lET0Ms9wDBqIEYd0D0HKLGHVv4hJY5HwSigFQAAFaYB3A==
+  </data>
+ </layer>
+ <layer name="Tile Layer 10" width="30" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBjZQHCgHYAGpAbaATjAYHXXKKAcMAMxywDYywPEvCTqAQDf9ABm
+  </data>
+ </layer>
+</map>

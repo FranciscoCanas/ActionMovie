@@ -19,10 +19,10 @@ local keypressed = "none"
 font12 = love.graphics.newFont(12) 
 
 -- Stuffs local to scene
-local MAXDEAD = 4
+local MAXDEAD = 12
 
 --bomb explodes after 5 minutes
-local countdown = Timer.new()
+Timers = {}
 local minutes = 4
 local seconds = 59
 
@@ -102,11 +102,17 @@ function state:enter()
 		{{15, 2, 15, 4, false}, {16, 8, 16, 6, false}, {18, 15, 18, 13, false}, {13, 21, 13, 19, false}}
 		} 
 --	insertEnemy(enemiesPosition)
-	enemyTimer = Timer.new()
-	enemyTimer:add(5, s3spawnEnemy)
 
-	countdown:addPeriodic(1, timed, 300)
+	Timers.countdown = Timer.new()
+	Timers.enemyTimer = Timer.new()
+	
+	Timers.enemyTimer:addPeriodic(5, s3spawnEnemy)
+	Timers.countdown:addPeriodic(1, timed, 300)
 end
+
+-- function dispatchEnemies()
+-- 	s3spawnEnemy()
+-- end
 
 function timed()
 	if (seconds == 0) then
@@ -131,8 +137,8 @@ function state:leave()
 			enemy.fixture:destroy()
 		end
 	end
-	enemyTimer:clear()
-	countdown:clear()
+	Timers.enemyTimer:clear()
+	Timers.countdown:clear()
 end
 
 function state:update(dt)
@@ -145,8 +151,8 @@ function state:update(dt)
 	world:update(math.min(dt, 1/60))
 	background:update(math.min(dt,1/60))
 	--Timer.update(math.min(dt, 1/60))
-	enemyTimer:update(math.min(dt, 1/60))
-	countdown:update(math.min(dt, 1/60))
+	Timers.enemyTimer:update(math.min(dt, 1/60))
+	Timers.countdown:update(math.min(dt, 1/60))
 	-- Update the players.
 	for i,player in ipairs(players) do
 		if player.isplaying then
@@ -249,14 +255,14 @@ function s3spawnEnemy()
 			end
 		end
 		if not spawn then
-			print(dimScreen.x..", "..dimScreen.y)
-			table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
-			table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
-			table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
+			-- print(dimScreen.x..", "..dimScreen.y)
+			-- table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
+			-- table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
+			-- table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
 		--*******
-			-- for i = 2, count, 1 do
-			-- 	state:insertEnemy({Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050))})
-			-- end
+			for i = 2, count, 1 do
+				state:insertEnemy({Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050))})
+			end
 		--******
 		-- else
 		-- 	break
