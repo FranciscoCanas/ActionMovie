@@ -132,7 +132,7 @@ love.graphics.setFont( font)
 			end)
 
 	stringTimer:add(40, function()
-				currentString = "Starring Chung Chi Sham as Detective Crispy"
+				currentString = "Starring Chi as Detective Crispy"
 				crispyAnim = player1.standAnim
 				state:closeUp(player1)
 				crispyForce = Vector(0,0)
