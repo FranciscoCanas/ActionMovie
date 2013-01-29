@@ -45,6 +45,7 @@ function state:enter()
 
 	loseString = "Lloyd the Rat got away!"
 	drawLoseString = false
+    playersWin = false
 
 	-- set up state.camera --
 	state.cam = Camera(
@@ -102,7 +103,8 @@ function state:enter()
 	-- set up some innocent bystanders here --
 	bystanders = {}
 --	table.insert(bystanders, Bystander(love.graphics.newImage('art/femaleBystander.png'), Vector(1000,800)))
-	bystanderPositions = {Vector(dimScreen.x/2,1000), Vector(dimScreen.x/2,900), Vector(dimScreen.x,1200), Vector(700,1050)}
+	bystanderPositions = {Vector(dimScreen.x/2,1000), Vector(dimScreen.x/2,900), Vector(dimScreen.x,1200), Vector(700,1050),
+                    Vector(dimScreen.x/2 + 100,1000), Vector(dimScreen.x/2+ 120,900), Vector(dimScreen.x-100,1200), Vector(700,1050)}
 	bystanderTimer = Timer.new()
     state:spawnBystanders()
     state:addBystanders(bystanderPositions)
@@ -120,7 +122,7 @@ function state:enter()
 
 	--set up murderballer
 	murderballer = Murderballer()
-	murderballer.position = Vector(dimScreen.x - 100, 650)
+	murderballer.position = Vector(dimScreen.x - 100, 715)
 	murderballer.animation = murderballer.runAnim
 	murderballer.delta = Vector(100,0)
 	murderballer.scale = 1
@@ -146,8 +148,8 @@ function state:spawnBystanders()
 			img = 'art/maleBystander.png'
 		end
 
-		posx = state.cam.x + dimScreen.x + math.random(800,1200)
-		posy = math.random(dimScreen.y, dimScreen.y+600)
+		posx = state.cam.x + dimScreen.x/2 + math.random(600,1800)
+		posy = math.random(dimScreen.y/2, dimScreen.y/2+600)
 
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
 	end
@@ -233,9 +235,11 @@ function state:update(dt)
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
 
-    -- check for player wineage here
-    if state:caughtMurderBaller(player1) or state:caughtMurderBaller(player2) then
-        state:playersWin()
+    if not playersWin then
+        -- check for player wineage here
+        if state:caughtMurderBaller(player1) or state:caughtMurderBaller(player2) then
+            state:playersWin()
+        end
     end
 
 	-- check for player loseage here
@@ -451,6 +455,7 @@ function state:playersLose()
 end
 
 function state:playersWin()
+    playersWin = true
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
 	TEsound.play("music/actionHit.ogg")     
     Gamestate.switch(Gamestate.story3) 

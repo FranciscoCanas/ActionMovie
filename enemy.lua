@@ -116,6 +116,7 @@ function(self, image, position, type, rand)
 	self.bloodEmitter:setSizes(0.1, 1.0)
 	self.bloodEmitter:setGravity(50,50)
 	self.bloodEmitter:setSpeed(200,370)
+    self.bloodEmitter:stop()
 end
 }
 
@@ -231,6 +232,13 @@ function Enemy:draw()
  love.graphics.draw(self.gunEmitter)
  love.graphics.draw(self.bloodEmitter)
  --jumperDebug.drawPath(font12, self.path, true)
+end
+
+function Enemy:setPosition(v)
+	self.body:setX(v.x)
+	self.body:setY(v.y)
+	self.position.x = v.x
+	self.position.y = v.y
 end
 
 -- when enemy decides where to go

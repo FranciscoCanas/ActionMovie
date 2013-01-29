@@ -18,6 +18,7 @@ love.graphics.setFont( font)
 -- title graphics 
 	alleyImage = love.graphics.newImage("art/titleScene.png")
     cityImage = love.graphics.newImage("art/cityscape.png")		
+    discoImage = love.graphics.newImage("art/disco.png")
     titleScene = alleyImage
 	titleImage = love.graphics.newImage("art/title.png")
 	drawTitle = false
@@ -41,6 +42,17 @@ love.graphics.setFont( font)
 		0.2) 
 
 	murderBaller = murderBallerRunAnim
+
+    -- disco ball
+    discoball = {}
+    discoball.position = Vector(600, 2500)
+    discoball.image = love.graphics.newImage('art/discoBall.png')
+    discoball.grid = Anim8.newGrid(320, 320,
+        discoball.image:getWidth(),
+        discoball.image:getHeight())
+    discoball.animation = Anim8.newAnimation('loop', discoball.grid('1-2,1'), 0.2)
+    discoball.scaleX = 0.25
+    discoball.scaleY = 0.25
 	
 	e1 = Enemy(love.graphics.newImage('art/Enemy1Sprite.png'),Vector(2800,420),MOVETOSETSPOT,false)
 	e2 = Enemy(love.graphics.newImage('art/Enemy1SpriteB.png'),Vector(2900,420),MOVETOSETSPOT, false)
@@ -231,22 +243,72 @@ love.graphics.setFont( font)
 	stringTimer:add(68.5, function()
 		e3.frameFlipH = false
 	end)
+-- start at 70
+    stringTimer:add(70, function()
+--        titleScene = nil
+        currentString=""
+        player1:setPosition(Vector(600,2650))        
+        crispyAnim = player1.hurtAnim
+        player2:setPosition(Vector(650,2650))        
+        mcGuffAnim = player2.hurtAnim
+        player2.frameFlipH = true
+        e1:setPosition(Vector(500,2590))
+        e1.animation = e1.runAnim
+        e2:setPosition(Vector(660,2650))
+        e2.animation = e2.runAnim
+        e2.frameFlipH = true
+        e3:setPosition(Vector(705,2580))
+        e3.animation = e3.runAnim
+        e3.frameFlipH = true
+        state:discoShot()
+    end)
+
+    stringTimer:add(72, function()
+        e3.frameFlipH = false
+	end)
+
+	stringTimer:add(73, function()
+		e2.frameFlipH = false
+	end)
 
 
-	stringTimer:add(70, function()
+	stringTimer:add(74, function()
+		player2.frameFlipH = false
+        player1.frameFlipH = true
+        e3.frameFlipH = false
+        e1.frameFlipH = true
+	end)
+        
+    stringTimer:add(75, function()
+        player1.frameFlipH = false
+        e1.frameFlipH = true
+        e2.frameFlipH = false
+    end)
+
+  stringTimer:add(76, function()
+        player1.frameFlipH = false
+        e2.frameFlipH = false
+        e3.frameFlipH = true
+        e1.frameFlipH = false
+        state.camdz = 1
+    end)
+
+    stringTimer:add(84, function()
+		state:titleExplosion()
+    end)
+
+	stringTimer:add(85, function()
         titleScene = cityImage
         drawTitle = true
 		currentString = ""
 		state:startingShot()
 		state.camdz = 1.001
+        state.camdx = 0
+        state.camdy = 0
 	end)
-	
 
 
-	
-
-
-	stringTimer:add(100, function()
+	stringTimer:add(103, function()
 			Gamestate.switch(Gamestate.menu)
 		end)
 
@@ -280,7 +342,7 @@ function state:update(dt)
 	e2.animation:update(dt)
 	--e1:update(dt)
 	e3.animation:update(dt)
-	
+	discoball.animation:update(dt)
 	if drawMurderBaller then
 		murderBaller:update(dt)
 	end
@@ -291,8 +353,24 @@ function state:update(dt)
 end
 
 function state:draw()
+
 	state.cam:attach()	
+    love.graphics.draw(discoImage,400,2400)
+    discoball.animation:drawf(discoball.image,
+        discoball.position.x,
+        discoball.position.y,
+        0,
+        discoball.scaleX,
+        discoball.scaleY,
+        0,
+        0,
+        false,
+        false)
+    
+
+    
 	love.graphics.draw(titleScene, 0,0)
+
 	-- draw stuff that's state.camera locked here
 	player1:draw()
 	player2:draw()
@@ -404,4 +482,12 @@ end
 function state:bothPlayers()
 	state.cam:lookAt(player1.position.x + 60, player1.position.y+30)
 	state.cam:zoomTo(8)	
+end
+
+function state:discoShot()
+    state.cam:lookAt(player2.position.x, player2.position.y)
+    state.cam:zoomTo(2)
+    state.camdx = 1
+    state.camdy = -5
+    state.camdz = 1.0005
 end
