@@ -11,16 +11,13 @@ local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
 local dialogue = {	
-"Action Movie: The Series",
-        "Written by",
-        "Christy and Francisco",
-        "Coded by",
-        "Christy and Francisco",
-        "Graphics by",
-        "Christy",
-        "Music by",
-        "Francisco",
-        ""
+        "Action Movie: The Series",
+        "Written by Christy and Francisco",
+        "Coded by Christy and Francisco",
+        "Graphics by Christy",
+        "Music by Francisco",
+        "Catering by Francisco and Christy",
+        "Murderballer #2 Sprite by Adrian Paulozza"
 }
 			
 local currentShot = 0
@@ -35,7 +32,7 @@ local shotFuncs = {
 	}
 
 function state:enter()
-love.graphics.setFont(font)
+    love.graphics.setFont(font)
 -- musics
 	bgMusicList = {"music/actionCredits.ogg"}
 -- start music
@@ -72,51 +69,11 @@ love.graphics.setFont(font)
 	state.camdy = 0
 	state.camdz = 1
 
--- string stuff
+    -- string stuff
     currentStringNum = 0
-
-	
 	
 	-- init state.camera and diag here
 	state:nextLine()
-	--state:nextShot()
-	
-	-- extra char graphics/anims here
-	
-	-- murderBaller = {}
-	-- drawMurderBaller = false
-	-- murderBaller.position = Vector(1000,500)
-	-- murderBaller.image = love.graphics.newImage('art/murderballer.png')
-	-- murderBaller.grid = Anim8.newGrid(52, 52, 
-			-- murderBaller.image:getWidth(),
-			-- murderBaller.image:getHeight())
-
-	-- murderBaller.runAnim = Anim8.newAnimation('loop',
-		-- murderBaller.grid('1-4, 1'),
-		-- 0.2) 
-
-	-- murderBaller.standAnim = Anim8.newAnimation('loop',
-		-- murderBaller.grid('1-4, 2'),
-		-- 0.2) 
-
-	-- murderBaller.animation = murderBaller.standAnim
-	-- murderBaller.delta = Vector(0,0)
-	-- murderBaller.draw = function()
-		-- murderBaller.animation:drawf(
-			-- murderBaller.image, 
-			-- murderBaller.position.x,
-			-- murderBaller.position.y,
-			-- 0, -- angle
-			-- 0.75, -- x scale
-			-- 0.75, -- y scale
-			-- 0, -- x offset
-			-- 0, -- y offset
-			-- false, -- H flip
-			-- false -- V flip
-			-- )
-	-- end
-	
-
 end
 
 function state:nextLine()

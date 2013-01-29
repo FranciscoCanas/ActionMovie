@@ -80,7 +80,7 @@ function state:enter()
 	
 
 	-- make objects in map solid
-	background = Level("ep1", false, state.cam)
+	background = Level("ep1s2", false, state.cam)
 	background:createObjects()
 
 	-- Initializing Jumper
@@ -149,7 +149,7 @@ function state:spawnBystanders()
 		end
 
 		posx = state.cam.x + dimScreen.x/2 + math.random(600,1800)
-		posy = math.random(dimScreen.y/2, dimScreen.y/2+600)
+		posy = math.random(dimScreen.y/2 - 100, dimScreen.y/2+600)
 
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
 	end
