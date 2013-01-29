@@ -77,7 +77,12 @@ function state:enter()
 	-- state.camera code ends here --
 	self.started = true
 
-	
+	--set up murderballer
+	state.murderballer = Murderballer()
+	state.murderballer.position = Vector(dimScreen.x - 100, 715)
+	state.murderballer.animation = murderballer.runAnim
+	state.murderballer.delta = Vector(100,0)
+	state.murderballer.scale = 1	
 
 	-- make objects in map solid
 	background = Level("ep1s2", false, state.cam)
@@ -120,12 +125,7 @@ function state:enter()
 	enemyTimer = Timer.new()
 	enemyTimer:addPeriodic(2, function() self:spawnEnemy() end)
 
-	--set up murderballer
-	murderballer = Murderballer()
-	murderballer.position = Vector(dimScreen.x - 100, 715)
-	murderballer.animation = murderballer.runAnim
-	murderballer.delta = Vector(100,0)
-	murderballer.scale = 1
+
 end
 
 function state:addBystanders(positions)
@@ -148,8 +148,10 @@ function state:spawnBystanders()
 			img = 'art/maleBystander.png'
 		end
 
-		posx = state.cam.x + dimScreen.x/2 + math.random(600,1800)
+		posx = murderballer.position.x + math.random(600,1800)
 		posy = math.random(dimScreen.y/2 - 100, dimScreen.y/2+600)
+--        posx = state.murderballer.position.x
+ --       posy = state.murderballer.position.y
 
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
 	end
@@ -202,7 +204,7 @@ function state:update(dt)
 	end
 
 	-- update the murderballer
-	murderballer:update(dt)
+	state.murderballer:update(dt)
 	
 	for i,enemy in ipairs(enemies) do
 		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
@@ -243,7 +245,7 @@ function state:update(dt)
     end
 
 	-- check for player loseage here
-    if not drawLoseString then
+    if (not drawLoseString)  and (not playersWin) then
 	    if state:outOfBounds(player1) and state:outOfBounds(player2) then
 		    state:playersLose()
 	    end
@@ -252,8 +254,8 @@ function state:update(dt)
 end
 
 function state:caughtMurderBaller(p)
-    return ((math.abs(p.position.x-murderballer.position.x) < 15) and
-        (math.abs(p.position.y-murderballer.position.y) < 15))
+    return ((math.abs(p.position.x-state.murderballer.position.x) < 15) and
+        (math.abs(p.position.y-state.murderballer.position.y) < 15))
 end
 
 function state:outOfBounds(p)
@@ -300,7 +302,7 @@ function state:draw()
 		bystander:draw()
 	end
 
-		murderballer:draw()
+		state.murderballer:draw()
 	state.cam:detach()
 
 --	if drawMurderBaller then
@@ -314,6 +316,8 @@ function state:draw()
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
+    love.graphics.print(state.murderballer.position.x, 200, 50)
+    love.graphics.print(state.cam.x, 700, 80)
     drawHud(font24)
 
 end 
@@ -333,7 +337,7 @@ function state:spawnEnemy()
 	local curDead = deadCount
     local spawnVector = {}
 	while totEnemy - curDead < 1 do
-        table.insert(spawnVector, Vector((state.cam.x + dimScreen.x + math.random(1000,1400)), 800 + math.random(100, 600)))
+        table.insert(spawnVector, Vector((state.murderballer.position.x + math.random(600,1000)), math.random(400, 800)))
 		totEnemy = totEnemy+1
 	end
 	state:insertEnemy(spawnVector, FOLLOWPLAYER, true)
@@ -415,7 +419,7 @@ function state:movecam(dt)
 --	end
 	
 	if state.camOnMurderballer then
-		state.cam:lookAt(murderballer.position.x - (dimScreen.x/2) + 100, dimScreen.y/2)
+		state.cam:lookAt(state.murderballer.position.x - (dimScreen.x/2) + 100, dimScreen.y/2)
 		state.cam:zoomTo(1)
 	end
 	-- Restrict zoom level to state.camera boundaries --NEEDS WORK--

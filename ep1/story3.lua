@@ -104,39 +104,7 @@ love.graphics.setFont(font)
 	state:nextShot()
 	
 	-- extra char graphics/anims here
-	
-	-- murderBaller = {}
-	-- drawMurderBaller = false
-	-- murderBaller.position = Vector(1000,500)
-	-- murderBaller.image = love.graphics.newImage('art/murderballer.png')
-	-- murderBaller.grid = Anim8.newGrid(52, 52, 
-			-- murderBaller.image:getWidth(),
-			-- murderBaller.image:getHeight())
 
-	-- murderBaller.runAnim = Anim8.newAnimation('loop',
-		-- murderBaller.grid('1-4, 1'),
-		-- 0.2) 
-
-	-- murderBaller.standAnim = Anim8.newAnimation('loop',
-		-- murderBaller.grid('1-4, 2'),
-		-- 0.2) 
-
-	-- murderBaller.animation = murderBaller.standAnim
-	-- murderBaller.delta = Vector(0,0)
-	-- murderBaller.draw = function()
-		-- murderBaller.animation:drawf(
-			-- murderBaller.image, 
-			-- murderBaller.position.x,
-			-- murderBaller.position.y,
-			-- 0, -- angle
-			-- 0.75, -- x scale
-			-- 0.75, -- y scale
-			-- 0, -- x offset
-			-- 0, -- y offset
-			-- false, -- H flip
-			-- false -- V flip
-			-- )
-	-- end
 	
 
 end

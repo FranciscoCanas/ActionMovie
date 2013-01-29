@@ -3,39 +3,36 @@ require 'TESound.TEsound'
 local Timer = require "hump.timer"
 local Camera = require "hump.camera"
 local font = love.graphics.setNewFont(28)
+local font36 = love.graphics.setNewFont(36)
 
 
-Gamestate.story2 = Gamestate.new()
-local state = Gamestate.story2
+Gamestate.story4 = Gamestate.new()
+local state = Gamestate.story4
 local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
-local dialogue = {	"Who's a baaaaaaaad mutha--.",
-			"Shut your mouth! We gotta start thinking about finding that bomb!",
-		"Look, it's that rat Lloyd. If anyone knows about bombs, it's gonna be him.",
-		"It's the fuzz! Aww sheeeeeeee--",
-			"Let's shake it outta him!",
-			"Ain't gonna catch me. I'm from the future. 2013!",
-			"Dang, he's making a break for it into that crowd!",
-			"Why is there always a parade around here?!"
+local dialogue = {	
+            "Oh no, the bomb is about to go--",
+            "Will Crispy and McGuff escape the explosion in time to save the president?!",
+            "Tune in next week, and find out!"
 			}
+    
 			
 local currentShot = 0
 local shotFuncs = {
-		function() state:closeUp(player2) end,
-		function() state:closeUp(player1) end,
-		function() state:closeUp(player2) end,
-		function() state:closeUp(murderballer) end,
-		function() state:closeUp(player1) end,
-		function() 
-			murderballer.delta = Vector(25,0)
-			state.camdx = murderballer.delta.x
-			murderballer.animation = murderballer.runAnim
-			state:closeUp(murderballer) end,
-		function() 
-			state.camdx = 0
-			state:closeUp(player2) end,
-		function() state:closeUp(player1) end
+        function() player2.animation=player2.standAnim
+            state:closeUp(player2)
+        end,
+		function() state:bothPlayers()
+            state.camdz=1.0001
+            state:explode()
+        player1.animation = player1.hurtAnim
+        player2.animation = player1.hurtAnim
+			TEsound.play("music/actionHit.ogg")  
+        end,
+        function() 
+            drawContinue = true
+        end
 	}
 
 function state:enter()
@@ -43,26 +40,29 @@ love.graphics.setFont(font)
 -- musics
 	bgMusicList = {"music/movemberBlues.ogg"}
 -- start music
-
+--	TEsound.play(bgMusicList, "bgMusic")
 
 -- background
-	backgroundScene = love.graphics.newImage("art/titleScene.png")
+	alleyScene = love.graphics.newImage("art/titleScene.png")
+    cityScene = love.graphics.newImage("art/cityscape.png")
+    backgroundScene = alleyScene
 
 -- players
 	player1:setPosition(Vector(400,500))
-	player2:setPosition(Vector(450,500))
+	player2:setPosition(Vector(470,500))
 	player2.facing = Vector(-1,0)
 	player2.frameFlipH = true
+
 	
-	murderballer = Murderballer()
+--	murderballer = Murderballer()
+--    murderballer.position = Vector(445, 518)
 
 -- timer stuff
 	stringTimer = Timer.new()
 
-
-	
 -- string stuff
     currentStringNum = 0
+	drawContinue = false
 
 -- state.camera setup
 -- set up state.camera ------------------------------------
@@ -85,41 +85,20 @@ love.graphics.setFont(font)
 	state:nextShot()
 	
 	-- extra char graphics/anims here
-	
-	-- murderBaller = {}
-	-- drawMurderBaller = false
-	-- murderBaller.position = Vector(1000,500)
-	-- murderBaller.image = love.graphics.newImage('art/murderballer.png')
-	-- murderBaller.grid = Anim8.newGrid(52, 52, 
-			-- murderBaller.image:getWidth(),
-			-- murderBaller.image:getHeight())
 
-	-- murderBaller.runAnim = Anim8.newAnimation('loop',
-		-- murderBaller.grid('1-4, 1'),
-		-- 0.2) 
-
-	-- murderBaller.standAnim = Anim8.newAnimation('loop',
-		-- murderBaller.grid('1-4, 2'),
-		-- 0.2) 
-
-	-- murderBaller.animation = murderBaller.standAnim
-	-- murderBaller.delta = Vector(0,0)
-	-- murderBaller.draw = function()
-		-- murderBaller.animation:drawf(
-			-- murderBaller.image, 
-			-- murderBaller.position.x,
-			-- murderBaller.position.y,
-			-- 0, -- angle
-			-- 0.75, -- x scale
-			-- 0.75, -- y scale
-			-- 0, -- x offset
-			-- 0, -- y offset
-			-- false, -- H flip
-			-- false -- V flip
-			-- )
-	-- end
-	
-	TEsound.play(bgMusicList, "bgMusic")
+-- particle sys stuff go here now!
+	explosionImage = love.graphics.newImage( "art/explosion.png" )
+	state.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
+	state.explosion:setEmissionRate(60)
+	state.explosion:setLifetime(10.0)
+	state.explosion:setParticleLife(10)
+	state.explosion:setSpread(360)
+	state.explosion:setSizes(4, 6.5, 8.0)
+	state.explosion:setRotation(60)
+	state.explosion:setSpeed(350,550)
+	state.explosion:setSpin(0,1,0.5)
+	state.explosion:setPosition(400, 400)
+	state.explosion:stop()
 end
 
 function state:nextLine()
@@ -130,7 +109,7 @@ function state:nextLine()
 
 		stringTimer:add(diagInterval, function()
 			if currentStringNum >= table.getn(dialogue) then
-				Gamestate.switch(Gamestate.scene2)
+				Gamestate.switch(Gamestate.scene3)
 			else
 			state:nextLine()
 			state:nextShot()
@@ -156,17 +135,20 @@ function state:update(dt)
 --	player2:update(dt)
 	state.cam:move(state.camdx*dt,state.camdy*dt)
 	state.cam:zoom(state.camdz)
-	murderballer:update(dt)
+	state.explosion:update(dt)
+--	murderballer:update(dt)
 end
 
 
 function state:draw()
+
 	state.cam:attach()	
 	love.graphics.draw(backgroundScene, 0,0)
+	love.graphics.draw(state.explosion)
 	-- draw stuff that's state.camera locked here
 	player1:draw()
 	player2:draw()
-	murderballer:draw()
+--	murderballer:draw()
 	state.cam:detach()	
 	
 	-- cinematic letterboxing here
@@ -175,7 +157,14 @@ function state:draw()
 	love.graphics.rectangle("fill", 0, dimScreen.y - 150, dimScreen.x, 150)
 	love.graphics.setColor(255,255,255,255)
 	
-	love.graphics.printf( currentString, (dimScreen.x/2) - 300, (dimScreen.y)-150, 600, "center" )
+	love.graphics.printf( currentString, (dimScreen.x/2) - 400, (dimScreen.y)-150, 800, "center" )
+    if drawContinue then
+        love.graphics.setColor(255,0,0,255)
+        love.graphics.setFont(font36)
+        love.graphics.printf( "To Be Continued", dimScreen.x/2 - 200, dimScreen.y/2 - 50, 400, "center")
+        love.graphics.setFont(font)
+        love.graphics.setColor(255,255,255,255)
+    end
 end
 
 function state:leave()
@@ -189,11 +178,11 @@ function state:keyreleased(key)
 		Gamestate.switch(Gamestate.menu)
 	elseif key == " " or key=="return" then
 		-- (space) skips to main scene1
-		Gamestate.switch(Gamestate.scene2)
+		Gamestate.switch(Gamestate.credits)
 	elseif key == player1.keyfire or key == player2.keyfire then
 		-- skip to next line in diag
 		if currentStringNum >= table.getn(dialogue) then
-				Gamestate.switch(Gamestate.scene2)
+				Gamestate.switch(Gamestate.credits)
 		else
 			state:nextLine()
 			state:nextShot()
@@ -206,8 +195,8 @@ function state:startingShot()
 	state.cam:zoomTo(1)
 end
 
+
 function state:closeUp(p)
-	currentStringPos = Vector((dimScreen.x/2) - 200, 200)
 	state.cam:lookAt(p.position.x + 25, p.position.y + 15)
 	state.cam:zoomTo(16)
 end
@@ -218,7 +207,11 @@ function state:shot2()
 end
 
 function state:bothPlayers()
-	state.cam:lookAt(player1.position.x + 60, player1.position.y+30)
+	state.cam:lookAt(player1.position.x + 70, player1.position.y+30)
 	state.cam:zoomTo(8)	
+end
+
+function state:explode()
+	state.explosion:start()
 end
 
