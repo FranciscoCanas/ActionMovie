@@ -69,7 +69,7 @@ function state:draw()
 
 	if player1.isplaying then 
 
-		love.graphics.print("Player1",
+		love.graphics.print("Crispy: P.I.",
 			60,
 			dimScreen.y - (player1.height + 80))
        love.graphics.setColor( 255,255,255,255 )
@@ -81,7 +81,7 @@ function state:draw()
 			dimScreen.y - (player1.height + 80))
 	end
 	if player2.isplaying then
-		love.graphics.print("Player2",
+		love.graphics.print("Detective McGuff",
 			dimScreen.x - (120 + player2.width),
 			dimScreen.y - (player2.height + 80))
         love.graphics.setColor(255,255,255,255)

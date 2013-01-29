@@ -58,7 +58,7 @@ love.graphics.setFont( font)
 	e2 = Enemy(love.graphics.newImage('art/Enemy1SpriteB.png'),Vector(2900,420),MOVETOSETSPOT, false)
 	e3 = Enemy(love.graphics.newImage('art/Enemy1SpriteC.png'),Vector(3000,420),MOVETOSETSPOT, false)
 
-	
+	guys = {player1, player2, e1, e2, e3}
 
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
@@ -148,7 +148,7 @@ love.graphics.setFont( font)
 			end)
 
 	stringTimer:add(40, function()
-				currentString = "Starring Chi as Detective Crispy"
+				currentString = "Starring Chi as Crispy: P.I."
 				crispyAnim = player1.standAnim
 				state:closeUp(player1)
 				crispyForce = Vector(0,0)
@@ -171,7 +171,7 @@ love.graphics.setFont( font)
 
 	stringTimer:add(46, function()
 				mcGuffAnim = player2.standAnim					
-				currentString = "Cisco as McGuff: P.I."
+				currentString = "Cisco as Detective McGuff"
 				state:closeUp(player2)
 			end)
 
@@ -244,7 +244,7 @@ love.graphics.setFont( font)
 		e3.frameFlipH = false
 	end)
 -- start at 70
-    stringTimer:add(70, function()
+    stringTimer:add(71, function()
 --        titleScene = nil
         currentString=""
         player1:setPosition(Vector(600,2650))        
@@ -264,32 +264,24 @@ love.graphics.setFont( font)
     end)
 
     stringTimer:add(72, function()
-        e3.frameFlipH = false
+        state:discoDance(guys)
 	end)
 
 	stringTimer:add(73, function()
-		e2.frameFlipH = false
+        state:discoDance(guys)
 	end)
 
 
 	stringTimer:add(74, function()
-		player2.frameFlipH = false
-        player1.frameFlipH = true
-        e3.frameFlipH = false
-        e1.frameFlipH = true
+        state:discoDance(guys)
 	end)
         
     stringTimer:add(75, function()
-        player1.frameFlipH = false
-        e1.frameFlipH = true
-        e2.frameFlipH = false
+        state:discoDance(guys)
     end)
 
   stringTimer:add(76, function()
-        player1.frameFlipH = false
-        e2.frameFlipH = false
-        e3.frameFlipH = true
-        e1.frameFlipH = false
+        state:discoDance(guys)
         state.camdz = 1
     end)
 
@@ -488,6 +480,14 @@ function state:discoShot()
     state.cam:lookAt(player2.position.x, player2.position.y)
     state.cam:zoomTo(2)
     state.camdx = 1
-    state.camdy = -5
+    state.camdy = -3
     state.camdz = 1.0005
+end
+
+function state:discoDance(peeps)
+    for i, peep in ipairs(peeps) do
+        if (math.random(1,2) > 1) then
+            peep.frameFlipH = not peep.frameFlipH            
+        end        
+    end
 end

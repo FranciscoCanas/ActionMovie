@@ -21,7 +21,7 @@ font16 = love.graphics.newFont(16)
 
 -- Stuffs local to scene
 local MAXDEAD = 32
-local TARGETDEAD = 3 -- end scene once we kill this many dudes
+local TARGETDEAD = 12 -- end scene once we kill this many dudes
 
 
 function state:init()	
