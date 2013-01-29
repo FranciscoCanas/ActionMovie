@@ -132,7 +132,7 @@ function Player:init()
 	-- object that owns the fixture during collision
 	-- detection:
 	self.fixture:setUserData(self)
-	--self.fixture:setCategory(PLAYER)
+	self.fixture:setCategory(PLAYER)
 		
 	self.body:setLinearDamping( self.damping )
 	

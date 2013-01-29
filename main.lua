@@ -32,15 +32,16 @@ world = love.physics.newWorld(
 	true)
 
 
-player1 = Player(1)
-player2 = Player(2)
-players = {player1, player2}
-
 OBSTACLE = 1 
 PLAYER = 2
 ENEMY = 3
 BULLET = 4
 BARRICADE = 5
+BOMB = 6
+
+player1 = Player(1)
+player2 = Player(2)
+players = {player1, player2}
 
 isGameOver = false
 gameOverTimer = Timer.new()
@@ -72,7 +73,7 @@ function love.load()
 	love.graphics.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		true, -- fullscreen
+		false, -- fullscreen
 		true, --vsync
 		0 -- antialiasing
 		)
@@ -100,6 +101,12 @@ function beginContact(a, b, coll)
 	elseif (a:is_a(Obstacle) and (b:is_a(Bullet))) then
 		a:impactEffect(coll)
 	elseif (b:is_a(Obstacle) and (a:is_a(Bullet))) then
+		b:impactEffect(coll)
+	elseif (a:is_a(Bomb) and (b:is_a(Bullet))) then
+		a:infuse()
+		a:impactEffect(coll)
+	elseif (b:is_a(Bomb) and (a:is_a(Bullet))) then
+		b:infuse()
 		b:impactEffect(coll)
 	end
 	

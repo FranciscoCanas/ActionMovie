@@ -33,17 +33,17 @@
  </tileset>
  <layer name="Collision" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztk8EKACEIRMXz/v/3dtlgCRMibXKZB0JK1CNNRUTB0fmuO88bp3LPBQVdbP7gMpu/1brlEnV2hMsNVHCZvWdmXZ39p6nQI4vs/zS6IP921R5lQxebVZdx7nZzzyX6rh0XJLe5oIMQEkcDefEDvQ==
+   eJztk8EKACEIRMVz//+9e9kgwmQjbWqZB0JK5CNURUTBUWnPlfLGrtxzQUEXmz+4jOZvtm65RL0d4XICN7iM/jOzrs598o3sfernBbnbN+wRArrYzLr0c7eaey7RvVZckJzmgg5CSBwPU6kDuQ==
   </data>
  </layer>
- <layer name="Unwalkable" width="35" height="30" visible="0">
+ <layer name="Unwalkable" width="35" height="30">
   <data encoding="base64" compression="zlib">
    eJztkzEKACAMA4uzu///qYuCiHUQayLkIGALwhXaZGYJnM747uSWV/XOBYVc1jC6ePsU3Wd3uU05+OO5eDNE9n9wQcDsgrwnZhckclnD7DLvVXT9iwsSNhd0hBD3qPX6BHA=
   </data>
  </layer>
  <layer name="Barricade" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt08EKABAQhOG98/7PK0VJ6yA0Y5u/HHZPn8LszzIaMNQtqR27NEexMCSLH6tl9f5299Es6KpldbfXe3YLS+wW1H9it6CSxY/NMr+70zmCRSnFXwHRigPJ
+   eJzt00EKACAIRFH3df/zRlAQoYtIcJT50EJXLyiRnPVowNG2tHXEaa5iQYgWPVSL9f5e99Us0U2LdTevfVYLSuiWqP+EbomKFj00y/3ufucKFsYYfgP/RwOz
   </data>
  </layer>
  <layer name="Ground" width="35" height="30">
@@ -53,12 +53,17 @@
  </layer>
  <layer name="Stuffs" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1DEKgDAMBdDe/yK66qSoi6IuFfVG/rmEUIQkVfLgDz9Q2qUJoWwd0it2zowsip0TkUOxu+8ZkclgTtmQ3WBOuZDbYJ5jeHlOwmpwZ4XUxPzUfgg0SGtwbw7/27SS/7YrT7pvpTsn3bfSnZPuW+nunPuvB9naY5o=
+   eJzt1DsKgEAMBNC9/4kUtVHURtG9kSklhCBCPso8mGICC2k2peTWUFrHrhkpk2PXbJTdscP39JQhYC5ZKGvAXHJSasD8ie7lOwtz9AI3R/QCyeBvyzL/bciH31vrruH31rpr+L217gDwXxcXv2Do
   </data>
  </layer>
  <layer name="Tile Layer " width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF1AbiNJYfBaNgpABceYFU8aEOdtNYnBRwlIbiy4F4BQluOU9D8Y1AvIkEt4wC0sBo3h4FQwGMtudGwSgYBaOAfAAARacNAw==
+   eJztyLENADAIAzD+f4m5c1/qDVSKxGCPrgJgsw7/xAn/xA0/AAB/HtXMCT0=
+  </data>
+ </layer>
+ <layer name="Bomb" width="35" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20JT6AAAAAAPgYQaAAB
   </data>
  </layer>
 </map>

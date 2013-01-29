@@ -128,7 +128,7 @@ function Enemy:init()
 	self.destination = nil
 
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = dimScreen.x-100 --/ max d7istance from player to shoot
+	self.maxTargetRange = dimScreen.x-200 --/ max distance from player to shoot
 	self.minTargetRange = 100 --/ min distance from player to shoot
 	self.observePlayerRange = dimScreen.x -- distance to interact with player
 	

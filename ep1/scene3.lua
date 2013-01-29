@@ -1,11 +1,12 @@
 -- This is the template for a scene --
 require "../level"
+require "../bomb"
 
 -- Required libraries that are locally used
 local Camera = require "hump.camera"
 local anim8 = require 'anim8.anim8'
 local Jumper = require 'Jumper.jumper'
- jumperDebug = require 'Jumper.debug_utils'
+jumperDebug = require 'Jumper.debug_utils'
 local Timer = require "hump.timer"
 require 'TESound.TEsound'
 
@@ -20,6 +21,7 @@ font12 = love.graphics.newFont(12)
 
 -- Stuffs local to scene
 local MAXDEAD = 12
+local MAXALIVE = 10
 
 --bomb explodes after 5 minutes
 Timers = {}
@@ -106,6 +108,10 @@ function state:enter()
 	Timers.countdown = Timer.new()
 	Timers.enemyTimer = Timer.new()
 	
+	bomb = Bomb(Vector(0, 368))
+	bomb.defusePosition = {{1, 11},{1, 14}, {2, 12}, {2, 13}}
+	--bomb.health = 100
+
 	Timers.enemyTimer:addPeriodic(5, s3spawnEnemy)
 	Timers.countdown:addPeriodic(1, timed, 300)
 end
@@ -157,7 +163,8 @@ function state:update(dt)
 	for i,player in ipairs(players) do
 		if player.isplaying then
 			player:update(math.min(dt, 1/60))
-
+			defusing = isDefusing(player)
+			if defusing then bomb:defuse(dt) end
 		end
 	end
 	
@@ -183,7 +190,6 @@ function state:update(dt)
 		s3removeDead()
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
-
 end
 
 function state:draw()
@@ -196,6 +202,7 @@ function state:draw()
 
 	--love.graphics.print("Attached to state.cam for reference", 30,30)
 
+	bomb:draw()
 	-- need to determin drawing order which depends on y values of things
 
 	if (player1.isplaying and player2.isplaying) then
@@ -214,6 +221,7 @@ function state:draw()
 		end
 	end
 	
+
 	for i,enemy in ipairs(enemies) do
 		enemy:draw()
 	end
@@ -230,6 +238,11 @@ function state:draw()
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
 	love.graphics.print("Time Left: "..minutes..":"..seconds, dimScreen.x/2, 20)
+
+	-- if defusing then
+	-- 	love.graphics.print("defusing bomb \n "..bomb.health, bomb.position.x, bomb.position.y - 50)
+	-- end
+
 	jumperDebug.drawPath(font12, path, true)
 	-- jumperDebug.drawPath(font12, _path, true)
 end 
@@ -254,7 +267,7 @@ function s3spawnEnemy()
 				count = count + 1
 			end
 		end
-		if not spawn then
+		if not spawn and (#enemies - deadCount + count -2 <= MAXALIVE) then
 			-- print(dimScreen.x..", "..dimScreen.y)
 			-- table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
 			-- table.insert(enemies, Enemy(false, Vector(state.cam.x + dimScreen.x + 500, math.random(450,1050)), MOVETOSETSPOT, true))
@@ -268,6 +281,11 @@ function s3spawnEnemy()
 		-- 	break
 		end
 	-- end
+end
+
+function isDefusing(player)
+	return ((player.animation == player.standAnim) and (math.abs(player.position.x - bomb.position.x) < 30) 
+		and (math.abs(player.position.y - bomb.position.y) < 30))
 end
 
 function state:focus()
@@ -366,4 +384,11 @@ function state:mousepressed(x,y,button)
 		-- getPath doesn't work when zooming is involved atm
 		path, length =pather:getPath(playerX, playerY, tileX, tileY)
 	end
+end
+
+function state:playersWin()
+    playersWin = true
+	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.play("music/actionHit.ogg")     
+    Gamestate.switch(Gamestate.story4) 
 end
