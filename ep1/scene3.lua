@@ -367,9 +367,7 @@ function state:movecam(dt)
 		-- Nothing to do here just yet.
 	end
 
-	if isGameOver then
-        gameovercam(state.cam)
-    end
+	
 	state.camWorldWidth = love.graphics.getWidth() / zoom
 	state.camWorldHeight = love.graphics.getHeight() / zoom
 	
@@ -393,6 +391,10 @@ function state:movecam(dt)
 	state.camWorldX = state.cam.x - (state.camWorldWidth / 2)
 	state.camWorldY = state.cam.y - (state.camWorldHeight / 2)
 	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
+	
+	if isGameOver then
+        gameovercam(state.cam)
+    end
 end
 
 function state:mousepressed(x,y,button)

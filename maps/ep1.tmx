@@ -18,7 +18,7 @@
  </tileset>
  <layer name="Collision" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt2kEOQDAUBNAewKEd3ZpQGU1L5b1kNqTSr2anFAAAAAAAaLO8vQGYjM5ARmcgozOQ0RnYWyq5uy8i5ymV6zVP1pyt7bVmxDyj39vF89Zjeuzhy+c9cp7W84LEH763P8wAI+kMZHQGMjoDGZ2BjM5ARmcgozOQ0RnIvf3vjshM2QAZLxnl
+   eJzt2kEPgjAMhuGpR/Gqf9efLhcSJDAY5Vs7eJ+kF8mWsa2uEFICAAAAAAAAAMCm8x4A0BhyBihDzgBlyBmgDDkD/OsysXadIIj5SJnfc/a0mWuralPjfmrP20J/32koxhB5vWvej3W9gBJb9tutj7t6IAbkzDW9+/h4D2LBM8Xel5HHBkTklTOR/+f2GOqJh1N72G2tCc90znjWwUM98XJqD7utNeGZciZ6HXw1Zz072WN6NfdOpH3qdXaq54Cc0RvvHfVzHDWefg7WckaVs5Z+o7+/b0mEc6m19VzLGVXOWvrlueU4Ec6lFtcz913NeE6P/F5H1S9BqOMHoIIcaA==
   </data>
  </layer>
  <layer name="back back buildings" width="205" height="25">
@@ -58,7 +58,7 @@
  </layer>
  <layer name="Tile Layer 7" width="205" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt0TkKwDAMBED//z25mlw/ixr3wSGOCDOw5YJYlQIAAAAAAAAAAAAAkMMcWSJDZIxML3WqjJ1eGzzZ7csbMv+75wbVETkja2SL7Df6LZ0qY+cofTZo6WS4oaVT/el3AAAAAAAAAJldwP1gDw==
+   eJzt11kKwzAMRVHvfzUtdIa27s6iUgT5TGXLEvE98D4VHA+JXAoAAAAAAAAAAAAAAAAAAAAA5HCV3CQnyVlycapRGWtGzUHLvEWOYdR6HyTHAWOz1qgq+UiekpfkvaHeUqMy1tQyZg4sNRnGYKlR/9TcJY8BY7PWRNEzDmCbWn5nfC9a+6xefRrstCecSeQ7t/ZZvfo02GlPOJMZ3zkz/p2wWu8d73tcpn0a9e/MNAewWe+dWnzvcfR48XPgdWZbnjvjXc1Lhm/y3tbT68y2PJd7Sz/R3+Qv1hPYtwWDfZs0
   </data>
  </layer>
 </map>

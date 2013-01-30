@@ -433,20 +433,6 @@ function Enemy:MoveToShootingSpot()
 		else
 			--print("type: "..self.type.." state changed to shoot in moveToShootingSpot")
 			self.state = shoot
-			-- local targetX
-			-- if player1.isplaying then
-			-- 	targetX = player1.body:getX()
-			-- else
-			-- 	targetX = player2.body:getX() 
-			-- end
-			-- world:rayCast(self.body:getX(), self.body:getY(), --enemy location
-			-- 			targetX , self.body:getY(), --target location
-			-- 			Enemy.rayCallback) -- order ofx rayCallback not necessary in order of what object is hit first
-			-- if toShoot then
-			-- 	self.state = shoot
-			-- else
-			-- 	self.state = moveToCover
-			-- end
 		end
 	end
 end
@@ -624,7 +610,6 @@ function Enemy.rayCallback(fixture, x, y, xn, yn, fraction)
 		toShoot = false 
 		return 0 -- stops ray from going through other fixtures
 	end
-
 	return 1 -- Continues with ray cast through all shapes.
 end
 

@@ -1,5 +1,4 @@
 -- This is the template for a scene.
-
 require "../level"
 
 -- Required libraries that are locally used
@@ -22,7 +21,7 @@ font32 = love.graphics.newFont(32)
 
 -- Stuffs local to scene
 local MAXDEAD = 32
-local TARGETDEAD = 12 -- end scene once we kill this many dudes
+local TARGETDEAD = 30 -- end scene once we kill this many dudes
 
 
 function state:init()	
@@ -63,8 +62,6 @@ function state:enter()
 	state.camBottom = 1000
 	-- camera code ends here --
 	self.started = true
-	
-	
 
 	-- make objects in map solid
 	background = Level("ep1", false, state.cam)
@@ -91,7 +88,6 @@ function state:enter()
 --	state:insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
 	enemyTimer:addPeriodic(2, function() 
-            
                 self:spawnEnemy() 
          end)
 	
@@ -130,7 +126,7 @@ function state:update(dt)
 	-- check for scene beaten conditions
     if not self.ended then
        
-	    if (TARGETDEAD <= 0) then
+	    if (deadCount >= TARGETDEAD) then
             local alldead = true
 		    enemyTimer:clear()
             for i,enemy in ipairs(enemies) do
@@ -159,7 +155,6 @@ function state:update(dt)
 		--print ("alive "..enemy.isalive.. " counted " .. enemy.counted)
 		if ((not enemy.isalive) and (not enemy.counted)) then
 			deadCount = deadCount + 1
-			TARGETDEAD = TARGETDEAD - 1
 			enemy.counted = true
 		elseif (enemy.isalive) then
 			enemy:update(dt)
@@ -221,7 +216,7 @@ function state:draw()
 	state.cam:detach()
 
 	love.graphics.setFont( font32 )
-    love.graphics.print("Bad Guys Left: "..TARGETDEAD, dimScreen.x/2-75, 10)
+    love.graphics.print("Bad Guys Left: "..TARGETDEAD-deadCount, dimScreen.x/2-75, 10)
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
@@ -240,7 +235,7 @@ function state:removeDead()
 end
 
 function state:spawnEnemy()
-    if (# enemies + deadCount) >= TARGETDEAD then
+    if (# enemies) >= TARGETDEAD then
         return
     end
 	local totEnemy = #enemies
@@ -322,16 +317,11 @@ function state:movecam(dt)
 	x = math.max(x, state.camLeft + (state.camWorldWidth / 2))
 	x = math.min(x, state.camRight - (state.camWorldWidth / 2))
 
-	y = math.max(y, state.camTop + (state.camWorldHeight / 2))
+	y = math.max(y, state.camTop + (state.camWorldHeight / 2) - 50)
 	y = math.min(y, state.camBottom - (state.camWorldWidth / 2))
 
 	-- Move the cam to the coordinates calculated above.
 	state.cam:lookAt(x, y)
-
-	-- Restrict zoom level to camera boundaries --NEEDS WORK--
-	-- if (y - ((dimScreen.y/2)*zoom)) < camTop then
-	-- 	zoom = (2/dimScreen.y)*(camTop+y)
-	-- end
 
 	-- Zoom the cam to the appropriate level.
 	state.cam:zoomTo(zoom)

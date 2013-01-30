@@ -10,7 +10,7 @@ local state = Gamestate.story1
 local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
-local dialogue = {	"Last week in Action Movie...",
+local dialogue = {	"Previously on Action Movie",
 			"Crispy, you're a loose canon!",
 			"That ice cream truck was illegally parked. He deserved what he got!",
 	"And who's gonna pay for the damages to that orphanage!?",
@@ -22,15 +22,19 @@ local currentShot = 0
 local shotFuncs = {
 		function() state:startingShot() 
                     TEsound.play("music/actionHit.ogg")  end, -- last week...
-		function() state:closeUp(player2) end, --
+		function() 
+					backgroundScene = alleyScene
+					state:closeUp(player2) end, --
 		function() state:closeUp(player1) end, --
 		function() state:closeUp(player2) end, --
 		function() 
+					backgroundScene = cityScene
                     player1:setPosition(Vector(1200,370))
                     player2:setPosition(Vector(1250,370))
                     state:closeUp(player1) 
                     end, -- If we don't...
 		function() 
+					backgroundScene = alleyScene
                     player1:setPosition(Vector(1800,400))
                     player2:setPosition(Vector(1850,400))
                     state:closeUp(player2) 
@@ -41,8 +45,9 @@ local shotFuncs = {
 function state:enter()
 love.graphics.setFont(font)
 -- background
-	backgroundScene = love.graphics.newImage("art/titleScene.png")
-
+	alleyScene = love.graphics.newImage("art/titleScene.png")
+    cityScene = love.graphics.newImage("art/cityscape.png")
+    backgroundScene = cityScene
 -- players
 	player1:setPosition(Vector(1800,500))
 	player2:setPosition(Vector(1850,500))
