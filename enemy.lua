@@ -14,11 +14,12 @@ function(self, image, position, type, rand)
 --	wx, wy = cam:worldCoords(position.x, position.y)
 	self.position = position
 	self.behaviour = type
-	images = {'art/Enemy1Sprite.png','art/Enemy1SpriteB.png','art/Enemy1SpriteC.png'}
+	images = {'art/Enemy1Sprite.png','art/Enemy1SpriteB.png','art/Enemy1SpriteC.png', 
+				'art/Enemy2Sprite.png', 'art/Enemy2SpriteB.png'}
 
 	-- set up image stuffs here
 	if not image then
-		self.type = math.random(1,3)
+		self.type = math.random(1,5)
 		randImage = images[self.type]
 		
 		self.image = love.graphics.newImage(randImage)

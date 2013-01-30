@@ -78,7 +78,7 @@ function Bomb:draw()
 	self:drawNumber(tens, Vector(self.position.x+43, self.position.y+12))
 	self:drawNumber(ones, Vector(self.position.x+47, self.position.y+12))
 
-	remainHealth = math.floor((100-self.health)%50)
+	remainHealth = math.floor(100-self.health)
 	for i=1,50,1 do
 		if (i <= remainHealth/2) then
 			self.bar.filled:drawf(self.bar.img, self.position.x+(7+i), self.position.y+8)
