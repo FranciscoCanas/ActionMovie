@@ -44,7 +44,7 @@ function(self, num)
 		self.frameDelay)
 
 	--ready for shooting animation here:
-	self.shootingAnim = Anim8.newAnimation('once',
+	self.shootingAnim = Anim8.newAnimation('loop',
 		self.grid('1-2, 2'),
 		self.frameDelay)
 		
@@ -160,7 +160,7 @@ function Player:update(dt)
 	local delta = Vector(0,0)
 	local moved = false
 	
-	if (not self.ishurt) and (self.isalive) and (not isGameOver) then
+	if (not self.fired) and (not self.ishurt) and (self.isalive) and (not isGameOver) then
 		if love.keyboard.isDown(self.keyleft) then
 			delta.x = -1
 			self.body:applyForce(-self.acceleration * dt,0)
@@ -240,6 +240,7 @@ function Player:fire()
 		self.animation:gotoFrame(1)
 		self.timer:add(0.5, function()
 					self:stopFire() 
+                    self.shootingAnim:gotoFrame(1)
 				end)
 		-- figure out origin to fire from 
 		-- and direction to fire in

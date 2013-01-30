@@ -16,6 +16,7 @@ function(self)
 		self.grid('1-4, 2'),
 		0.2) 
 
+    self.scale = 1
 	self.animation = self.standAnim
 	self.delta = Vector(0,0)
 

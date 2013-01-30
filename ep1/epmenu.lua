@@ -77,7 +77,7 @@ function state:keyreleased(key)
 		elseif (epi == 1) then
 			Gamestate.switch(Gamestate.story2)
 		elseif (epi == 2) then
-			Gamestate.switch(Gamestate.story3)
+			Gamestate.switch(Gamestate.story4)
 		end
 	elseif key == "up" then
 		epi = (epi - 1) % 3

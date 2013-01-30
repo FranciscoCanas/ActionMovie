@@ -141,6 +141,7 @@ end
 
 function state:spawnBystanders()
 	local posx, posy
+
 	for i = 1,math.random(1,5),1 do 
 		if math.random(1,2) == 1 then
 			img = 'art/femaleBystander.png'
@@ -148,10 +149,10 @@ function state:spawnBystanders()
 			img = 'art/maleBystander.png'
 		end
 
-		posx = murderballer.position.x + math.random(600,1800)
-		posy = math.random(dimScreen.y/2 - 100, dimScreen.y/2+600)
---        posx = state.murderballer.position.x
- --       posy = state.murderballer.position.y
+		posx = state.cam.x + dimScreen.x + math.random(600,1800)
+		posy = math.random(200, dimScreen.y - 100)
+--      posx = state.murderballer.position.x
+--      posy = state.murderballer.position.y
 
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
 	end
@@ -302,7 +303,7 @@ function state:draw()
 		bystander:draw()
 	end
 
-		state.murderballer:draw()
+	state.murderballer:draw()
 	state.cam:detach()
 
 --	if drawMurderBaller then
@@ -319,7 +320,6 @@ function state:draw()
     love.graphics.print(state.murderballer.position.x, 200, 50)
     love.graphics.print(state.cam.x, 700, 80)
     drawHud(font24)
-
 end 
 
 function state:removeDead() 
@@ -432,6 +432,10 @@ function state:movecam(dt)
 	state.camWorldX = state.cam.x - (state.camWorldWidth / 2)
 	state.camWorldY = state.cam.y - (state.camWorldHeight / 2)
 	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
+
+     if isGameOver then
+        gameovercam(state.cam)
+     end
 end
 
 function state:mousepressed(x,y,button)
