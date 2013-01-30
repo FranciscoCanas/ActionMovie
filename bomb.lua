@@ -28,11 +28,12 @@ Bomb = Class{
 			self.bar.img:getWidth(),
 			self.bar.img:getHeight())
 
-		for i = 1, 10, 1 do
-			self.bar[i*2] = Anim8.newAnimation('once',
-				self.bar.grid:getFrames(i..',1'),
-				1)
-		end
+		
+		self.bar.filled = Anim8.newAnimation('once',
+			self.bar.grid:getFrames('1,1'),
+			1)
+		self.bar.empty = Anim8.newAnimation('once', 
+			self.bar.grid:getFrames('2,1'), 1)
 
 		self.width = self.image:getWidth()
 		self.height = self.image:getHeight()
@@ -76,6 +77,16 @@ function Bomb:draw()
 	love.graphics.draw(self.difuseImg, self.position.x, self.position.y-5)
 	self:drawNumber(tens, Vector(self.position.x+43, self.position.y+12))
 	self:drawNumber(ones, Vector(self.position.x+47, self.position.y+12))
+
+	remainHealth = math.floor((100-self.health)%50)
+	for i=1,50,1 do
+		if (i <= remainHealth/2) then
+			self.bar.filled:drawf(self.bar.img, self.position.x+(7+i), self.position.y+8)
+		else
+			self.bar.empty:drawf(self.bar.img, self.position.x+(7+i), self.position.y+8)
+		end
+	end
+
 end
 
 
