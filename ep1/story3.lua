@@ -75,6 +75,7 @@ love.graphics.setFont(font)
 	
 	murderballer = Murderballer()
     murderballer.position = Vector(445, 518)
+    murderballer.delta = Vector(0,0)
 
 -- timer stuff
 	stringTimer = Timer.new()

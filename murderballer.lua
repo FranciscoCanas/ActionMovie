@@ -19,15 +19,13 @@ function(self)
     self.scale = 1
 	self.animation = self.standAnim
 	self.delta = Vector(0,0)
-
-
 end
 }
+
 function Murderballer:update(dt)
 	self.position = self.position + (self.delta * dt)
 	self.animation:update(dt)
 end
-
 
 function Murderballer:draw()
 	self.animation:drawf(

@@ -263,7 +263,7 @@ stringTimer:add(73, function()
 	end)
 
 -- start at 70
-    stringTimer:add(76, function()
+    stringTimer:add(77, function()
 --        titleScene = nil
         currentString=""
         player1:setPosition(Vector(600,2650))        
@@ -288,24 +288,24 @@ stringTimer:add(73, function()
         state:discoShot()
     end)
 
-    stringTimer:add(77, function()
+    stringTimer:add(78, function()
         state:discoDance(guys)
 	end)
-
-	stringTimer:add(78, function()
-        state:discoDance(guys)
-	end)
-
 
 	stringTimer:add(79, function()
         state:discoDance(guys)
 	end)
+
+
+	stringTimer:add(80, function()
+        state:discoDance(guys)
+	end)
         
-    stringTimer:add(80, function()
+    stringTimer:add(81, function()
         state:discoDance(guys)
     end)
 
-  stringTimer:add(81, function()
+  stringTimer:add(82, function()
         state:discoDance(guys)
         state.camdz = 0.5
     end)
