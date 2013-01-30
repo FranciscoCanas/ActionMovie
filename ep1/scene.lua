@@ -351,13 +351,13 @@ function state:movecam(dt)
 end
 
 
-function state:mousepressed(x,y,button)
-	if button == 'l' then
-		--x,y = cam:worldCoords(x_, y_)
-		tileX, tileY = background:toTile(x, y)
-		x_, y_ = player1:getCenter()
-		playerX, playerY = background:toTile(x_, y_)
-		-- getPath doesn't work when zooming is involved atm
-		path, length =pather:getPath(playerX, playerY, tileX, tileY)
-	end
-end
+-- function state:mousepressed(x,y,button)
+-- 	if button == 'l' then
+-- 		--x,y = cam:worldCoords(x_, y_)
+-- 		tileX, tileY = background:toTile(x, y)
+-- 		x_, y_ = player1:getCenter()
+-- 		playerX, playerY = background:toTile(x_, y_)
+-- 		-- getPath doesn't work when zooming is involved atm
+-- 		path, length =pather:getPath(playerX, playerY, tileX, tileY)
+-- 	end
+-- end

@@ -126,7 +126,7 @@ end
 
 function timed()
 	if (seconds == 0 and minutes == 0) then
-		state:playersWin()
+		state:playersWin(Gamestate.story4)
 	elseif (seconds == 0) then
 		seconds = 59
 		minutes = minutes - 1
@@ -202,7 +202,7 @@ function state:update(dt)
 
 	if not playersWin then
 		if (bomb.health < 1 ) then 
-			state:playersWin()
+			state:playersWin(Gamestate.state4a)
 		end
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
@@ -395,20 +395,9 @@ function state:movecam(dt)
 	background.map:setDrawRange(state.camWorldX, state.camWorldY, state.camWorldWidth, state.camWorldHeight)
 end
 
-function state:mousepressed(x,y,button)
-	if button == 'l' then
-		--x,y = state.cam:worldCoords(x_, y_)
-		tileX, tileY = background:toTile(x, y)
-		x_, y_ = player1:getCenter()
-		playerX, playerY = background:toTile(x_, y_)
-		-- getPath doesn't work when zooming is involved atm
-		path, length =pather:getPath(playerX, playerY, tileX, tileY)
-	end
-end
-
-function state:playersWin()
+function state:playersWin(story)
     playersWin = true
 	TEsound.stop("bgMusic", false) -- stop bg music immediately
 	TEsound.play("music/actionHit.ogg")     
-    Gamestate.switch(Gamestate.story4) 
+    Gamestate.switch(story) 
 end
