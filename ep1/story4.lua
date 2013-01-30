@@ -62,6 +62,7 @@ love.graphics.setFont(font)
 
 -- string stuff
     currentStringNum = 0
+    currentShot = 0
 	drawContinue = false
 
 -- state.camera setup

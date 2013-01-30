@@ -20,7 +20,8 @@ local dialogue = {	"Last week in Action Movie...",
 			}
 local currentShot = 0
 local shotFuncs = {
-		function() state:startingShot() end, -- last week...
+		function() state:startingShot() 
+                    TEsound.play("music/actionHit.ogg")  end, -- last week...
 		function() state:closeUp(player2) end, --
 		function() state:closeUp(player1) end, --
 		function() state:closeUp(player2) end, --
@@ -56,8 +57,7 @@ love.graphics.setFont(font)
 
 -- string stuff
     currentStringNum = 0
-
-	
+    currentShot = 0
 
 -- state.camera setup
 -- set up state.camera ------------------------------------
@@ -80,7 +80,6 @@ love.graphics.setFont(font)
 	-- init state.camera and diag here
 	state:nextLine()
 	state:nextShot()
-
 end
 
 function state:nextLine()
@@ -163,7 +162,6 @@ function state:startingShot()
 	state.cam:lookAt(600,400)
 	state.cam:zoomTo(1)
 end
-
 
 function state:closeUp(p)
 	state.cam:lookAt(p.position.x + 25, p.position.y + 15)

@@ -28,8 +28,6 @@ function(self, image, position)
 		self.grid('4-6, 1'),
 		self.frameDelay)
 		
-	
-		
 	self.animation = self.runAnim
 	
 	-- Set up for Timers

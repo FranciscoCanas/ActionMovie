@@ -57,7 +57,7 @@ function state:enter()
 	state.camZoomRatio = 400
 	--boundaries for the state.camera
 	state.camLeft = 0
-	state.camRight = 2000
+	state.camRight = 6000
 	state.camTop = 0
 	state.camBottom = 1000
 	-- camera code ends here --
