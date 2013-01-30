@@ -42,10 +42,12 @@ function state:enter()
 	-- Initialize players here
 	if player1.isplaying then
 		player1.body:setPosition(100, 600)
+		player1.health = 10
 		--player1:setPosition(Vector(100,600))
 	end
 	if player2.isplaying then
 		player2.body:setPosition(100,700)
+		player2.health = 10
 		--player2:setPosition(Vector(100,700)) 
 	end
 
@@ -87,8 +89,12 @@ function state:enter()
 	
 	-- set up bullets table --
 	bullets = {}
+
+	-- set up the bomb
+	bomb = {}
+	bomb = Bomb(Vector(0, 368))
 	
-	-- set up some baddies here --
+	-- get ready for some baddies here --
 	enemies = {}
 	deadCount = 0
 
@@ -103,17 +109,15 @@ function state:enter()
 		--thrid column of possible cover before reaching player
 		{{15, 2, 15, 4, false}, {16, 8, 16, 6, false}, {18, 15, 18, 13, false}, {13, 21, 13, 19, false}}
 		} 
---	insertEnemy(enemiesPosition)
 
-	Timers.countdown = Timer.new()
+	-- Timer stuff
+	Timers.countdown = Timer.new()	
 	Timers.enemyTimer = Timer.new()
-	
-	bomb = Bomb(Vector(0, 368))
-	bomb.defusePosition = {{1, 11},{1, 14}, {2, 12}, {2, 13}}
-	--bomb.health = 100
-
 	Timers.enemyTimer:addPeriodic(5, s3spawnEnemy)
-	Timers.countdown:addPeriodic(1, timed, 300)
+	Timers.countdown:addPeriodic(1, timed, 301)
+
+	-- winning condition
+	playersWin = false
 end
 
 -- function dispatchEnemies()
@@ -121,7 +125,9 @@ end
 -- end
 
 function timed()
-	if (seconds == 0) then
+	if (seconds == 0 and minutes == 0) then
+		state:playersWin()
+	elseif (seconds == 0) then
 		seconds = 59
 		minutes = minutes - 1
 	else
@@ -145,6 +151,7 @@ function state:leave()
 	end
 	Timers.enemyTimer:clear()
 	Timers.countdown:clear()
+	bomb:reset()
 end
 
 function state:update(dt)
@@ -164,7 +171,10 @@ function state:update(dt)
 		if player.isplaying then
 			player:update(math.min(dt, 1/60))
 			defusing = isDefusing(player)
-			if defusing then bomb:defuse(dt) end
+			if defusing then bomb:defuse(dt) 
+				--else bomb:infuse(dt)
+			end
+
 		end
 	end
 	
@@ -188,6 +198,12 @@ function state:update(dt)
 
 	if deadCount >= MAXDEAD then 
 		s3removeDead()
+	end
+
+	if not playersWin then
+		if (bomb.health < 1 ) then 
+			state:playersWin()
+		end
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
 end
@@ -243,6 +259,7 @@ function state:draw()
 	-- 	love.graphics.print("defusing bomb \n "..bomb.health, bomb.position.x, bomb.position.y - 50)
 	-- end
 
+	drawHud(font12)
 	jumperDebug.drawPath(font12, path, true)
 	-- jumperDebug.drawPath(font12, _path, true)
 end 
@@ -350,6 +367,9 @@ function state:movecam(dt)
 		-- Nothing to do here just yet.
 	end
 
+	if isGameOver then
+        gameovercam(state.cam)
+    end
 	state.camWorldWidth = love.graphics.getWidth() / zoom
 	state.camWorldHeight = love.graphics.getHeight() / zoom
 	

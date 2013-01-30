@@ -33,7 +33,7 @@
  </tileset>
  <layer name="Collision" width="35" height="30">
   <data encoding="base64" compression="zlib">
-   eJztk8EKACEIRMVz//+9e9kgwmQjbWqZB0JK5CNURUTBUWnPlfLGrtxzQUEXmz+4jOZvtm65RL0d4XICN7iM/jOzrs598o3sfernBbnbN+wRArrYzLr0c7eaey7RvVZckJzmgg5CSBwPU6kDuQ==
+   eJztk9EKwCAIRcXn/f/37qVBiMmGyq1xDwgpUodQFREFx8N8nmu2pzOPXFDQxecPLteIbN1zqbq7wmUHTnBZ/WdnXYN+8o7ufbLzgtztE/YIAV18vrrYucvmkUv1WxkXJLu5oIMQUscNzRoDLQ==
   </data>
  </layer>
  <layer name="Unwalkable" width="35" height="30">
@@ -59,11 +59,6 @@
  <layer name="Tile Layer " width="35" height="30">
   <data encoding="base64" compression="zlib">
    eJztyLENADAIAzD+f4m5c1/qDVSKxGCPrgJgsw7/xAn/xA0/AAB/HtXMCT0=
-  </data>
- </layer>
- <layer name="Bomb" width="35" height="30">
-  <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20JT6AAAAAAPgYQaAAB
   </data>
  </layer>
 </map>

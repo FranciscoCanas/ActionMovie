@@ -1,8 +1,8 @@
-Tens = 0
-Ones = 10
+
 Bomb = Class{
 	function(self, position)
 		self.health = 100
+		self:reset()
 		self.position = position
 		self.image = love.graphics.newImage('art/bomb.png')
 
@@ -19,6 +19,18 @@ Bomb = Class{
 		for i=1,11,1 do
 			self.numbers[i] = Anim8.newAnimation('once', 
 				self.numbers.grid:getFrames(i..',1'),
+				1)
+		end
+
+		self.bar = {}
+		self.bar.img = love.graphics.newImage('art/bombBar.png')
+		self.bar.grid = Anim8.newGrid(1, 3, 
+			self.bar.img:getWidth(),
+			self.bar.img:getHeight())
+
+		for i = 1, 10, 1 do
+			self.bar[i*2] = Anim8.newAnimation('once',
+				self.bar.grid:getFrames(i..',1'),
 				1)
 		end
 
@@ -66,6 +78,8 @@ function Bomb:draw()
 	self:drawNumber(ones, Vector(self.position.x+47, self.position.y+12))
 end
 
+
+
 function Bomb:drawNumber(num, position) 
 	if (num == 1) then
 		self.numbers[1]:drawf(self.numbers.img, position.x, position.y)
@@ -87,10 +101,25 @@ function Bomb:drawNumber(num, position)
 		self.numbers[9]:drawf(self.numbers.img, position.x, position.y)
 	elseif (num == 0) then
 		self.numbers[10]:drawf(self.numbers.img, position.x, position.y)
+	elseif (num == 10) then
+		self.numbers[10]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[1]:drawf(self.numbers.img, position.x-4, position.y)
 	else
 		self.numbers[11]:drawf(self.numbers.img, position.x, position.y)
 	end
 end
+
+function Bomb:reset() 
+
+	self.health = 100
+	tens = -1
+	ones = 0
+	if self.fixture then
+		self.fixture:destroy()
+	end
+end
+
+
 
 function Bomb:update(dt)
 	self.fxEmitter:update(dt)
@@ -100,13 +129,15 @@ function Bomb:defuse(rate)
 	if self.health > 0 then
 		self.health = self.health - 1.5*rate
 		tens = math.floor((100-self.health)/10)
+		if tens == 0 then tens = -1 end	
 		ones = math.floor((100 - self.health)%10)
 	end	
 end
 
-function Bomb:infuse()
+function Bomb:infuse(rate)
+	if not rate then rate = 2 end
 	if self.health < 100 then
-		self.health = self.health + 1
+		self.health = self.health + 0.5*rate
 		tens = math.floor((100-self.health)/10)
 		ones =math.floor((100 - self.health)%10)
 	end
