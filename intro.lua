@@ -57,8 +57,10 @@ love.graphics.setFont( font)
 	e1 = Enemy(love.graphics.newImage('art/Enemy1Sprite.png'),Vector(2800,420),MOVETOSETSPOT,false)
 	e2 = Enemy(love.graphics.newImage('art/Enemy1SpriteB.png'),Vector(2900,420),MOVETOSETSPOT, false)
 	e3 = Enemy(love.graphics.newImage('art/Enemy1SpriteC.png'),Vector(3000,420),MOVETOSETSPOT, false)
+    e4 = Enemy(love.graphics.newImage('art/Enemy2Sprite.png'),Vector(3100,420),MOVETOSETSPOT, false)
+	e5 = Enemy(love.graphics.newImage('art/Enemy2SpriteB.png'),Vector(2700,420),MOVETOSETSPOT, false)
 
-	guys = {player1, player2, e1, e2, e3}
+	guys = {player1, player2, e1, e2, e3, e4, e5}
 
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
@@ -125,11 +127,15 @@ love.graphics.setFont( font)
 
 	-- around 32.75 or so
 	stringTimer:add(33, function()
-                titleScene = cityImage
-				state.camdx = 0
+                
 				state:titleExplosion()
 				currentString = ""
 			end)
+    stringTimer:add(34, function()       
+                titleScene = cityImage
+				state.camdx = 0
+                drawTitle = true
+        end)
 
 	stringTimer:add(37, function()
                 titleScene = alleyImage
@@ -171,7 +177,7 @@ love.graphics.setFont( font)
 
 	stringTimer:add(46, function()
 				mcGuffAnim = player2.standAnim					
-				currentString = "Cisco as Detective McGuff"
+				currentString = "Cisco San Franco as Detective McGuff"
 				state:closeUp(player2)
 			end)
 
@@ -240,11 +246,24 @@ love.graphics.setFont( font)
 		e3.frameFlipH = true
 	end)
 
-	stringTimer:add(68.5, function()
+	stringTimer:add(67.5, function()
 		e3.frameFlipH = false
 	end)
+
+    stringTimer:add(69, function()
+		currentString = "Tim Buttersfield as \"Kung Fu Chang\""
+		state:bodyShot(e5)
+		e5.animation = e5.shootAnim
+	end)
+
+stringTimer:add(73, function()
+		currentString = "and Sir Alex P. Jefferson the Third as \"Apollo Creed Jr.\""
+		state:bodyShot(e4)
+		e4.animation = e4.shootAnim
+	end)
+
 -- start at 70
-    stringTimer:add(71, function()
+    stringTimer:add(76, function()
 --        titleScene = nil
         currentString=""
         player1:setPosition(Vector(600,2650))        
@@ -260,36 +279,57 @@ love.graphics.setFont( font)
         e3:setPosition(Vector(705,2580))
         e3.animation = e3.runAnim
         e3.frameFlipH = true
+        e4:setPosition(Vector(515,2670))
+        e4.animation = e3.runAnim
+        e4.frameFlipH = true
+        e5:setPosition(Vector(560,2680))
+        e5.animation = e3.runAnim
+        e5.frameFlipH = true
         state:discoShot()
     end)
 
-    stringTimer:add(72, function()
+    stringTimer:add(77, function()
         state:discoDance(guys)
 	end)
 
-	stringTimer:add(73, function()
+	stringTimer:add(78, function()
         state:discoDance(guys)
 	end)
 
 
-	stringTimer:add(74, function()
+	stringTimer:add(79, function()
         state:discoDance(guys)
 	end)
         
-    stringTimer:add(75, function()
+    stringTimer:add(80, function()
         state:discoDance(guys)
     end)
 
-  stringTimer:add(76, function()
+  stringTimer:add(81, function()
         state:discoDance(guys)
-        state.camdz = 1
+        state.camdz = 0.5
     end)
-
     stringTimer:add(84, function()
+        state:discoDance(guys)
+    end)
+
+    stringTimer:add(86, function()
+        state:discoDance(guys)
+    end)
+
+    stringTimer:add(90, function()
+        state:discoDance(guys)
+    end)
+
+    stringTimer:add(94, function()
+        state:discoDance(guys)
+    end)
+
+    stringTimer:add(100, function()
 		state:titleExplosion()
     end)
 
-	stringTimer:add(85, function()
+	stringTimer:add(101, function()
         titleScene = cityImage
         drawTitle = true
 		currentString = ""
@@ -300,7 +340,7 @@ love.graphics.setFont( font)
 	end)
 
 
-	stringTimer:add(103, function()
+	stringTimer:add(105, function()
 			Gamestate.switch(Gamestate.menu)
 		end)
 
@@ -334,6 +374,8 @@ function state:update(dt)
 	e2.animation:update(dt)
 	--e1:update(dt)
 	e3.animation:update(dt)
+    e4.animation:update(dt)
+    e5.animation:update(dt)
 	discoball.animation:update(dt)
 	if drawMurderBaller then
 		murderBaller:update(dt)
@@ -369,6 +411,8 @@ function state:draw()
 	e1:draw()
 	e2:draw()
 	e3:draw()
+    e4:draw()
+    e5:draw()
 	state.cam:detach()	
 
 		if drawMurderBaller then
@@ -410,7 +454,6 @@ end
 
 function state:titleExplosion()
 	self.explosion:start()
-	drawTitle = true
 end
 
 function state:zoomCrispy()

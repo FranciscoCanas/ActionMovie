@@ -46,9 +46,13 @@ function(self, image, position, type, rand)
 		self.grid('1-3, 1'),
 		self.frameDelay)
 		
-	self.shootAnim = Anim8.newAnimation('once',
+	self.shootAnim = Anim8.newAnimation('loop',
 		self.grid('1-2, 2'),
 		self.frameDelay)
+
+    self.hurtAnim = Anim8.newAnimation('once',
+        self.grid('1,3'),
+        self.frameDelay)
 		
 	self.diesAnim = Anim8.newAnimation('once',
 		self.grid('1-2, 3'),
@@ -152,6 +156,7 @@ function Enemy:init()
 	moveToShoot = 2
 	shoot = 4
 	moveToCover = 8
+    hurt = 16
 	self.state = idle
 	
 	-- direction to move to during an update
@@ -189,7 +194,9 @@ function Enemy:update(dt)
    elseif self.state == moveToCover then
 		self:moveToCover()
    elseif self.state == dying then
-   
+        return
+   elseif self.state == hurt then
+        return
    end
    
    if (self.delta.x < 0) then
@@ -519,6 +526,14 @@ end
 -- called by world collision callback in main.lua
 function Enemy:isShot(bullet, collision)
 local pos = Vector(self.position.x + 10, self.position.y + 20)
+
+    -- change animation temporarily
+    self.animation = self.hurtAnim
+    self.state = hurt
+    self.timer:add(0.5, function()
+            self.state = idle
+            self.animation = self.standAnim
+        end)
 
 -- set up the bloody splurty guy
 	self.bloodEmitter:setDirection(0)
