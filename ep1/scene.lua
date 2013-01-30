@@ -334,4 +334,3 @@ function state:movecam(dt)
         gameovercam(state.cam)
     end
 end
-
