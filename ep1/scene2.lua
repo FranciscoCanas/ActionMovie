@@ -79,9 +79,9 @@ function state:enter()
 
 	--set up murderballer
 	state.murderballer = Murderballer()
-	state.murderballer.position = Vector(dimScreen.x - 100, 715)
+	state.murderballer.position = Vector(dimScreen.x - 200, dimScreen.y-100)
 	state.murderballer.animation = murderballer.runAnim
-	state.murderballer.delta = Vector(100,0)
+	state.murderballer.delta = Vector(150,0)
 	state.murderballer.scale = 1	
 
 	-- make objects in map solid
@@ -108,12 +108,12 @@ function state:enter()
 	-- set up some innocent bystanders here --
 	bystanders = {}
 --	table.insert(bystanders, Bystander(love.graphics.newImage('art/femaleBystander.png'), Vector(1000,800)))
-	bystanderPositions = {Vector(dimScreen.x/2,1000), Vector(dimScreen.x/2,900), Vector(dimScreen.x,1200), Vector(700,1050),
+	bystanderPositions = {Vector(dimScreen.x/2,400), Vector(dimScreen.x/2,400), Vector(dimScreen.x,1000), Vector(700,450),
                     Vector(dimScreen.x/2 + 100,1000), Vector(dimScreen.x/2+ 120,900), Vector(dimScreen.x-100,1200), Vector(700,1050)}
 	bystanderTimer = Timer.new()
     state:spawnBystanders()
     state:addBystanders(bystanderPositions)
-	bystanderTimer:addPeriodic(math.random(1,3), function()
+	bystanderTimer:addPeriodic(2, function()
 		state:spawnBystanders()
 		end)
 	
@@ -123,9 +123,7 @@ function state:enter()
 	deadCount = 0
 --	insertEnemy(bystandersPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(2, function() self:spawnEnemy() end)
-
-
+	enemyTimer:addPeriodic(4, function() self:spawnEnemy() end)
 end
 
 function state:addBystanders(positions)
@@ -140,7 +138,7 @@ function state:addBystanders(positions)
 end
 
 function state:spawnBystanders()
-	local posx, posy
+	local posx, posy = state.cam:worldCoords(state.cam.x, state.cam.y)
 
 	for i = 1,math.random(1,5),1 do 
 		if math.random(1,2) == 1 then
@@ -149,11 +147,8 @@ function state:spawnBystanders()
 			img = 'art/maleBystander.png'
 		end
 
-		posx = state.cam.x + dimScreen.x + math.random(600,1800)
-		posy = math.random(200, dimScreen.y - 100)
---      posx = state.murderballer.position.x
---      posy = state.murderballer.position.y
-
+		posx = posx + math.random(dimScreen.x + 100, dimScreen.x + 600)
+		posy = math.random(400, dimScreen.y - 50)
 		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
 	end
 end
@@ -317,8 +312,9 @@ function state:draw()
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
-    love.graphics.print(state.murderballer.position.x, 200, 50)
-    love.graphics.print(state.cam.x, 700, 80)
+--    love.graphics.print(state.murderballer.position.x, 200, 50)
+  --  love.graphics.print(state.murderballer.position.y, 200, 100)
+--    love.graphics.print(state.cam.x, 700, 80)
     drawHud(font24)
 end 
 
@@ -336,8 +332,9 @@ function state:spawnEnemy()
 	local totEnemy = #enemies
 	local curDead = deadCount
     local spawnVector = {}
+    local posx, posy = state.cam:worldCoords(state.cam.x, state.cam.y)
 	while totEnemy - curDead < 1 do
-        table.insert(spawnVector, Vector((state.murderballer.position.x + math.random(600,1000)), math.random(400, 800)))
+        table.insert(spawnVector, Vector((posx + math.random(dimScreen.x+200,dimScreen.x+500)), math.random(300,dimScreen.y-50)))
 		totEnemy = totEnemy+1
 	end
 	state:insertEnemy(spawnVector, FOLLOWPLAYER, true)

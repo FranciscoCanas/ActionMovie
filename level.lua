@@ -102,9 +102,7 @@ function Level:draw()
 	-- drawing out the position of collision boxes
 	if self.drawObstacles then
 		for id, object in next,obstacles,nil do
-			love.graphics.polygon("fill", object.body:getWorldPoints(object.shape:getPoints()))
-
-			
+			love.graphics.polygon("fill", object.body:getWorldPoints(object.shape:getPoints()))		
 		end	
 	end
 

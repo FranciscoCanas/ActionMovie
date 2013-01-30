@@ -1,4 +1,4 @@
-Action Movie, The Series: The Video Game
+Action Movie: The Series: The Video Game
 
 Christy Sham 
 Francisco Canas
@@ -6,21 +6,46 @@ Francisco Canas
 A game design and development deathmatch submission for the GMD 2013 
 event at the University of Toronto's Game Design and Development Club.
 
-Using the Love2d game making framework.
+ABSTRACT:
+If Shaft, V.I. Warshawski, and Magnum P.I. had a threesome (the movies and tv show I mean, not the people, although that'd be awesome too!), and if this threesome resulted in a badass love child that was a video game, it would be Action Movie: The Series (the video game). Action Movie is based loosely on youtube's The Worst Movie Death Scene ever, and highly influenced by the best and worst of 70s action B-movies and 80s action tv series. 
 
-The following libraries are used by permission under the MIT License 
+Action Movie has everything: Gunfights, chase scenes, explosions, midgets, disco dancing, The President, all you can eat Tacos, and more.
+
+So strap yourself in, turn up the volume on your shitty laptop speakers, and get ready for Action. Action Movie, that is!
+
+CONTROLS:
+During Play:
+Crispy moves with w,a,s,d and shoots with f.
+McGuff moves with o,k,l,; and shoots with j.
+
+During Cutscenes:
+f and j advance the dialogue.
+Enter skips the cutscene.
+
+Esc always returns you to the main menu, and quits if already there.
+
+
+
+TECHNICAL:
+Action Movie was made using the Love2d game making framework.
+Programmed in LUA by Christie and Francisco
+All music by Francisco
+All graphics by Christie (except as noted below)
+
+The following love2d libraries are used by permission under the MIT License: 
 (Terms of use specified under LICENSE file)
-anim8 by Enrique García Cota
-HUMP by Matthias Richter.
+anim8 by Enrique García Cota: https://github.com/kikito/anim8
+HUMP by Matthias Richter: http://vrld.github.com/hump/
+Advanced Tile Loader by Kadoba: https://github.com/Kadoba
+Jumper by Yonaba: https://github.com/Yonaba
 
 List of Creative Common / Open Source assets used:
+Murderballer #2 sprite by Adrian Paulozza (from Murderball 2013 by Francisco Canas and Adrian Paulozza)
 
-Sound:
-Gunshot1: Gunshot3.mp3 by tcawte	from www.freesound.org
+All sound effects used from www.freesound.org:
+Gunshot1: Gunshot3.mp3 by tcawte	
 Gunshot2: Gunshot.wav by erkanozan
 Gunshot3: Gunshot.wav by KwazieProduksuns
-Scream1: wilhelm_scream_outtake.wav 
-scream2: 
-scream3: by Syna-Max
+Screams by Syna-Max
 
-Graphics:
+

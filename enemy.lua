@@ -100,16 +100,16 @@ function(self, image, position, type, rand)
 
 	self.body:setLinearDamping( self.damping )
 
--- particle sys stuff go here now!
+-- gun particles:
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
-	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
-	self.gunEmitter:setEmissionRate(500)
-	self.gunEmitter:setLifetime(0.01)
-	self.gunEmitter:setParticleLife(0.25)
+	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 200 )
+	self.gunEmitter:setEmissionRate(800)
+	self.gunEmitter:setLifetime(0.02)
+	self.gunEmitter:setParticleLife(0.075)
 	self.gunEmitter:setSpread(3.14/4)
 	self.gunEmitter:setSizes(0.05, 0.25)
-	self.gunEmitter:setGravity(0,0)
-	self.gunEmitter:setSpeed(200,300)
+	self.gunEmitter:setGravity(0,9.8)
+	self.gunEmitter:setSpeed(300,500)
 
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
@@ -487,6 +487,7 @@ function Enemy:shoot()
 		self.gunEmitter:setDirection( aim )
 		
 		pos = pos + self.facing * 25
+        self.gunEmitter:setPosition(pos.x, pos.y-10)
 		self.timer:add(0.25, function()
 			
 			self.gunEmitter:start()

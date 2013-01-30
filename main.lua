@@ -68,6 +68,7 @@ function love.load()
 	-- Gamestate inits:
 	Gamestate.registerEvents()
 	Gamestate.switch(Gamestate.intro)
+    love.mouse.setVisible(false)
 	
 	-- Graphic options:
 	love.graphics.setMode(

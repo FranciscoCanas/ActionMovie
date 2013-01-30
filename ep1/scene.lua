@@ -18,6 +18,7 @@ local keypressed = "none"
 -- some fonts
 font12 = love.graphics.newFont(12) 
 font16 = love.graphics.newFont(16)
+font32 = love.graphics.newFont(32)
 
 -- Stuffs local to scene
 local MAXDEAD = 32
@@ -57,7 +58,7 @@ function state:enter()
 	state.camZoomRatio = 400
 	--boundaries for the state.camera
 	state.camLeft = 0
-	state.camRight = 6000
+	state.camRight = 6500
 	state.camTop = 0
 	state.camBottom = 1000
 	-- camera code ends here --
@@ -89,7 +90,10 @@ function state:enter()
 	deadCount = 0
 --	state:insertEnemy(enemiesPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(2, function() self:spawnEnemy() end)
+	enemyTimer:addPeriodic(2, function() 
+            
+                self:spawnEnemy() 
+         end)
 	
 	eventTimer = Timer.new()
 end
@@ -216,25 +220,12 @@ function state:draw()
 	
 	state.cam:detach()
 
-	love.graphics.setFont( font16 )
-    love.graphics.print("Bad Guys Left: ", dimScreen.x-25, 10)
-    love.graphics.print(TARGETDEAD, dimScreen.x,10)
+	love.graphics.setFont( font32 )
+    love.graphics.print("Bad Guys Left: "..TARGETDEAD, dimScreen.x/2-75, 10)
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.
-	--love.graphics.print("Scene Placeholder", 10, 10)
-	-- love.graphics.print(player1.position.x, 200, 10)
-	-- love.graphics.print(player1.position.y, 220, 10)
-	-- love.graphics.print(player1.facing.x, 200, 30)
-	-- love.graphics.print(player1.facing.y, 210, 30)
-	-- love.graphics.print(player1.health, 50, 50)
-	-- love.graphics.print("clicked", 10, 70)
-	-- love.graphics.print(tileX or 0, 60, 70)
-	-- love.graphics.print(tileY or 0, 80, 70)
-	-- love.graphics.print("player1", 10, 90)
-	-- love.graphics.print(playerX or 0, 60, 90)
-	-- love.graphics.print(playerY or 0, 80, 90)
-	-- jumperDebug.drawPath(font12, path, true)
+
 	drawHud(font12)
 end 
 
@@ -249,11 +240,15 @@ function state:removeDead()
 end
 
 function state:spawnEnemy()
+    if (# enemies + deadCount) >= TARGETDEAD then
+        return
+    end
 	local totEnemy = #enemies
 	local curDead = deadCount
     local spawnVector = {}
+    local posx, posy = state.cam:worldCoords(state.cam.x, state.cam.y)
 	while totEnemy - curDead < 3 do
-        table.insert(spawnVector, Vector((state.cam.x + dimScreen.x + math.random(1000,1400)), 800 + math.random(100, 600)))
+        table.insert(spawnVector, Vector((posx + math.random(dimScreen.x,dimScreen.x+400)), 800 + math.random(100, dimScreen.y-100)))
 		totEnemy = totEnemy+1
 	end
 	state:insertEnemy(spawnVector, FOLLOWPLAYER, true)
@@ -349,15 +344,3 @@ function state:movecam(dt)
         gameovercam(state.cam)
     end
 end
-
-
--- function state:mousepressed(x,y,button)
--- 	if button == 'l' then
--- 		--x,y = cam:worldCoords(x_, y_)
--- 		tileX, tileY = background:toTile(x, y)
--- 		x_, y_ = player1:getCenter()
--- 		playerX, playerY = background:toTile(x_, y_)
--- 		-- getPath doesn't work when zooming is involved atm
--- 		path, length =pather:getPath(playerX, playerY, tileX, tileY)
--- 	end
--- end
