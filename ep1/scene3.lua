@@ -35,7 +35,7 @@ end
 function state:enter()
 	-- set up sound objects here
 	bgMusicList = {"music/meanStreets.ogg"}
---	TEsound.playLooping(bgMusicList, "bgMusic")
+	TEsound.playLooping(bgMusicList, "bgMusic")
 	
 	-- initialize world here
 	-- world:setGravity(0,9.8*love.physics.getMeter())
