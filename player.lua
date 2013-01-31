@@ -73,14 +73,15 @@ function(self, num)
 	
 	-- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
-	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 500 )
+		self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 500 )
 	self.bloodEmitter:setEmissionRate(500)
 	self.bloodEmitter:setLifetime(0.02)
-	self.bloodEmitter:setParticleLife(0.3)
+	self.bloodEmitter:setParticleLife(0.35)
 	self.bloodEmitter:setSpread(3.14/3)
-	self.bloodEmitter:setSizes(0.3, 1.0)
-	self.bloodEmitter:setGravity(0,9.8)
-	self.bloodEmitter:setSpeed(200,320)
+	self.bloodEmitter:setSizes(0.1, 0.5)
+	self.bloodEmitter:setGravity(0,100)
+	self.bloodEmitter:setSpeed(200,300)
+	self.bloodEmitter:stop()
 
 end
 }

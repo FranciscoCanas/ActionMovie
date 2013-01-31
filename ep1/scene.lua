@@ -21,7 +21,7 @@ font32 = love.graphics.newFont(32)
 
 -- Stuffs local to scene
 local MAXDEAD = 32
-local TARGETDEAD = 30 -- end scene once we kill this many dudes
+local TARGETDEAD = 20 -- end scene once we kill this many dudes
 
 
 function state:init()	
@@ -243,7 +243,7 @@ function state:spawnEnemy()
     local spawnVector = {}
     local posx, posy = state.cam:worldCoords(state.cam.x, state.cam.y)
 	while totEnemy - curDead < 3 do
-        table.insert(spawnVector, Vector((posx + math.random(dimScreen.x,dimScreen.x+400)), 800 + math.random(100, dimScreen.y-100)))
+        table.insert(spawnVector, Vector((posx + math.random(dimScreen.x+200,dimScreen.x+600)), 800 + math.random(100, dimScreen.y-100)))
 		totEnemy = totEnemy+1
 	end
 	state:insertEnemy(spawnVector, FOLLOWPLAYER, true)

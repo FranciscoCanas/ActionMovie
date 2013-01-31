@@ -59,8 +59,13 @@ love.graphics.setFont( font)
 	e3 = Enemy(love.graphics.newImage('art/Enemy1SpriteC.png'),Vector(3000,420),MOVETOSETSPOT, false)
     e4 = Enemy(love.graphics.newImage('art/Enemy2Sprite.png'),Vector(3100,420),MOVETOSETSPOT, false)
 	e5 = Enemy(love.graphics.newImage('art/Enemy2SpriteB.png'),Vector(2700,420),MOVETOSETSPOT, false)
+	
+	b1 = Bystander(nil,Vector(5000,0))
+	b2 = Bystander(nil,Vector(5000,0))
+	b3 = Bystander(nil,Vector(5000,0))
+	b4 = Bystander(nil,Vector(5000,0))
 
-	guys = {player1, player2, e1, e2, e3, e4, e5}
+	guys = {player1, player2, e1, e2, e3, e4, e5,b1,b2,b3,b4}
 
 -- particle sys stuff go here now!
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
@@ -262,7 +267,7 @@ stringTimer:add(73, function()
 		e4.animation = e4.shootAnim
 	end)
 
--- start at 70
+-- start at 77
     stringTimer:add(77, function()
 --        titleScene = nil
         currentString=""
@@ -285,6 +290,18 @@ stringTimer:add(73, function()
         e5:setPosition(Vector(560,2680))
         e5.animation = e3.runAnim
         e5.frameFlipH = true
+		
+		b1:setPosition(Vector(400,2600))
+		b1.animation = b1.danceAnim
+		b2:setPosition(Vector(770,2670))
+		b2.frameFlipH = true
+		b2.animation = b1.danceAnim
+		b3:setPosition(Vector(787,2700))
+		b3.animation = b1.danceAnim
+		b3.frameFlipH = true
+		b4:setPosition(Vector(720,2630))
+		b4.animation = b1.danceAnim
+		b4.frameFlipH = true
         state:discoShot()
     end)
 
@@ -307,7 +324,7 @@ stringTimer:add(73, function()
 
   stringTimer:add(82, function()
         state:discoDance(guys)
-        state.camdz = 0.5
+        state.camdz = 1.0002
     end)
     stringTimer:add(84, function()
         state:discoDance(guys)
@@ -356,6 +373,7 @@ end
 function state:update(dt)
 -- trying this frame limiter here
 	frameLimiter(dt)
+	dt = math.min(dt, 1/60)
 	world:update(dt)
 
 	stringTimer:update(dt)
@@ -376,6 +394,11 @@ function state:update(dt)
 	e3.animation:update(dt)
     e4.animation:update(dt)
     e5.animation:update(dt)
+	
+	b1.animation:update(dt)
+	b2.animation:update(dt)
+	b3.animation:update(dt)
+	b4.animation:update(dt)
 	discoball.animation:update(dt)
 	if drawMurderBaller then
 		murderBaller:update(dt)
@@ -413,6 +436,10 @@ function state:draw()
 	e3:draw()
     e4:draw()
     e5:draw()
+	b1:draw()
+	b2:draw()
+	b3:draw()
+	b4:draw()
 	state.cam:detach()	
 
 		if drawMurderBaller then

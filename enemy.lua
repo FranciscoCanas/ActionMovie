@@ -35,8 +35,6 @@ function(self, image, position, type, rand)
 			self.image:getWidth(),
 			self.image:getHeight())
 	
---	self.scalex = math.random(0.5, 0.8)
---	self.scaley = math.random(0.6, 0.8)
 
 	self.standAnim = Anim8.newAnimation('loop', 
 			self.grid:getFrames('1, 1'),
@@ -46,7 +44,7 @@ function(self, image, position, type, rand)
 		self.grid('1-3, 1'),
 		self.frameDelay)
 		
-	self.shootAnim = Anim8.newAnimation('loop',
+	self.shootAnim = Anim8.newAnimation('once',
 		self.grid('1-2, 2'),
 		self.frameDelay)
 
@@ -113,14 +111,14 @@ function(self, image, position, type, rand)
 
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
-	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 200 )
+	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 500 )
 	self.bloodEmitter:setEmissionRate(500)
-	self.bloodEmitter:setLifetime(0.01)
-	self.bloodEmitter:setParticleLife(0.5)
+	self.bloodEmitter:setLifetime(0.02)
+	self.bloodEmitter:setParticleLife(0.35)
 	self.bloodEmitter:setSpread(3.14/3)
-	self.bloodEmitter:setSizes(0.1, 1.0)
-	self.bloodEmitter:setGravity(50,50)
-	self.bloodEmitter:setSpeed(200,370)
+	self.bloodEmitter:setSizes(0.1, 0.5)
+	self.bloodEmitter:setGravity(0,100)
+	self.bloodEmitter:setSpeed(200,300)
     self.bloodEmitter:stop()
 end
 }
@@ -133,12 +131,12 @@ function Enemy:init()
 	self.destination = nil
 
 	self.inRange = 32  -- y axis shooting boundary
-	self.maxTargetRange = dimScreen.x-200 --/ max distance from player to shoot
+	self.maxTargetRange = dimScreen.x-300 --/ max distance from player to shoot
 	self.minTargetRange = 100 --/ min distance from player to shoot
-	self.observePlayerRange = dimScreen.x -- distance to interact with player
+	self.observePlayerRange = dimScreen.x-100 -- distance to interact with player
 	
 	if (self.rand) then
-		self.scalex = math.random(50, 70) / 100
+		self.scalex = math.random(50, 70)/ 100
 		self.scaley = math.random(50, 90)/ 100
 	else
 		self.scalex = 0.7
@@ -181,6 +179,10 @@ function Enemy:update(dt)
 	self.timer:update(dt)
 	-- delta holds direction of movement input
 	self.delta = Vector(0,0)
+	
+	if self.fired then 
+		return
+	end
 	
    -- this is our finite state machine handling
    -- structure here
@@ -445,7 +447,7 @@ function Enemy:shoot()
 		self.fired = true
 		self.animation = self.shootAnim
 		self.animation:gotoFrame(1)
-		self.timer:add(1.0, function() 
+		self.timer:add(1.5, function() 
 					self:stopShoot() 
 				end)
 		-- face the target
@@ -588,7 +590,9 @@ function Enemy:SetNearestTarget()
 			if player.isplaying and player.isalive then
 				local px, py = player.body:getWorldCenter()
 				
-				thisdist = (Vector(px, py) - Vector(mx, my)):len()
+				--thisdist = (Vector(px, py) - Vector(mx, my)):len()
+				-- y dist only:
+					thisdist = math.abs(py-my)
 				
 				if thisdist < leastdist then
 					leastdist = thisdist
