@@ -45,7 +45,8 @@ love.graphics.setFont(font)
 -- background
 	alleyScene = love.graphics.newImage("art/titleScene.png")
     cityScene = love.graphics.newImage("art/cityscape.png")
-    backgroundScene = alleyScene
+    officeScene = love.graphics.newImage("art/officeScene.png")
+    backgroundScene = officeScene
 
 -- players
 	player1:setPosition(Vector(400,500))

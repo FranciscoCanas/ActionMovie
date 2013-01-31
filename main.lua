@@ -13,7 +13,7 @@ require "enemy"
 require "bullet"
 require "bystander"
 require 'murderballer'
-
+Hud = require "hud"
 
 
 
@@ -132,15 +132,18 @@ end
 
 function drawHud(oldFont)
 	love.graphics.setFont(hudFont)
+	heart = love.graphics.newImage('art/heart.png')
 	if player1.isplaying then
 		for i=1,player1.health do
-			love.graphics.print( "@", 5 + (i*20), 5)
+			--love.graphics.print( "@", 5 + (i*20), 5)
+			love.graphics.draw( heart, 5 + (i*30), 5)
 		end
 	end
 	
 	if player2.isplaying then
 		for i=1,player2.health do
-			love.graphics.print( "@", dimScreen.x - 20 - (i*20), 5)
+			--love.graphics.print( "@", dimScreen.x - 20 - (i*20), 5)
+			love.graphics.draw(heart, dimScreen.x - 20 - (i*30), 5)
 		end
 
 	end

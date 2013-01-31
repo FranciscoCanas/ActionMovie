@@ -216,7 +216,7 @@ function state:draw()
 	state.cam:detach()
 
 	love.graphics.setFont( font28 )
-    love.graphics.print("Bad Guys Left: "..TARGETDEAD-deadCount, dimScreen.x/2-90, 10)
+    love.graphics.print("Bad Guys Left \n         "..TARGETDEAD-deadCount, dimScreen.x/2-90, 10)
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.

@@ -23,22 +23,27 @@
  </layer>
  <layer name="Ground" width="300" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt00sKg0AQBFDP4f3ibbLOJXLIkN0gI9Io9gz9Gh7kJxRVZFuWZZtEe68B8lRnj3hP2Vnsq7+q7BHvKTuLffP6ew+QqbL2srOMbNae2vN/u97fZ4BMlbWXnWVks/bUnv/b9f6y81Rnj3hP2Vnsq7+q7BHvKTuLffVXlT3iPWVnsa/+qrJHvKfsLPbVX1X2iPeUnWX2fb8AAAAAAAAAAAAAAAAAAAAAAADwoP+tS/9WHmcPONa77EyV2QOOtXf2u/3vz57BHnCn9nqfr53vsAdk2F/kud7r3nvsAXf4AaEdNS8=
+   eJzt01sKgzAQBdCsw/3V3fS7m2j3WPwLEpEBcSJzAgf6ULjcS9bW2voQv85rgjzV2SPeU3YW++qvKnvEe8rOYt+8/t4TZKrsqfdQT/Hc7lvct7P195kgU2X9HtlZZvbUnty3a/vLzlOdPeI9ZWexr/6qske8p+ws9tVfVfaI95Sdxb76q8oe8Z6ys9hXf1XZI95Tdpan7/sFAAAAAAAAAAAAAAAAAAAAAACAG21naeOzcDt7wLHRyc5UmT3gWH/Onts/f/YO9oAr9Wf0+zL4D3tAhv2JvDf6PPqOPeAKfwISfeM=
   </data>
  </layer>
- <layer name="Bricks" width="300" height="30">
+ <layer name="Bricks and stores" width="300" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt2cdug0AUhWGc3lZpq7Sns3fBr5FtHjO993ZQsHQ1msEwEORR/k86IqbNHQQ3OMmyasMp25s4Dqwf1zh25FmXt6jlL88VK3R9AExX9Cq3l9j+VdVn6vSgJnz9qkqo/xQ9Iaa2mGNCNcxCbwRSddJiOWx5/GSZT9nu9quqd5Fp7ymh3uMeZ/cL9ZhxjfEAdOc0Ypn3fFzT96tZ6CFNa+j6nRT4L3zPmn2ehs6y7bl97HhN+5U7ju9dqW4dTb6/xfbJWeivQAqKZ3lofrZCz5Hbp3KzPvSeUOfcoWMn/Sr0nW0yh7zmOFnWbg6257n9zHdssW6UpXGtY6UwN9/vvb7qdsfz/S2V61R97jPlXLkoc6lcKSuDLFtV1sqsKxvKjbbdKnfKvXJdxl0fOq/d145h9/eNUfV+lcocUqkzRipzc++jPurmOnVX94M+PypPZZ6VF2VT27aU7TI7yq7ypm3vyofyqbyWcdeHzmv3tWPY/X1jhPrVuGKsWZtDKnXGSGVu7n3UR91cp+7q/tLn76KgwW8Gypyyp+wrB2UOlSNlQVlUlpRlZb6Muz50XruvHcPu7xuj6v+DqcwhlTpjpDI39z7qpW6uU2d1AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC0/EZkZsQ==
+   eJztmdeu2zAMhp3uBZzuq/a0QHsereld7DxGb/uY3XsvGrUAghAtegXHwPcBP+TIokhRI45TVf1sC/eHsHPqm4Dt00xdPSGWqX0t0T7lZz/RV0skp1NscvORw46lpTSenE2UOdZEJA+5NhG73NhKdo1pM2SMU3IZ7XOqD89+6Fy2Z5XNpT6/+vI8Zr/0Udof1p831l2mbYQxNl4Mtn5qrqLzOse409rKzUdk3e6d6xJ6jGP2R1+O+vIy5vzbm3IsdaCPqI/GuR7aT9SHV1/y4/Wh7Z5NKLcT7VNZF+7b/eE9q5XutXg5sXaR77Qm4G8Ic5/zS/htc2Hn48kMMSzxLLAEkThTPr1nZe/crlW5RD7GPgMuxZj1/nxEWR/YLvr7IzHnGTKWoTEssZaWOv+88+o0nDlzvidoiY5pzNijNnVVHleuTc5m7LNmjjneXUQoxZXba9pma8ohRPex9jf0vLJ+cs9K0TiGzMHYc7K1m7rX5zybSn2NmY8oueeNSNuoTbSN58ebp9NwVvdxqGf3KXnoe6+zV2226lrj7T97TtWqPvI71uvbs037I9kcbarquujGZvj1I9Hjgk5UuxPHPlp/1BOD9aOvba5TP0NzvVVq6+tMm+g7nHRtzys9tlx/uyp/RuixafsUq62vMvXedW5stROrt/6933WR9d9k7LS/3LtU7z8XG98S+03PT+77yMvTvvLPKO/80XGX3ufquF+IXopedXoteiO6JHN5WXSl01XRNdE7ufde9EH0UfS2k633+tVttQ/dPuej7/t8LWNYS5zJ3patre5/jXNg19Eh4iZP88X9ST5/Fn3p9FX0TXRT7t0S3e50R3RX9EPu/RT9Ev0Wfe9k671+dVvtQ7fP+fDOq6bH12kbw1riTPa2bG11/5q1jM2uo0PETZ7mi/uPfP7bBrT5r43ojOie6L7ouNMD0UPROdF50QXRRdHZTrbe61e31T50+5yPvv8H1zKGtcSZ7G15bPrXrGVsdh0dJG7yNFvcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsC7+AVgjXXE=
   </data>
  </layer>
- <layer name="Tile Layer 4" width="300" height="30">
+ <layer name="Windows" width="300" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1LtOw0AQBdA1j5L8dKCk5id5JE3Co2EoqOwYS7DenXCOdDWRtvCdjexSAAD4a/edz6y9z3Uu0bpj6zmndbfs79tD5/OU1r3+61yidcfWc07rbtnft2y2kVtpnjv/x1nfU4+9AfjZzVDKZhj//vYSeYw8RZ7L+GwX2dcuOeE3vXt+3tp71VB7h8x3lLX7VNcevUUOkWPkdeLsPfKxdqkF5npnft7ae9VQe4fMd5S5ew8uv76pkSFyMYzPriLXHX5353pnft7ae9VQe4fMd5S5OwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH36BNNQWfE=
+   eJzt1MlOwzAUBdCEYYPEJLFmA3wpsGTNT5ZpU6YNDwlERJ1AIWns9BzpylFc1Vd2kqoCAKBvV5mPpfae+pgydqdcxi5jdyv9fbvOfGwzdq91H1PG7pTL2GXsbqW/b6U5j1zI6Ll0HpPepxx7k6+TuqpOW3JWf803r5vZjxxEDr/9NnU/9b8/rQnrZDee+b168frTXWQWuYncVotz95GHoUsm/Kf3X9Zppnmv7/X6sNPyHZt9jKn96rq/rKHPZlVnP4RSu/f1bAztOTKPPEaeEnMvkddVl/qFrt5TWK/LUctzNV9tjVZD71VOZ7GskrvnYPP92Y/UkY16cW4rsp3hd7er9xTW63Lctn4m5zT0XuV0FssquTsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5egODzlxI
   </data>
  </layer>
  <layer name="Tile Layer 5" width="300" height="30">
   <data encoding="base64" compression="zlib">
    eJzt17EKwjAUBdCEztr2G7R/akdnP7Ozm1kEW1BTaImt58Alj/AIjwyBhAAAwL+5lh4AINOt9ADAT7hsKP1KdwBsQx1DaFLaOK5PKeeUblI/ez6lfdOXc+6053UfYI5DejeO8fs6x7DOqACLu5ceACBT5a8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsDsPKmQeWg==
+  </data>
+ </layer>
+ <layer name="Tile Layer 6" width="300" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20ND6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgBcDjKAAAQ==
   </data>
  </layer>
 </map>
