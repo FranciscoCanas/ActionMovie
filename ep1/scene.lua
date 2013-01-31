@@ -17,7 +17,7 @@ local keypressed = "none"
 -- some fonts
 font12 = love.graphics.newFont(12) 
 font16 = love.graphics.newFont(16)
-font32 = love.graphics.newFont(32)
+font28 = love.graphics.newFont(28)
 
 -- Stuffs local to scene
 local MAXDEAD = 32
@@ -215,8 +215,8 @@ function state:draw()
 	
 	state.cam:detach()
 
-	love.graphics.setFont( font32 )
-    love.graphics.print("Bad Guys Left: "..TARGETDEAD-deadCount, dimScreen.x/2-75, 10)
+	love.graphics.setFont( font28 )
+    love.graphics.print("Bad Guys Left: "..TARGETDEAD-deadCount, dimScreen.x/2-90, 10)
 	-- Anything drawn out here is drawn according to screen
 	-- perspective. 
 	-- The HUD and any other overlays will go here.

@@ -11,24 +11,30 @@ local currentString = ""
 local currentStringNum = 0
 local diagInterval = 5
 local dialogue = {	
-        "Action Movie: The Series",
-        "Written by Christy and Francisco",
-        "Coded by Christy and Francisco",
-        "Graphics by Christy",
-        "Music by Francisco",
-        "Catering by Francisco and Christy",
-        "Murderballer #2 Sprite by Adrian Paulozza"
+        "Action Movie: The Series (The Video Game)",
+        "Conceived and Conceptualized by Christy and Francisco",
+		"Writing and Acting by Christy and Francisco",
+        "Digital Manipulations by Christy and Francisco",
+        "Visuals and Art Direction by Christy",
+        "All Funky Jams by Francisco",
+        "Cinematography by Francisco",
+		"Costumes by Christy",
+		"FIN"
 }
 			
 local currentShot = 0
 local shotFuncs = {
           function() state:startingShot() end,
+		  function() state:startingShot() end,
           function() state:startingShot() end,      
           function() state:startingShot() end,      
           function() state:startingShot() end,      
           function() state:startingShot() end,      
           function() state:startingShot() end,      
-          function() state:startingShot() end,      		
+		  function() state:startingShot() end,      
+          function() state:startingShot() 
+			stringTimer.clear()
+			end,      		
 	}
 
 function state:enter()
@@ -84,10 +90,10 @@ function state:nextLine()
 
 		stringTimer:add(diagInterval, function()
 			if currentStringNum >= table.getn(dialogue) then
-				Gamestate.switch(Gamestate.menu)
+			--	Gamestate.switch(Gamestate.menu)
 			else
 			state:nextLine()
---			state:nextShot() -- no shot changes here
+			state:nextShot() -- no shot changes here
 			end
 		end)
 end

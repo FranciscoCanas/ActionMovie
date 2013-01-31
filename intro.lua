@@ -131,7 +131,7 @@ love.graphics.setFont( font)
 
 
 	-- around 32.75 or so
-	stringTimer:add(33, function()
+	stringTimer:add(32.5, function()
                 
 				state:titleExplosion()
 				currentString = ""
@@ -342,11 +342,11 @@ stringTimer:add(73, function()
         state:discoDance(guys)
     end)
 
-    stringTimer:add(100, function()
+    stringTimer:add(96, function()
 		state:titleExplosion()
     end)
 
-	stringTimer:add(101, function()
+	stringTimer:add(97, function()
         titleScene = cityImage
         drawTitle = true
 		currentString = ""

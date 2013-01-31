@@ -28,7 +28,7 @@ function(self, image, position, type, rand)
 	end
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
-	self.frameDelay = 0.2
+	self.frameDelay = 0.5
 	self.frameFlipH = false
 	self.frameFlipV = false
 	self.grid = Anim8.newGrid(128, 128, 
@@ -42,7 +42,7 @@ function(self, image, position, type, rand)
 			
 	self.runAnim = Anim8.newAnimation('loop',
 		self.grid('1-3, 1'),
-		self.frameDelay)
+		self.frameDelay-0.2)
 		
 	self.shootAnim = Anim8.newAnimation('once',
 		self.grid('1-2, 2'),
@@ -125,7 +125,7 @@ end
 
 function Enemy:init()
 	self.isalive = true
-	self.health = 3
+	self.health = math.random(1,3)
 	self.fired = false
 	self.target = nil
 	self.destination = nil
