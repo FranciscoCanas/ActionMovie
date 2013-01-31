@@ -13,8 +13,6 @@ require "enemy"
 require "bullet"
 require "bystander"
 require 'murderballer'
-Hud = require "hud"
-
 
 
 
