@@ -257,7 +257,7 @@ function state:draw()
 	if (seconds < 10) then
 		seconds = "0"..seconds
 	end
-	love.setFont(font28)
+	love.graphics.setFont( font28 )
 	love.graphics.print("Time Left: "..minutes..":"..seconds, dimScreen.x/2, 20)
 
 	-- if defusing then
