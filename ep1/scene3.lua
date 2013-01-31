@@ -18,6 +18,7 @@ local keypressed = "none"
 
 -- some fonts
 font12 = love.graphics.newFont(12) 
+font28 = love.graphics.newFont(28)
 
 -- Stuffs local to scene
 local MAXDEAD = 12
@@ -253,6 +254,10 @@ function state:draw()
 	-- love.graphics.print("Scene Placeholder", 10, 10)
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
+	if (seconds < 10) then
+		seconds = "0"..seconds
+	end
+	love.setFont(font28)
 	love.graphics.print("Time Left: "..minutes..":"..seconds, dimScreen.x/2, 20)
 
 	-- if defusing then
