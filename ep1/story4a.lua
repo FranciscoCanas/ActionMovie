@@ -28,8 +28,8 @@ local shotFuncs = {
         end,
 		function()
 			state:bothPlayers()
-			player1.animation = runAnim
-			player2.animation = runAnim
+			player1.animation = player1.runAnim
+			player2.animation = player2.runAnim
 		end,
 		
 		function()
