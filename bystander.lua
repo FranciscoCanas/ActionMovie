@@ -10,13 +10,24 @@ function(self, image, position)
 --	wx, wy = cam:worldCoords(position.x, position.y)
 	self.position = position
 --	self.behaviour = type
-	self.image = image --love.graphics.newImage(image)
+
+	images = {'art/bystander1.png','art/bystander1a.png','art/bystander1b.png',
+				'art/bystander2.png','art/bystander2a.png'}
+	if not image then
+		self.type = math.random(1,# images)
+		randImage = images[self.type]
+		
+		self.image = love.graphics.newImage(randImage)
+	else
+		self.image = image --love.graphics.newImage(image)
+	end
+
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
-	self.frameDelay = 0.2
+	self.frameDelay = 0.5
 	self.frameFlipH = false
 	self.frameFlipV = false
-	self.grid = Anim8.newGrid(100, 100, 
+	self.grid = Anim8.newGrid(128, 128, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
@@ -25,14 +36,19 @@ function(self, image, position)
 			self.frameDelay)
 			
 	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('4-6, 1'),
+		self.grid('2-3, 1'),
+		self.frameDelay)
+		
+	self.danceAnim = Anim8.newAnimation('loop',
+		self.grid('1-2,1'),
 		self.frameDelay)
 		
 	self.animation = self.runAnim
 	
 	-- Set up for Timers
 	self.timer = Timer.new()
-	
+	self.width = 128 * self.scalex
+	self.height = 128 * self.scaley
 	-- love.physics code starts here
 	self.facing = Vector(-1,0)
 	self.acceleration = 8000
@@ -85,6 +101,8 @@ function Bystander:init()
 	self.fired = false
 	self.target = nil
 	self.destination = nil
+	self.scalex = 0.6
+	self.scaley = 0.6
 
 	self.inRange = 32  -- y axis shooting boundary
 	self.maxTargetRange = 400 --/ max distance from player to shoot
@@ -114,6 +132,14 @@ function Bystander:init()
 	screamsoundlist = { "sfx/scream1.ogg", "sfx/scream2.ogg", 
 		"sfx/scream3.ogg"}
 	
+end
+
+
+function Bystander:setPosition(v)
+	self.body:setX(v.x)
+	self.body:setY(v.y)
+	self.position.x = v.x
+	self.position.y = v.y
 end
 
 function Bystander:update(dt)
@@ -162,8 +188,8 @@ function Bystander:draw()
 			self.position.x,
 			self.position.y,
 			0, -- angle
-			1, -- x scale
-			1, -- y scale
+			self.scalex, -- x scale
+			self.scaley, -- y scale
 			0, -- x offset
 			0, -- y offset
 			self.frameFlipH,

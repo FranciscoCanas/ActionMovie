@@ -202,7 +202,7 @@ function state:update(dt)
 
 	if not playersWin then
 		if (bomb.health < 1 ) then 
-			state:playersWin(Gamestate.state4a)
+			state:playersWin(Gamestate.story4a)
 		end
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.

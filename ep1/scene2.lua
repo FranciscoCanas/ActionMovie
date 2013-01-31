@@ -81,7 +81,7 @@ function state:enter()
 	state.murderballer = Murderballer()
 	state.murderballer.position = Vector(dimScreen.x - 200, dimScreen.y-100)
 	state.murderballer.animation = murderballer.runAnim
-	state.murderballer.delta = Vector(150,0)
+	state.murderballer.delta = Vector(93,0)
 	state.murderballer.scale = 1	
 
 	-- make objects in map solid
@@ -108,7 +108,7 @@ function state:enter()
 	-- set up some innocent bystanders here --
 	bystanders = {}
 --	table.insert(bystanders, Bystander(love.graphics.newImage('art/femaleBystander.png'), Vector(1000,800)))
-	bystanderPositions = {Vector(dimScreen.x/2,400), Vector(dimScreen.x/2,400), Vector(dimScreen.x,1000), Vector(700,450),
+	bystanderPositions = {Vector(dimScreen.x/2,470), Vector(dimScreen.x/2,500), Vector(dimScreen.x,1000), Vector(700,450),
                     Vector(dimScreen.x/2 + 100,1000), Vector(dimScreen.x/2+ 120,900), Vector(dimScreen.x-100,1200), Vector(700,1050)}
 	bystanderTimer = Timer.new()
     state:spawnBystanders()
@@ -128,28 +128,19 @@ end
 
 function state:addBystanders(positions)
     for i, pos in ipairs(positions) do
-        if math.random(1,2) == 1 then
-			img = 'art/femaleBystander.png'
-		else
-			img = 'art/maleBystander.png'
-		end
-		table.insert(bystanders, Bystander(love.graphics.newImage(img), pos))
+  
+		table.insert(bystanders, Bystander(nil, pos))
     end
 end
 
 function state:spawnBystanders()
 	local posx, posy = state.cam:worldCoords(state.cam.x, state.cam.y)
 
-	for i = 1,math.random(1,5),1 do 
-		if math.random(1,2) == 1 then
-			img = 'art/femaleBystander.png'
-		else
-			img = 'art/maleBystander.png'
-		end
+	for i = 1,math.random(5,10),1 do 
 
 		posx = posx + math.random(dimScreen.x + 100, dimScreen.x + 600)
-		posy = math.random(400, dimScreen.y - 50)
-		table.insert(bystanders, Bystander(love.graphics.newImage(img), Vector(posx, posy)))
+		posy = math.random(410, dimScreen.y + 500)
+		table.insert(bystanders, Bystander(nil, Vector(posx, posy)))
 	end
 end
 
