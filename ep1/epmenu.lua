@@ -8,6 +8,7 @@ require "ep1/scene2"
 require "ep1/story3"
 require "ep1/scene3"
 require "ep1/story4"
+require "ep1/story4a"
 
 Gamestate.epmenu = Gamestate.new()
 local state = Gamestate.epmenu
