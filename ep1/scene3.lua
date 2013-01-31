@@ -27,7 +27,7 @@ local MAXALIVE = 10
 --bomb explodes after 5 minutes
 Timers = {}
 local minutes = 4
-local seconds = 59
+local seconds = 15
 
 function state:init()	
 	self.started = false
@@ -255,11 +255,14 @@ function state:draw()
 	-- love.graphics.print(player1.position.x, 200, 10)
 	-- love.graphics.print(player1.position.y, 220, 10)
 	if (seconds < 10) then
-		seconds = "0"..seconds
+		secondstr = "0"..seconds
+	else
+		secondstr = seconds
 	end
 	love.graphics.setFont( font28 )
-	love.graphics.print("Time Left: "..minutes..":"..seconds, dimScreen.x/2, 20)
-
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.print("Time Left\n    "..minutes..":"..secondstr, dimScreen.x/2-50, 10)
+	love.graphics.setColor(255, 255, 255, 255)
 	-- if defusing then
 	-- 	love.graphics.print("defusing bomb \n "..bomb.health, bomb.position.x, bomb.position.y - 50)
 	-- end
