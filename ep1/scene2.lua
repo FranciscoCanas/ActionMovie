@@ -22,7 +22,6 @@ font24 = love.graphics.newFont(24)
 -- Stuffs local to scene
 local MAXDEAD = 4
 
-
 function state:init()	
 	self.started = false
 end
@@ -81,7 +80,7 @@ function state:enter()
 	state.murderballer = Murderballer()
 	state.murderballer.position = Vector(dimScreen.x - 200, dimScreen.y-100)
 	state.murderballer.animation = murderballer.runAnim
-	state.murderballer.delta = Vector(93,0)
+	state.murderballer.delta = Vector(100,0)
 	state.murderballer.scale = 1	
 
 	-- make objects in map solid
@@ -108,8 +107,10 @@ function state:enter()
 	-- set up some innocent bystanders here --
 	bystanders = {}
 --	table.insert(bystanders, Bystander(love.graphics.newImage('art/femaleBystander.png'), Vector(1000,800)))
-	bystanderPositions = {Vector(dimScreen.x/2,470), Vector(dimScreen.x/2,500), Vector(dimScreen.x,1000), Vector(700,450),
-                    Vector(dimScreen.x/2 + 100,1000), Vector(dimScreen.x/2+ 120,900), Vector(dimScreen.x-100,1200), Vector(700,1050)}
+	bystanderPositions = {Vector(dimScreen.x/2,670), Vector(dimScreen.x/2,500), Vector(dimScreen.x,1000), Vector(900,450),
+                    Vector(dimScreen.x/2 + 100,1000), Vector(dimScreen.x/2+ 120,900), Vector(dimScreen.x-100,1200), Vector(850,1050),
+					Vector(dimScreen.x/1.5,670), Vector(dimScreen.x/1.5,500), Vector(dimScreen.x+200,1000), Vector(800,450),
+                    Vector(dimScreen.x/1.5 + 100,1000), Vector(dimScreen.x/1.5+ 120,770), Vector(dimScreen.x,1200), Vector(900,1050)}
 	bystanderTimer = Timer.new()
     state:spawnBystanders()
     state:addBystanders(bystanderPositions)
@@ -123,7 +124,7 @@ function state:enter()
 	deadCount = 0
 --	insertEnemy(bystandersPosition, FOLLOWPLAYER)
 	enemyTimer = Timer.new()
-	enemyTimer:addPeriodic(4, function() self:spawnEnemy() end)
+	enemyTimer:addPeriodic(3, function() self:spawnEnemy() end)
 end
 
 function state:addBystanders(positions)
@@ -136,7 +137,7 @@ end
 function state:spawnBystanders()
 	local posx, posy = state.cam:worldCoords(state.cam.x, state.cam.y)
 
-	for i = 1,math.random(5,10),1 do 
+	for i = 1,math.random(10,20),1 do 
 
 		posx = posx + math.random(dimScreen.x + 100, dimScreen.x + 600)
 		posy = math.random(410, dimScreen.y + 500)
@@ -223,6 +224,11 @@ function state:update(dt)
 		state:removeDead()
 	end
 	state:movecam(dt) -- Update state.camera. See movestate.cam func below.
+	
+	local mx, my = state.cam:worldCoords(state.murderballer.position.x, state.murderballer.position.y)
+	if (mx > (265 * 32)) then -- 265
+		state.murderballer.delta = Vector(500,0)
+	end
 
     if not playersWin then
         -- check for player wineage here

@@ -16,10 +16,10 @@ local dialogue = {
 		"Writing and Acting by Christy and Francisco",
         "Digital Manipulations by Christy and Francisco",
         "Visuals and Art Direction by Christy",
-        "All Funky Jams by Francisco",
+        "Funky Jams Performed by Francisco",
         "Cinematography by Francisco",
-		"Costumes by Christy",
-		"FIN"
+		"Costume Design by Christy",
+		"THE END"
 }
 			
 local currentShot = 0
