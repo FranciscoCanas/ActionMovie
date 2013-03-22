@@ -131,7 +131,7 @@ love.graphics.setFont( font)
 
 
 	-- around 32.75 or so
-	stringTimer:add(32.5, function()
+	stringTimer:add(31, function()
                 
 				state:titleExplosion()
 				currentString = ""
