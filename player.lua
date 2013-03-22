@@ -11,7 +11,14 @@ function(self, num)
 		self.keyfire = "f"
 		self.keyroll = "g" 
 		self.image = love.graphics.newImage('art/WomanSprite.png')
-		
+        if ARCADE then
+            self.keyup = "up"
+            self.keyleft = "left"
+            self.keyright = "right"
+            self.keydown =  "down"  
+            self.keyfire = "z"
+            self.keyroll = "x"
+		end
 	elseif num == 2 then
 		self.pnum = 2
 		self.keyup = "o"
@@ -21,6 +28,14 @@ function(self, num)
 		self.keyfire = "j"
 		self.keyroll = "h" 
 		self.image = love.graphics.newImage('art/ManSprite.png')
+        if ARCADE then
+            self.keyup = "r"
+            self.keyleft = "d"
+            self.keyright = "g"
+            self.keydown =  "f"  
+            self.keyfire = "a"
+            self.keyroll = "s"
+        end
 		
 	end
 	self:init()

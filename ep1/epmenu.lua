@@ -68,10 +68,10 @@ function state:draw()
 end 
 
 function state:keyreleased(key)
-	if key == "escape" then
+	if key == "escape" or key == "i" then
 		-- quits game
 		Gamestate.switch(Gamestate.menu)
-	elseif key == "return" then
+	elseif key == "return"  or key=="z" or key=="a" then
 		-- Start scene 1
 		if (epi == 0) then
 			Gamestate.switch(Gamestate.story1)
@@ -80,9 +80,9 @@ function state:keyreleased(key)
 		elseif (epi == 2) then
 			Gamestate.switch(Gamestate.story3)
 		end
-	elseif key == "up" then
+	elseif key == "up" or key=="r" then
 		epi = (epi - 1) % 3
-	elseif key == "down" then
+	elseif key == "down" or key=="f" then
 		epi = (epi + 1) % 3 
 	end	
 	

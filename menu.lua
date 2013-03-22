@@ -96,10 +96,10 @@ function state:draw()
 end 
 
 function state:keyreleased(key)
-	if key == "escape" then
+	if key == "escape" or key == "i" then
 		-- quits game
 		love.event.push("quit")
-	elseif (key == "return" or key==" ") then
+	elseif (key == "return" or key==" " or key=="z" or key=="a") then
 		-- Start scene 1
         if (epselect == 1 and (player1.isplaying or player2.isplaying)) then
     		Gamestate.switch(Gamestate.epmenu)
@@ -114,9 +114,9 @@ function state:keyreleased(key)
 		player1.isplaying = not player1.isplaying
 	elseif key == player2.keyfire then
 		player2.isplaying = not player2.isplaying
-	elseif key == "up" then
+	elseif key == "up" or key == "r" then
 		epselect = (epselect - 1) % 3
-	elseif key == "down" then
+	elseif key == "down" or key == "f" then
 		epselect = (epselect + 1) % 3 
 	end	
 end

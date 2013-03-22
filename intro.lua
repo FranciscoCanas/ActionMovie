@@ -470,10 +470,10 @@ function state:draw()
 end 
 
 function state:keyreleased(key)
-	if key == "escape" then
+	if key == "escape" or key == 'i' then
 		-- quits game
 		love.event.push("quit")
-	elseif key == " " or key=="return" then
+	elseif key == " " or key=="return" or key =="z" or key == "a" then
 		-- (space) skips to main menu
 		Gamestate.switch(Gamestate.menu)
 	end	
