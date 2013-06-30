@@ -18,7 +18,7 @@ require 'murderballer'
 
 -- Globals
 -- TODO: organize these into groups
-ARCADE=true -- Used to change settings for arcade cabinet version
+ARCADE=false -- Used to change settings for arcade cabinet version
 
 -- note: Initialization order matters.
 hudFont = love.graphics.setNewFont(24)

@@ -125,7 +125,7 @@ end
 
 function Enemy:init()
 	self.isalive = true
-	self.health = math.random(1,3)
+	self.health = math.random(1,2)
 	self.fired = false
 	self.target = nil
 	self.destination = nil
