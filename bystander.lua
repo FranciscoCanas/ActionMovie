@@ -25,23 +25,23 @@ function(self, image, position)
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.5
-	self.frameFlipH = false
-	self.frameFlipV = false
+	self.frameFlipH = 1
+	self.frameFlipV = 1
 	self.grid = Anim8.newGrid(128, 128, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
-	self.standAnim = Anim8.newAnimation('loop', 
-			self.grid:getFrames('1, 1'),
-			self.frameDelay)
+	self.standAnim = Anim8.newAnimation( 
+			self.grid:getFrames(1, 1),
+			self.frameDelay, 'pauseAtEnd')
 			
-	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('2-3, 1'),
-		self.frameDelay)
+	self.runAnim = Anim8.newAnimation(
+		self.grid('2-3', 1),
+		self.frameDelay, 'pauseAtEnd')
 		
-	self.danceAnim = Anim8.newAnimation('loop',
-		self.grid('1-2,1'),
-		self.frameDelay)
+	self.danceAnim = Anim8.newAnimation(
+		self.grid('1-2',1),
+		self.frameDelay, 'pauseAtEnd')
 		
 	self.animation = self.runAnim
 	
@@ -86,11 +86,11 @@ function(self, image, position)
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
 	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 100 )
 	self.gunEmitter:setEmissionRate(500)
-	self.gunEmitter:setLifetime(0.01)
-	self.gunEmitter:setParticleLife(0.25)
+	self.gunEmitter:setEmitterLifetime(0.01)
+	self.gunEmitter:setParticleLifetime(0.25)
 	self.gunEmitter:setSpread(3.14/3)
 	self.gunEmitter:setSizes(0.05, 0.5)
-	self.gunEmitter:setGravity(0,0)
+	self.gunEmitter:setLinearAcceleration(0,0)
 	self.gunEmitter:setSpeed(140,260)
 end
 }
@@ -167,9 +167,9 @@ function Bystander:update(dt)
 	end
 	
 	if self.facing.x == -1 then
-		self.frameFlipH = true
+		self.frameFlipH = -1
 	else
-		self.frameFlipH = false
+		self.frameFlipH = 1
 	end
    
    self.body:applyForce(self.delta.x * self.acceleration, 
@@ -184,7 +184,7 @@ end
 
 
 function Bystander:draw()
-	self.animation:drawf(self.image, 
+	self.animation:draw(self.image, 
 			self.position.x,
 			self.position.y,
 			0, -- angle

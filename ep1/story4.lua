@@ -40,7 +40,7 @@ love.graphics.setFont(font)
 -- musics
 	bgMusicList = {"music/movemberBlues.ogg"}
 -- start music
---	TEsound.play(bgMusicList, "bgMusic")
+--	TEsound.play(bgMusicList, "stream")
 
 -- background
 	alleyScene = love.graphics.newImage("art/titleScene.png")
@@ -52,7 +52,7 @@ love.graphics.setFont(font)
 	player1:setPosition(Vector(400,500))
 	player2:setPosition(Vector(470,500))
 	player2.facing = Vector(-1,0)
-	player2.frameFlipH = true
+	player2.frameFlipH = -1
 
 	
 --	murderballer = Murderballer()
@@ -92,8 +92,8 @@ love.graphics.setFont(font)
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
 	state.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
 	state.explosion:setEmissionRate(60)
-	state.explosion:setLifetime(10.0)
-	state.explosion:setParticleLife(10)
+	state.explosion:setEmitterLifetime(10.0)
+	state.explosion:setParticleLifetime(10)
 	state.explosion:setSpread(360)
 	state.explosion:setSizes(4, 6.5, 8.0)
 	state.explosion:setRotation(60)
@@ -171,7 +171,7 @@ end
 
 function state:leave()
 	stringTimer:clear()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 end
 
 function state:keyreleased(key)

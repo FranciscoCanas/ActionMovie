@@ -8,12 +8,12 @@ function(self)
 			self.image:getWidth(),
 			self.image:getHeight())
 
-	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('1-4, 1'),
+	self.runAnim = Anim8.newAnimation(
+		self.grid('1-4', 1),
 		0.2) 
 
-	self.standAnim = Anim8.newAnimation('loop',
-		self.grid('1-4, 2'),
+	self.standAnim = Anim8.newAnimation(
+		self.grid('1-4', 2),
 		0.2) 
 
     self.scale = 1
@@ -28,7 +28,7 @@ function Murderballer:update(dt)
 end
 
 function Murderballer:draw()
-	self.animation:drawf(
+	self.animation:draw(
 			self.image, 
 			self.position.x,
 			self.position.y,
@@ -36,8 +36,8 @@ function Murderballer:draw()
 			self.scale, -- x scale
 			self.scale, -- y scale
 			0, -- x offset
-			0, -- y offset
-			false, -- H flip
-			false -- V flip
+			0 -- y offset
+			--1, -- H flip
+			--1 -- V flip
 			)
 end

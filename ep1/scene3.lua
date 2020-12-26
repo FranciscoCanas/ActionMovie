@@ -36,10 +36,10 @@ end
 function state:enter()
 	-- set up sound objects here
 	bgMusicList = {"music/meanStreets.ogg"}
-	TEsound.playLooping(bgMusicList, "bgMusic")
+	TEsound.playLooping(bgMusicList, "stream")
 	
 	-- initialize world here
-	-- world:setGravity(0,9.8*love.physics.getMeter())
+	-- world:setLinearAcceleration(0,9.8*love.physics.getMeter())
 	-- Initialize players here
 	if player1.isplaying then
 		player1.body:setPosition(100, 600)
@@ -144,7 +144,7 @@ function state:insertEnemy(positions)
 end
 
 function state:leave()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 	for i, enemy in ipairs(enemies) do
 		if enemy.isalive then
 			enemy.fixture:destroy()
@@ -407,7 +407,7 @@ end
 
 function state:playersWin(story)
     playersWin = true
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 	TEsound.play("music/actionHit.ogg")     
     Gamestate.switch(story) 
 end

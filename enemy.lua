@@ -29,32 +29,32 @@ function(self, image, position, type, rand)
 	--self.image = love.graphics.newImage('art/gunman.png')
 	-- Set up anim8 for spritebatch animations:
 	self.frameDelay = 0.5
-	self.frameFlipH = false
-	self.frameFlipV = false
+	self.frameFlipH = nop
+	self.frameFlipV = nop
 	self.grid = Anim8.newGrid(128, 128, 
 			self.image:getWidth(),
 			self.image:getHeight())
 	
 
-	self.standAnim = Anim8.newAnimation('loop', 
-			self.grid:getFrames('1, 1'),
+	self.standAnim = Anim8.newAnimation(
+			self.grid:getFrames(1, 1),
 			self.frameDelay)
 			
-	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('1-3, 1'),
+	self.runAnim = Anim8.newAnimation(
+		self.grid('1-3', 1),
 		self.frameDelay-0.2)
 		
-	self.shootAnim = Anim8.newAnimation('once',
-		self.grid('1-2, 2'),
-		self.frameDelay)
+	self.shootAnim = Anim8.newAnimation(
+		self.grid('1-2', 2),
+		self.frameDelay, 'pauseAtEnd')
 
-    self.hurtAnim = Anim8.newAnimation('once',
-        self.grid('1,3'),
-        self.frameDelay)
+    self.hurtAnim = Anim8.newAnimation(
+        self.grid(1,3),
+        self.frameDelay, 'pauseAtEnd')
 		
-	self.diesAnim = Anim8.newAnimation('once',
-		self.grid('1-2, 3'),
-		self.frameDelay)
+	self.diesAnim = Anim8.newAnimation(
+		self.grid('1-2', 3),
+		self.frameDelay, 'pauseAtEnd')
 		
 	self.animation = self.standAnim
 	
@@ -102,22 +102,22 @@ function(self, image, position, type, rand)
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
 	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 200 )
 	self.gunEmitter:setEmissionRate(800)
-	self.gunEmitter:setLifetime(0.02)
-	self.gunEmitter:setParticleLife(0.075)
+	self.gunEmitter:setEmitterLifetime(0.02)
+	self.gunEmitter:setParticleLifetime(0.075)
 	self.gunEmitter:setSpread(3.14/4)
 	self.gunEmitter:setSizes(0.05, 0.25)
-	self.gunEmitter:setGravity(0,9.8)
+	self.gunEmitter:setLinearAcceleration(0,9.8)
 	self.gunEmitter:setSpeed(300,500)
 
 -- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
 	self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 500 )
 	self.bloodEmitter:setEmissionRate(500)
-	self.bloodEmitter:setLifetime(0.02)
-	self.bloodEmitter:setParticleLife(0.35)
+	self.bloodEmitter:setEmitterLifetime(0.02)
+	self.bloodEmitter:setParticleLifetime(0.35)
 	self.bloodEmitter:setSpread(3.14/3)
 	self.bloodEmitter:setSizes(0.1, 0.5)
-	self.bloodEmitter:setGravity(0,100)
+	self.bloodEmitter:setLinearAcceleration(0,100)
 	self.bloodEmitter:setSpeed(200,300)
     self.bloodEmitter:stop()
 end
@@ -208,9 +208,11 @@ function Enemy:update(dt)
 	end
 	
 	if self.facing.x == -1 then
-		self.frameFlipH = true
+		--self.frameFlipH = -1
+		self.animation:flipH()
 	else
-		self.frameFlipH = false
+		--self.frameFlipH = 1
+		self.animation:flipH()
 	end
    
    self.body:applyForce(self.delta.x * self.acceleration * dt, 
@@ -228,16 +230,16 @@ function Enemy:draw()
 	--if self.isalive then
 		--love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
 	--end
-	self.animation:drawf(self.image, 
+	self.animation:draw(self.image, 
 			self.position.x,
 			self.position.y,
 			0, -- angle
 			self.scalex, -- x scale
 			self.scaley, -- y scale
 			0, -- x offset
-			0, -- y offset
-			self.frameFlipH,
-			self.frameFlipV
+			0 -- y offset
+			--self.frameFlipH,
+			--self.frameFlipV
 			)
  love.graphics.draw(self.gunEmitter)
  love.graphics.draw(self.bloodEmitter)

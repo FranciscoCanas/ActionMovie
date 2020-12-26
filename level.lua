@@ -62,12 +62,12 @@ Obstacle = Class {
 		particleImage = love.graphics.newImage( "art/dustParticle.png" )
 		self.fxEmitter = love.graphics.newParticleSystem( particleImage, 500 )
 		self.fxEmitter:setEmissionRate(800)
-		self.fxEmitter:setLifetime(0.05)
-		self.fxEmitter:setParticleLife(0.075)
+		self.fxEmitter:setEmitterLifetime(0.05)
+		self.fxEmitter:setParticleLifetime(0.075)
 		self.fxEmitter:setDirection(0)
 		self.fxEmitter:setSpread(2*3.14)
 		self.fxEmitter:setSizes(0.05, 1.25)
-		self.fxEmitter:setGravity(0,9)
+		self.fxEmitter:setLinearAcceleration(0,9)
 		self.fxEmitter:setSpeed(300,500)
 
 	end

@@ -52,7 +52,7 @@ love.graphics.setFont(font)
 	player1:setPosition(Vector(400,500))
 	player2:setPosition(Vector(450,500))
 	player2.facing = Vector(-1,0)
-	player2.frameFlipH = true
+	player2.frameFlipH = -1
 	
 	murderballer = Murderballer()
 
@@ -94,18 +94,18 @@ love.graphics.setFont(font)
 			-- murderBaller.image:getWidth(),
 			-- murderBaller.image:getHeight())
 
-	-- murderBaller.runAnim = Anim8.newAnimation('loop',
+	-- murderBaller.runAnim = Anim8.newAnimation(
 		-- murderBaller.grid('1-4, 1'),
 		-- 0.2) 
 
-	-- murderBaller.standAnim = Anim8.newAnimation('loop',
+	-- murderBaller.standAnim = Anim8.newAnimation(
 		-- murderBaller.grid('1-4, 2'),
 		-- 0.2) 
 
 	-- murderBaller.animation = murderBaller.standAnim
 	-- murderBaller.delta = Vector(0,0)
 	-- murderBaller.draw = function()
-		-- murderBaller.animation:drawf(
+		-- murderBaller.animation:draw(
 			-- murderBaller.image, 
 			-- murderBaller.position.x,
 			-- murderBaller.position.y,
@@ -119,7 +119,7 @@ love.graphics.setFont(font)
 			-- )
 	-- end
 	
-	TEsound.play(bgMusicList, "bgMusic")
+	TEsound.play(bgMusicList, "stream")
 end
 
 function state:nextLine()
@@ -180,7 +180,7 @@ end
 
 function state:leave()
 	stringTimer:clear()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 end
 
 function state:keyreleased(key)

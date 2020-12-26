@@ -19,9 +19,9 @@ function state:enter()
 	player2.isplaying = false
 	player1:init()
 	player2:init()
-	player1:setPosition(Vector(100, dimScreen.y-(player1.height + 20)))
-	player2:setPosition(Vector(dimScreen.x - (player1.width + 50), 
-		dimScreen.y-(player1.height + 20)))
+	player1:setPosition(Vector(dimScreen.x / 16, (dimScreen.y / 8) - (player1.height + 20)))
+	player2:setPosition(Vector((dimScreen.x / 4) - (player1.width + 50), 
+		dimScreen.y / 2 -(player1.height + 20)))
 
     isGameOver = false
     epselect = 1
@@ -36,7 +36,7 @@ end
 function state:update(dt)
 	dt = math.min(dt, 1/60)
     globalMenuBGx = globalMenuBGx + dt * globalMenuBGdx
-    if (globalMenuBGx < -1*titleScene:getWidth()) then
+    if (globalMenuBGx < -1 * titleScene:getWidth()) then
         globalMenuBGx = 0
     end
 	player1:update(dt)
@@ -44,13 +44,13 @@ function state:update(dt)
 end
 
 function state:draw()
-	love.graphics.draw(titleScene, globalMenuBGx,0)
-    love.graphics.draw(titleScene, globalMenuBGx + titleScene:getWidth(), 0)
-
-	love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , 25)
+	MENU_Y_SCALE = 3.5
+	MENU_X_SCALE = 4.0
+	love.graphics.draw(titleScene, globalMenuBGx, 0)
+	love.graphics.draw(titleImage, (dimScreen.x / 7), dimScreen.y / 24)
     love.graphics.setColor( 255,0,0,255 )
     love.graphics.setFont(font)
-	love.graphics.print("Main Menu", (dimScreen.x / 2) - 40, dimScreen.y/1.75)
+	love.graphics.print("Main Menu", (dimScreen.x / MENU_X_SCALE) - 40, dimScreen.y / MENU_Y_SCALE)
 	-- Code to draw player when they join a game
 
 	if epselect==0 then
@@ -60,37 +60,39 @@ function state:draw()
 	else
 		arrowCoord = 100
 	end
+
     love.graphics.setFont(selectFont)
-	love.graphics.print("->", (dimScreen.x / 2) - 60, (dimScreen.y/1.75) + arrowCoord)
-	love.graphics.print("Intro", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) +50)
-	love.graphics.print("Episode One", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) + 75)
-	love.graphics.print("Credits", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) + 100)
+	love.graphics.print("->", (dimScreen.x / MENU_X_SCALE) - 60, (dimScreen.y / MENU_Y_SCALE) + arrowCoord)
+	love.graphics.print("Intro", (dimScreen.x / MENU_X_SCALE) - 40, (dimScreen.y / MENU_Y_SCALE) +50)
+	love.graphics.print("Episode One", (dimScreen.x / MENU_X_SCALE) - 40, (dimScreen.y / MENU_Y_SCALE) + 75)
+	love.graphics.print("Credits", (dimScreen.x / MENU_X_SCALE) - 40, (dimScreen.y / MENU_Y_SCALE) + 100)
 --    love.graphics.setColor( 255,255,255,255 )
 
 	if player1.isplaying then 
 
 		love.graphics.print("Crispy: P.I.",
 			60,
-			dimScreen.y - (player1.height + 80))
-       love.graphics.setColor( 255,255,255,255 )
+			(dimScreen.y / 2) - (player1.height + 80))
+		love.graphics.setColor( 255,255,255,255 )
+		player1:setPosition(Vector(60, (dimScreen.y / 2) - (player1.height + 80)))
 		player1:draw()
-       love.graphics.setColor( 255,0,0,255 )
+    	love.graphics.setColor( 255,0,0,255 )
 	else
 		love.graphics.print("Press F to join",
 			60,
-			dimScreen.y - (player1.height + 80))
+			(dimScreen.y / 2) - (player1.height + 80))
 	end
 	if player2.isplaying then
 		love.graphics.print("Detective McGuff",
-			dimScreen.x - (120 + player2.width),
-			dimScreen.y - (player2.height + 80))
+			dimScreen.x / 2 - (120 + player2.width),
+			dimScreen.y / 2 - (player2.height + 80))
         love.graphics.setColor(255,255,255,255)
 		player2:draw()
        love.graphics.setColor( 255,0,0,255 )
 	else
 		love.graphics.print("Press J to join",
-			dimScreen.x - (120 + player2.width),
-			dimScreen.y - (player2.height + 80))
+			dimScreen.x / 2 - (120 + player2.width),
+			dimScreen.y / 2 - (player2.height + 80))
 	end
        love.graphics.setColor( 255,255,255,255 )
 end 

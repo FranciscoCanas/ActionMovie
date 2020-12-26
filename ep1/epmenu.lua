@@ -32,8 +32,7 @@ end
 
 function state:draw()
 	love.graphics.draw(titleScene, globalMenuBGx,0)
-    love.graphics.draw(titleScene, globalMenuBGx + titleScene:getWidth(), 0)
-	love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , 25)
+	love.graphics.draw(titleImage, (dimScreen.x / 7), dimScreen.y / 24)
     love.graphics.setColor( 255,0,0,255 )
 
 
@@ -45,11 +44,11 @@ function state:draw()
 		arrowCoord = 100
 	end
 
-   	love.graphics.print("Episode One", (dimScreen.x / 2) - 40, dimScreen.y/1.75 )
-	love.graphics.print("->", (dimScreen.x / 2) - 60, (dimScreen.y/1.75) + arrowCoord)
-	love.graphics.print("Scene One", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) +50)
-	love.graphics.print("Scene Two", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) + 75)
-	love.graphics.print("Scene Three", (dimScreen.x / 2) - 40, (dimScreen.y / 1.75) + 100)
+   	love.graphics.print("Episode One", (dimScreen.x / MENU_X_SCALE) - 40, dimScreen.y/ MENU_Y_SCALE )
+	love.graphics.print("->", (dimScreen.x / MENU_X_SCALE) - 60, (dimScreen.y / MENU_Y_SCALE) + arrowCoord)
+	love.graphics.print("Scene One", (dimScreen.x / MENU_X_SCALE) - 40, (dimScreen.y / MENU_Y_SCALE) +50)
+	love.graphics.print("Scene Two", (dimScreen.x / MENU_X_SCALE) - 40, (dimScreen.y / MENU_Y_SCALE) + 75)
+	love.graphics.print("Scene Three", (dimScreen.x / MENU_X_SCALE) - 40, (dimScreen.y / MENU_Y_SCALE) + 100)
     love.graphics.setColor( 255,255,255,255 )
 
 	-- Code to draw player when they join a game
@@ -57,6 +56,7 @@ function state:draw()
 		--love.graphics.print("Player1",
 		--	60,
 		--	dimScreen.y - (player1.height + 50))
+		player1:setPosition(Vector(dimScreen.x / MENU_X_SCALE,  dimScreen.y / MENU_Y_SCALE))
 		player1:draw()
 	end
 	if player2.isplaying then

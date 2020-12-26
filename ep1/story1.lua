@@ -21,7 +21,7 @@ local dialogue = {	"Previously on Action Movie",
 local currentShot = 0
 local shotFuncs = {
 		function() state:startingShot() 
-                    TEsound.play("music/actionHit.ogg")  end, -- last week...
+                    TEsound.play("music/actionHit.ogg", "static")  end, -- last week...
 		function() 
 					backgroundScene = alleyScene
 					state:closeUp(player2) end, --
@@ -52,7 +52,7 @@ love.graphics.setFont(font)
 	player1:setPosition(Vector(1800,500))
 	player2:setPosition(Vector(1850,500))
 	player2.facing = Vector(-1,0)
-	player2.frameFlipH = true
+	player2.frameFlipH = -1
 
 -- timer stuff
 	stringTimer = Timer.new()
@@ -79,7 +79,7 @@ love.graphics.setFont(font)
 
 
 	-- start music
-	TEsound.play(bgMusicList, "bgMusic")
+	TEsound.play(bgMusicList, "static")
 
 	
 	-- init state.camera and diag here
@@ -142,7 +142,7 @@ end
 
 function state:leave()
 	stringTimer:clear()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 end
 
 function state:keyreleased(key)

@@ -17,9 +17,10 @@ Bomb = Class{
 			self.numbers.img:getHeight())
 
 		for i=1,11,1 do
-			self.numbers[i] = Anim8.newAnimation('once', 
-				self.numbers.grid:getFrames(i..',1'),
-				1)
+			self.numbers[i] = Anim8.newAnimation(
+				self.numbers.grid:getFrames(i,1),
+				1,
+				'pauseAtEnd')
 		end
 
 		self.bar = {}
@@ -29,11 +30,11 @@ Bomb = Class{
 			self.bar.img:getHeight())
 
 		
-		self.bar.filled = Anim8.newAnimation('once',
-			self.bar.grid:getFrames('1,1'),
-			1)
-		self.bar.empty = Anim8.newAnimation('once', 
-			self.bar.grid:getFrames('2,1'), 1)
+		self.bar.filled = Anim8.newAnimation(
+			self.bar.grid:getFrames(1,1),
+			1, 'pauseAtEnd')
+		self.bar.empty = Anim8.newAnimation(
+			self.bar.grid:getFrames(2,1), 1, 'pauseAtEnd')
 
 		self.width = self.image:getWidth()
 		self.height = self.image:getHeight()
@@ -60,12 +61,12 @@ Bomb = Class{
 		particleImage = love.graphics.newImage( "art/dustParticle.png" )
 		self.fxEmitter = love.graphics.newParticleSystem( particleImage, 500 )
 		self.fxEmitter:setEmissionRate(800)
-		self.fxEmitter:setLifetime(0.05)
-		self.fxEmitter:setParticleLife(0.075)
+		self.fxEmitter:setEmitterLifetime(0.05)
+		self.fxEmitter:setParticleLifetime(0.075)
 		self.fxEmitter:setDirection(0)
 		self.fxEmitter:setSpread(2*3.14)
 		self.fxEmitter:setSizes(0.05, 1.25)
-		self.fxEmitter:setGravity(0,9)
+		self.fxEmitter:setLinearAcceleration(0,9)
 		self.fxEmitter:setSpeed(300,500)
 	end
 }
@@ -81,9 +82,9 @@ function Bomb:draw()
 	remainHealth = math.floor(100-self.health)
 	for i=1,50,1 do
 		if (i <= remainHealth/2) then
-			self.bar.filled:drawf(self.bar.img, self.position.x+(7+i), self.position.y+8)
+			self.bar.filled:draw(self.bar.img, self.position.x+(7+i), self.position.y+8)
 		else
-			self.bar.empty:drawf(self.bar.img, self.position.x+(7+i), self.position.y+8)
+			self.bar.empty:draw(self.bar.img, self.position.x+(7+i), self.position.y+8)
 		end
 	end
 
@@ -93,30 +94,30 @@ end
 
 function Bomb:drawNumber(num, position) 
 	if (num == 1) then
-		self.numbers[1]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[1]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 2) then
- 		self.numbers[2]:drawf(self.numbers.img, position.x, position.y)
+ 		self.numbers[2]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 3) then
-		self.numbers[3]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[3]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 4) then
-		self.numbers[4]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[4]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 5) then
-		self.numbers[5]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[5]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 6) then
-		self.numbers[6]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[6]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 7) then
-		self.numbers[7]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[7]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 8) then
-		self.numbers[8]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[8]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 9) then
-		self.numbers[9]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[9]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 0) then
-		self.numbers[10]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[10]:draw(self.numbers.img, position.x, position.y)
 	elseif (num == 10) then
-		self.numbers[10]:drawf(self.numbers.img, position.x, position.y)
-		self.numbers[1]:drawf(self.numbers.img, position.x-4, position.y)
+		self.numbers[10]:draw(self.numbers.img, position.x, position.y)
+		self.numbers[1]:draw(self.numbers.img, position.x-4, position.y)
 	else
-		self.numbers[11]:drawf(self.numbers.img, position.x, position.y)
+		self.numbers[11]:draw(self.numbers.img, position.x, position.y)
 	end
 end
 

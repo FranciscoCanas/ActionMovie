@@ -42,7 +42,7 @@ function state:enter()
 -- musics
 	bgMusicList = {"music/actionCredits.ogg"}
 -- start music
-	TEsound.play(bgMusicList, "bgMusic")
+	TEsound.play(bgMusicList, "stream")
 
 -- background
 	backgroundScene = love.graphics.newImage("art/cityscape.png")
@@ -51,7 +51,7 @@ function state:enter()
 	player1:setPosition(Vector(400,500))
 	player2:setPosition(Vector(470,500))
 	player2.facing = Vector(-1,0)
-	player2.frameFlipH = true
+	player2.frameFlipH = -1
 	
 	murderballer = Murderballer()
     murderballer.position = Vector(445, 518)
@@ -145,7 +145,7 @@ end
 
 function state:leave()
 	stringTimer:clear()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 end
 
 function state:keyreleased(key)

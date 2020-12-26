@@ -19,11 +19,13 @@ require 'murderballer'
 -- Globals
 -- TODO: organize these into groups
 ARCADE=false -- Used to change settings for arcade cabinet version
+SCREEN_X = 2560
+SCREEN_Y = 1600
 
 -- note: Initialization order matters.
 hudFont = love.graphics.setNewFont(24)
 gameOverFont = love.graphics.setNewFont(48)
-dimScreen = Vector(1024, 768)
+dimScreen = Vector(SCREEN_X, SCREEN_Y)
 framesPerSecond = 56
 love.physics.setMeter(32) --the height of a meter our worlds will be 32px
 world = love.physics.newWorld(
@@ -68,15 +70,17 @@ function love.load()
 	-- Gamestate inits:
 	Gamestate.registerEvents()
 	Gamestate.switch(Gamestate.intro)
-    love.mouse.setVisible(false)
+	love.mouse.setVisible(false)
+	flags = {}
+	flags["fullscreen"] = true
+	flags["vsync"] = false
+	flags["msaa"] = 0
 	
 	-- Graphic options:
-	love.graphics.setMode(
+	love.window.setMode(
 		dimScreen.x, 
 		dimScreen.y, 
-		true, -- fullscreen
-		true, --vsync
-		0 -- antialiasing
+		flags
 		)
 		
 	-- universal world callbacks here:
@@ -158,7 +162,7 @@ end
 
 
 function StartGameOver(player)
-        	TEsound.stop("bgMusic", false) -- stop bg music immediately
+        	TEsound.stop("stream", false) -- stop bg music immediately
 			TEsound.play("music/actionHit.ogg")             
             isGameOver = true
             deadPlayer = player

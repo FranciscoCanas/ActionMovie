@@ -10,7 +10,9 @@ local font = love.graphics.setNewFont(32)
 Gamestate.intro = Gamestate.new()
 local state = Gamestate.intro
 local currentString = ""
-local currentStringPos = Vector((dimScreen.x/2) - 200, (dimScreen.y/2)-100)
+SCREEN_CENTER_X = (dimScreen.x/4) - (dimScreen.x/32)
+SCREEN_CENTER_Y = (dimScreen.y/4) - (dimScreen.y/32)
+local currentStringPos = Vector(SCREEN_CENTER_X, SCREEN_CENTER_Y)
 
 function state:enter()
 -- set the font here
@@ -33,13 +35,13 @@ love.graphics.setFont( font)
 			murderBallerImage:getWidth(),
 			murderBallerImage:getHeight())
 
-	murderBallerRunAnim = Anim8.newAnimation('loop',
-		murderBallerGrid('1-4, 1'),
-		0.2) 
+	murderBallerRunAnim = Anim8.newAnimation(
+		murderBallerGrid('1-4', 1),
+		0.2, 'pauseAtEnd') 
 
-	murderBallerStandAnim = Anim8.newAnimation('loop',
-		murderBallerGrid('1-4, 2'),
-		0.2) 
+	murderBallerStandAnim = Anim8.newAnimation(
+		murderBallerGrid('1-4', 2),
+		0.2, 'pauseAtEnd') 
 
 	murderBaller = murderBallerRunAnim
 
@@ -50,7 +52,7 @@ love.graphics.setFont( font)
     discoball.grid = Anim8.newGrid(320, 320,
         discoball.image:getWidth(),
         discoball.image:getHeight())
-    discoball.animation = Anim8.newAnimation('loop', discoball.grid('1-2,1'), 0.2)
+    discoball.animation = Anim8.newAnimation(discoball.grid('1-2',1), 0.2, 'pauseAtEnd')
     discoball.scaleX = 0.25
     discoball.scaleY = 0.25
 	
@@ -71,17 +73,18 @@ love.graphics.setFont( font)
 	explosionImage = love.graphics.newImage( "art/explosion.png" )
 	self.explosion = love.graphics.newParticleSystem( explosionImage, 500 )
 	self.explosion:setEmissionRate(60)
-	self.explosion:setLifetime(1.0)
-	self.explosion:setParticleLife(10)
+	self.explosion:setEmitterLifetime(1.0)
+	self.explosion:setParticleLifetime(10)
 	self.explosion:setSpread(360)
 	self.explosion:setSizes(4, 6.5, 8.0)
 	self.explosion:setRotation(60)
 	self.explosion:setSpeed(350,550)
 	self.explosion:setSpin(0,1,0.5)
-	self.explosion:setPosition(dimScreen.x/2, dimScreen.y/2)
+	self.explosion:setPosition(dimScreen.x / 4, dimScreen.y / 4)
 	self.explosion:stop()
 
 -- set up props here (like sprites and such)
+	drawPlayers = false
 	mcGuffForce = Vector(0,0)
 	crispyForce = Vector(0,0)
 	mcGuffAnim = player2.standAnim
@@ -90,7 +93,7 @@ love.graphics.setFont( font)
     player2:init()
 
 -- set up state.camera ------------------------------------
-	state.cam = Camera(dimScreen.x/2, 400, 
+	state.cam = Camera(dimScreen.x / 4, 400, 
 		1, -- zoom level
 		0 -- rotation angle
 		)
@@ -131,13 +134,11 @@ love.graphics.setFont( font)
 
 
 	-- around 32.75 or so
-	stringTimer:add(31, function()
-                
+	stringTimer:add(30.15, function()
 				state:titleExplosion()
 				currentString = ""
 			end)
-    stringTimer:add(34, function()       
-                titleScene = cityImage
+    stringTimer:add(32, function()       
 				state.camdx = 0
                 drawTitle = true
         end)
@@ -145,16 +146,17 @@ love.graphics.setFont( font)
 	stringTimer:add(37, function()
                 titleScene = alleyImage
 				drawTitle = false
-				
+				crispyAnim = player1.runAnim
 				state:zoomCrispy()
 			end)
 
 	stringTimer:add(39, function()
+				drawPlayers = true
 				crispyAnim = player1.shootingAnim
 				crispyForce = Vector(0,0)
 				state.camdz = 1
 				state.camdx = 0
-				state.cam:lookAt(player1.position.x+50, player1.position.y)
+				state.cam:lookAt(player1.position.x + player1.image:getWidth() / 2, player1.position.y)
 				state.cam:zoomTo(10)
 			end)
 
@@ -175,7 +177,7 @@ love.graphics.setFont( font)
 					mcGuffForce = Vector(0,0)
 				state.camdz = 1
 				state.camdx = 0
-				state.cam:lookAt(player2.position.x+50, player2.position.y)
+				state.cam:lookAt(player2.position.x + player2.image:getWidth() / 2, player2.position.y)
 				state.cam:zoomTo(10)
 
 			end)
@@ -186,12 +188,9 @@ love.graphics.setFont( font)
 				state:closeUp(player2)
 			end)
 
-
-
-	-- 42
 	stringTimer:add(49, function()
 				currentString = ""
-				state.cam:lookAt(murderBallerPos.x, murderBallerPos.y-50)
+				state.cam:lookAt(murderBallerPos.x, murderBallerPos.y - 100)
 				state.cam:zoomTo(4)
 				state.camdx = 15
 				state.camdy = 0
@@ -199,14 +198,9 @@ love.graphics.setFont( font)
 				drawMurderBaller = true		
 			end)
 
-	
-
-
 	stringTimer:add(51, function()
 			currentString = "Murderballer #2 as Lloyd the Rat"
 			murderBaller = murderBallerStandAnim
---			murderballer.position = Vector(murderBallerPos.x, murderBallerPos.y)
---			state:closeUp(murderballer)
 			state.cam:zoomTo(6)
 			state.camdx = 0
 			state.camdz = 1
@@ -218,7 +212,6 @@ love.graphics.setFont( font)
 				state:bodyShot(e1)
 				e1.animation = e1.shootAnim
 				drawMurderBaller = false
-			      --state:endAtTitle()
 			end)
 			
 	stringTimer:add(56, function()
@@ -228,9 +221,7 @@ love.graphics.setFont( font)
 	stringTimer:add(59, function()
 		currentString = "P. Tear Griffon as \"Limpy\""
 		state:bodyShot(e2)
-		e2.animation = e2.shootAnim
-	
-		  --state:endAtTitle()
+		e2.animation = e2.shootAnim	
 	end)
 	
 	stringTimer:add(60, function()
@@ -248,11 +239,11 @@ love.graphics.setFont( font)
 	end)
 
 	stringTimer:add(67, function()
-		e3.frameFlipH = true
+		e3.frameFlipH = -1
 	end)
 
 	stringTimer:add(67.5, function()
-		e3.frameFlipH = false
+		e3.frameFlipH = 1
 	end)
 
     stringTimer:add(69, function()
@@ -269,39 +260,38 @@ stringTimer:add(73, function()
 
 -- start at 77
     stringTimer:add(77, function()
---        titleScene = nil
         currentString=""
         player1:setPosition(Vector(600,2650))        
         crispyAnim = player1.hurtAnim
         player2:setPosition(Vector(650,2650))        
         mcGuffAnim = player2.hurtAnim
-        player2.frameFlipH = true
+        player2.animation:flipH()
         e1:setPosition(Vector(500,2590))
         e1.animation = e1.runAnim
         e2:setPosition(Vector(660,2650))
         e2.animation = e2.runAnim
-        e2.frameFlipH = true
+        e2.animation:flipH()
         e3:setPosition(Vector(705,2580))
         e3.animation = e3.runAnim
-        e3.frameFlipH = true
+        e3.animation:flipH()
         e4:setPosition(Vector(515,2670))
         e4.animation = e3.runAnim
-        e4.frameFlipH = true
+        e4.animation:flipH()
         e5:setPosition(Vector(560,2680))
         e5.animation = e3.runAnim
-        e5.frameFlipH = true
+        e5.animation:flipH()
 		
 		b1:setPosition(Vector(400,2600))
 		b1.animation = b1.danceAnim
 		b2:setPosition(Vector(770,2670))
-		b2.frameFlipH = true
+        b2.animation:flipH()
 		b2.animation = b1.danceAnim
 		b3:setPosition(Vector(787,2700))
 		b3.animation = b1.danceAnim
-		b3.frameFlipH = true
+        b3.animation:flipH()
 		b4:setPosition(Vector(720,2630))
 		b4.animation = b1.danceAnim
-		b4.frameFlipH = true
+        b4.animation:flipH()
         state:discoShot()
     end)
 
@@ -324,7 +314,7 @@ stringTimer:add(73, function()
 
   stringTimer:add(82, function()
         state:discoDance(guys)
-        state.camdz = 1.0002
+        state.camdz = 1.0001
     end)
     stringTimer:add(84, function()
         state:discoDance(guys)
@@ -363,11 +353,11 @@ stringTimer:add(73, function()
 
 
 	-- start music
-	TEsound.play(bgMusicList, "bgMusic")
+	TEsound.play(bgMusicList, "stream")
 end
 
 function state:leave()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("static", false) -- stop bg music immediately
 end
 
 function state:update(dt)
@@ -412,25 +402,27 @@ end
 function state:draw()
 
 	state.cam:attach()	
-    love.graphics.draw(discoImage,400,2400)
-    discoball.animation:drawf(discoball.image,
+    love.graphics.draw(discoImage, 400, 2400)
+    discoball.animation:draw(discoball.image,
         discoball.position.x,
         discoball.position.y,
         0,
         discoball.scaleX,
         discoball.scaleY,
         0,
-        0,
-        false,
-        false)
+        0)--,
+        --false,
+        --false)
     
 
     
 	love.graphics.draw(titleScene, 0,0)
 
 	-- draw stuff that's state.camera locked here
-	player1:draw()
-	player2:draw()
+	if drawPlayers then
+		player1:draw()
+		player2:draw()
+	end
 	e1:draw()
 	e2:draw()
 	e3:draw()
@@ -443,16 +435,14 @@ function state:draw()
 	state.cam:detach()	
 
 		if drawMurderBaller then
-		murderBaller:drawf(murderBallerImage, 
+		murderBaller:draw(murderBallerImage, 
 			murderBallerPos.x,
 			murderBallerPos.y,
 			0, -- angle
 			4, -- x scale
 			4, -- y scale
 			0, -- x offset
-			0, -- y offset
-			false, -- H flip
-			false -- V flip
+			0 -- y offset
 			)
 		end
 	
@@ -460,10 +450,10 @@ function state:draw()
 
 	-- draw the credits and other non-state.camera locked stuff here
 	love.graphics.draw(self.explosion)
-	love.graphics.printf( currentString, currentStringPos.x, currentStringPos.y, 400, "center" )
+	love.graphics.printf( currentString, currentStringPos.x - 25, currentStringPos.y, 400, "center" )
 
 	if drawTitle then
-		love.graphics.draw(titleImage, (dimScreen.x/2) - 320 , 25)
+		love.graphics.draw(titleImage, SCREEN_CENTER_X, 25)
 	end
 
 
@@ -487,7 +477,7 @@ function state:zoomCrispy()
 	crispyForce = Vector(2000,0)
 	state.camdx = 15
 	state.camdz = 1.001
-	state.cam:lookAt(player1.position.x+35, player1.position.y)
+	state.cam:lookAt(player1.position.x + player1.image:getWidth() / 2, player1.position.y)
 	state.cam:zoomTo(5)
 	crispyAnim = player1.runAnim
 end
@@ -496,7 +486,7 @@ function state:zoomMcGuff()
 	mcGuffForce = Vector(2000,0)
 	state.camdx = 15
 	state.camdz = 1.001
-	state.cam:lookAt(player2.position.x+35, player2.position.y)
+	state.cam:lookAt(player2.position.x + player2.image:getWidth() / 2, player2.position.y)
 	state.cam:zoomTo(5)
 	mcGuffAnim = player2.runAnim
 end
@@ -505,13 +495,13 @@ function state:zoomToTitle()
 	state.camdx = 0
 	state.camdy = 0
 	state.camdz = 1.001
-	state.cam:lookAt(dimScreen.x/2, dimScreen.y/2)
+	state.cam:lookAt(SCREEN_CENTER_X, SCREEN_CENTER_Y)
 	state.cam:zoomTo(1)
 end
 
 function state:endAtTitle()
 	state.cam:zoomTo(1)
-	state.camdz = 1
+	state.camdz = 1.001
 	drawTitle = true
 	player1:setPosition(Vector(300,900))
 	crispyAnim = player1.shootingAnim
@@ -557,7 +547,7 @@ end
 function state:discoDance(peeps)
     for i, peep in ipairs(peeps) do
         if (math.random(1,2) > 1) then
-            peep.frameFlipH = not peep.frameFlipH            
+            peep.animation:flipH()     
         end        
     end
 end

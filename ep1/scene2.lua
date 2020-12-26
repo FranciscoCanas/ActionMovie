@@ -29,10 +29,10 @@ end
 function state:enter()
 	-- set up sound objects here
 	bgMusicList = {"music/meanStreets.ogg"}
-	TEsound.playLooping(bgMusicList, "bgMusic")
+	TEsound.playLooping(bgMusicList, "stream")
 	
 	-- initialize world here
-	-- world:setGravity(0,9.8*love.physics.getMeter())
+	-- world:setLinearAcceleration(0,9.8*love.physics.getMeter())
 	-- Initialize players here
 	if player1.isplaying then
 		player1:setPosition(Vector(100,600))
@@ -161,7 +161,7 @@ function state:insertEnemy(positions, type)
 end
 
 function state:leave()
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 	enemies = {}
 	bullets = {}
 	bystanders = {}
@@ -448,7 +448,7 @@ function state:playersLose()
 	drawLoseString = true
 	state.camdx = 0
 	murderBallerPosDX = 1.5
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 	TEsound.play("music/actionHit.ogg")     
 
 	eventTimer:add(3, function()
@@ -458,7 +458,7 @@ end
 
 function state:playersWin()
     playersWin = true
-	TEsound.stop("bgMusic", false) -- stop bg music immediately
+	TEsound.stop("stream", false) -- stop bg music immediately
 	TEsound.play("music/actionHit.ogg")     
     Gamestate.switch(Gamestate.story3) 
 end

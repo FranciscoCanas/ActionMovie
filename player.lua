@@ -1,5 +1,9 @@
 --require 'main'
 --require 'TESound.TEsound'
+
+SCREEN_X = 2560
+SCREEN_Y = 1600
+
 Player = Class{
 function(self, num)
 	if num == 1 then
@@ -44,28 +48,32 @@ function(self, num)
 	
 	-- Set up anim8 for spritebatch animations -----------------------------
 	self.frameDelay = 0.3
-	self.frameFlipH = false
-	self.frameFlipV = false
+	self.frameFlipH = nop
+	self.frameFlipV = nop
 	self.grid = Anim8.newGrid(128, 128, 
-			self.image:getWidth(),
-			self.image:getHeight())
+		self.image:getWidth(),
+		self.image:getHeight())
 	
-	self.standAnim = Anim8.newAnimation('loop', 
-			self.grid:getFrames(1,1),
-			self.frameDelay)
-			
-	self.runAnim = Anim8.newAnimation('loop',
-		self.grid('2-3, 1'),
+	self.standAnim = Anim8.newAnimation(
+		self.grid(1,1),
 		self.frameDelay)
-
-	--ready for shooting animation here:
-	self.shootingAnim = Anim8.newAnimation('loop',
-		self.grid('1-2, 2'),
+			
+			
+	self.runAnim = Anim8.newAnimation(
+		self.grid('2-3', 1),
 		self.frameDelay)
 		
-	self.hurtAnim = Anim8.newAnimation('loop',
-		self.grid('1-2, 3'),
+
+	--ready for shooting animation here:
+	self.shootingAnim = Anim8.newAnimation(
+		self.grid('1-2', 2),
 		self.frameDelay)
+		
+		
+	self.hurtAnim = Anim8.newAnimation(
+		self.grid('1-2', 3),
+		self.frameDelay)
+		
 		
 	self.animation = self.standAnim
 	
@@ -79,22 +87,22 @@ function(self, num)
 	gunParticleImage = love.graphics.newImage( "art/gunParticle.png" )
 	self.gunEmitter = love.graphics.newParticleSystem( gunParticleImage, 200 )
 	self.gunEmitter:setEmissionRate(800)
-	self.gunEmitter:setLifetime(0.02)
-	self.gunEmitter:setParticleLife(0.075)
+	self.gunEmitter:setEmitterLifetime(0.02)
+	self.gunEmitter:setParticleLifetime(0.075)
 	self.gunEmitter:setSpread(3.14/4)
 	self.gunEmitter:setSizes(0.05, 0.25)
-	self.gunEmitter:setGravity(0,9.8)
+	self.gunEmitter:setLinearAcceleration(0,9.8)
 	self.gunEmitter:setSpeed(300,500)
 	
 	-- particle sys stuff go here now!
 	bloodParticleImage = love.graphics.newImage( "art/bloodParticle.png" )
 		self.bloodEmitter = love.graphics.newParticleSystem( bloodParticleImage, 500 )
 	self.bloodEmitter:setEmissionRate(500)
-	self.bloodEmitter:setLifetime(0.02)
-	self.bloodEmitter:setParticleLife(0.35)
+	self.bloodEmitter:setEmitterLifetime(0.02)
+	self.bloodEmitter:setParticleLifetime(0.35)
 	self.bloodEmitter:setSpread(3.14/3)
 	self.bloodEmitter:setSizes(0.1, 0.5)
-	self.bloodEmitter:setGravity(0,100)
+	self.bloodEmitter:setLinearAcceleration(0,100)
 	self.bloodEmitter:setSpeed(200,300)
 	self.bloodEmitter:stop()
 
@@ -116,8 +124,9 @@ function Player:init()
 	if self.pnum == 1 then
 		self.position = Vector(4900, 900)
 	elseif self.pnum == 2 then
-		self.position = Vector(4200,940)
+		self.position = Vector(4200, 940)
 	end
+
 	-- love.physics code starts here -----------------------------------------
 	self.facing = Vector(1,0) -- normalized direction vector
 	self.acceleration = 12000 * 120
@@ -181,12 +190,14 @@ function Player:update(dt)
 			delta.x = -1
 			self.body:applyForce(-self.acceleration * dt,0)
 			moved = true
-			self.frameFlipH = true
+			--self.frameFlipH = -1
+			self.animation:flipH()
 		elseif love.keyboard.isDown(self.keyright) then
 			delta.x =  1
 			self.body:applyForce(self.acceleration * dt,0)
 			moved = true
-			self.frameFlipH = false
+			--self.frameFlipH = 1
+			self.animation:flipH()
 		end	
 		if love.keyboard.isDown(self.keyup) then
 			delta.y = -1
@@ -224,16 +235,16 @@ end
 
 function Player:draw()
 --love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
-    self.animation:drawf(self.image, 
+    self.animation:draw(self.image, 
 				self.position.x,
 				self.position.y,
 				0, -- angle
 				self.scale, -- x scale
 				self.scale, -- y scale
 				0, -- x offset
-				0, -- y offset
-				self.frameFlipH,
-				self.frameFlipV
+				0 -- y offset
+				--self.frameFlipH,
+				--self.frameFlipV
 				)
 
  love.graphics.draw(self.gunEmitter)
